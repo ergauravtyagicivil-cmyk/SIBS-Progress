@@ -1,0 +1,1306 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Micro-tunnel progress — SIBS 1 &amp; 2</title>
+<style>
+  :root{
+    --ground:#EBEEF0;--surface:#fff;--ink:#0E1A22;--ink2:#3A4A54;--ink3:#5C6C76;
+    --line:#CDD6DB;--rule:#E6EBEE;--bore:#1D5A88;--bore2:#3C87BC;--soft:#DCE7EF;
+    --ok:#2C7A58;--bad:#A33A22;--amber:#C08A1E;--calc:#F5F8F9;--r:3px;
+    --total:#22323E;--comp:#2A8C82;--comp2:#3C87BC;--mo:#1D5A88;--idle:#B9C4CA;
+    --f:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  b,strong{font-weight:600}
+  .wrap{max-width:1300px;margin:0 auto;padding:0 16px 60px}
+  .num{font-variant-numeric:tabular-nums}
+  h1,h3{font-weight:600;margin:0}
+  button{font-family:inherit;font-size:13px;cursor:pointer}
+  input,select,textarea{font-family:inherit;font-size:13px;color:var(--ink);width:100%;padding:6px 7px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)}
+  input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--bore);outline-offset:0}
+  label{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:3px;font-weight:500}
+
+  header{background:var(--ink);color:#E9EEF1;padding:15px 0 0}
+  .mast{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-start}
+  .mast h1{font-size:18px;letter-spacing:-.01em}
+  .mast .meta{font-size:12.5px;color:#B3C4CD;margin-top:3px}
+  .right{text-align:right;font-size:12.5px;color:#B3C4CD}
+  .asat{display:flex;gap:7px;align-items:center;justify-content:flex-end}
+  .asat input{width:140px;background:#22323D;border-color:#33454F;color:#fff;padding:4px 6px}
+  .savestate{display:block;margin-top:5px}
+  .savestate.warn{color:#E0B378}
+  nav{display:flex;margin-top:13px;overflow-x:auto}
+  .tab{background:none;border:0;padding:10px 16px;color:#B3C4CD;border-bottom:2px solid transparent;white-space:nowrap;font-size:13.5px}
+  .tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--bore2);font-weight:500;background:rgba(255,255,255,.05)}
+
+  .panel{display:none;padding-top:16px}.panel.on{display:block}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;margin-bottom:14px}
+  .card>h3{font-size:13.5px}
+  .sub{color:var(--ink2);font-size:13px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .cols3{display:grid;grid-template-columns:290px 1fr;gap:14px;align-items:start}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:1px;background:var(--rule);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .kpi{background:var(--surface);padding:13px 15px}
+  .kpi b{display:block;font-size:23px;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .kpi span{display:block;font-size:12px;color:var(--ink2);margin-top:3px;font-weight:500}
+  .kpi small{font-size:12px;color:var(--ink3)}
+  .kpi.hi b{color:var(--bore)}
+  .cpanel{padding:0;overflow:hidden}
+  .cphead{padding:12px 16px;color:#fff;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .cphead h3{font-size:15px;color:#fff}
+  .cphead span{font-size:12.5px;opacity:.85}
+  .cpbody{padding:14px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .cpstats{flex:1;min-width:190px}
+  .cprow{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--rule);font-size:13px}
+  .cprow:last-child{border-bottom:0}
+  .cprow span{color:var(--ink2)}
+  .cprow b{font-variant-numeric:tabular-nums;color:var(--ink)}
+  .cpdn{padding:0 16px 14px}
+  .cpdn .l{display:flex;justify-content:space-between;font-size:12px;color:var(--ink);margin:7px 0 3px;font-weight:500}
+  .cpdn .l em{font-style:normal;color:var(--ink2);font-variant-numeric:tabular-nums}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-weight:600;color:var(--ink2);font-size:12px;padding:7px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+  td{padding:5px 7px;border-bottom:1px solid var(--rule);white-space:nowrap;color:var(--ink)}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr:hover{background:#F6F9FA}
+  tfoot td{font-weight:600;border-top:1px solid var(--line);border-bottom:0;background:#F3F7F8}
+  .tblwrap{overflow:auto;max-height:64vh}
+  table.compact td{padding:4px 6px}
+
+  /* entry sheet */
+  .sheet{overflow:auto;max-height:72vh;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+  .sheet table{font-size:13px}
+  .sheet th{position:sticky;top:0;z-index:3;border-bottom:1px solid var(--line);box-shadow:0 1px 0 var(--line);font-size:11.5px;padding:6px;color:var(--ink);font-weight:600}
+  .sheet th.grp{background:#F3F7F8;color:var(--ink);text-align:center;border-left:1px solid var(--line)}
+  .sheet td{padding:0;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .sheet td.pad{padding:3px 7px}
+  .sheet input,.sheet select{border:0;border-radius:0;background:transparent;padding:5px 6px;font-size:12.5px}
+  .sheet input:focus,.sheet select:focus{outline:2px solid var(--bore);outline-offset:-2px;background:#fff;position:relative;z-index:2}
+  .sheet input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+  .sheet td.calc{background:var(--calc);color:var(--ink);font-weight:500;text-align:right;font-variant-numeric:tabular-nums;padding:5px 7px}
+  .sheet tr.band td{background:#EEF3F5;font-weight:600;font-size:12px;color:var(--ink);border-top:1px solid var(--line);padding:5px 8px}
+  .sheet tr.sub td{background:#F7FAFB;font-size:12px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums;padding:4px 7px}
+  .sheet tr.sub td.n{text-align:right}
+  .sheet td.sn{background:var(--calc);text-align:center;color:var(--ink2);font-size:12px;font-weight:600;width:34px}
+  .rowdel{background:none;border:0;color:var(--ink3);font-size:15px;line-height:1;padding:3px 6px;cursor:pointer}
+  .rowdel:hover{color:var(--bad)}
+  .mini{padding:3px 9px;font-size:12px;font-weight:500;border:1px solid var(--line);background:#fff;border-radius:2px;color:var(--ink);margin-right:4px}
+  .mini:hover{background:#F1F5F7}
+  .mini.pri{background:var(--bore);color:#fff;border-color:var(--bore)}
+  .mini.pri:hover{filter:brightness(1.1);background:var(--bore)}
+  .sheet td.prog{background:#F0F6FA;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;padding:5px 7px}
+  .sheet tr[data-row]:hover td{background:#F4F8FA}
+  .sheet tr[data-row]:hover td.prog{background:#E6F0F7}
+  .overlay{position:fixed;inset:0;background:rgba(10,18,24,.48);display:none;align-items:center;justify-content:center;z-index:60;padding:18px}
+  .overlay.on{display:flex}
+  .modal{background:#fff;border-radius:4px;width:100%;max-width:640px;max-height:88vh;overflow:auto;box-shadow:0 14px 44px rgba(0,0,0,.32)}
+  .mhead{padding:14px 18px;border-bottom:1px solid var(--line)}
+  .mhead b{font-size:15px;display:block}
+  .mhead span{font-size:12.5px;color:var(--ink2)}
+  .mbody{padding:16px 18px}
+  .mfoot{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:9px;align-items:center;justify-content:flex-end;background:#F7FAFB;position:sticky;bottom:0}
+  .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .mgrid .full{grid-column:1/-1}
+  .bignum input{font-size:20px;padding:10px;text-align:right;font-variant-numeric:tabular-nums}
+  .preview{background:#F2F7FA;border:1px solid var(--soft);border-radius:var(--r);padding:10px 12px;font-size:13px;margin-top:12px;font-variant-numeric:tabular-nums}
+
+  .bar{height:7px;background:var(--soft);border-radius:2px;overflow:hidden;min-width:60px}
+  .bar i{display:block;height:100%;background:var(--bore)}
+  .chip{font-size:11px;font-weight:500;padding:1px 6px;border-radius:2px;border:1px solid;white-space:nowrap}
+  .c-done{color:var(--ok);border-color:#B4D5C5;background:#EDF6F1}
+  .c-bored{color:var(--bore);border-color:#B8CFE0;background:#EDF3F8}
+  .c-run{color:#8A6512;border-color:#E2D1A0;background:#FAF4E6}
+  .c-idle{color:var(--ink2);border-color:var(--line);background:#F3F6F7}
+  .late{color:var(--bad)}.early{color:var(--ok)}
+
+  .gantt{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+  .grow{display:flex;align-items:center;border-bottom:1px solid var(--rule);height:25px}
+  .glabel{flex:0 0 178px;padding:0 8px;font-size:12px;color:var(--ink);font-weight:500;position:sticky;left:0;background:var(--surface);border-right:1px solid var(--line);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:25px}
+  .gtrack{position:relative;height:25px;flex:1;min-width:820px}
+  .gplan{position:absolute;top:5px;height:6px;background:#C4CED4;border-radius:2px}
+  .gact{position:absolute;top:13px;height:7px;background:var(--bore);border-radius:2px}
+  .gact.part{background:var(--amber)}
+  .gmonths{display:flex;border-bottom:1px solid var(--line);height:23px;position:sticky;top:0;background:var(--surface);z-index:2}
+  .gmonths .glabel{color:var(--ink);font-weight:500;line-height:23px;height:23px}
+  .gm{position:absolute;top:0;font-size:11px;color:var(--ink2);font-weight:500;border-left:1px solid var(--rule);padding-left:3px;height:23px;line-height:23px}
+  .gnow{position:absolute;top:0;bottom:0;width:1px;background:var(--bad)}
+  body.ro .tab[data-p="sheet"],body.ro .tab[data-p="data"]{display:none}
+  .live{display:inline-flex;align-items:center;gap:6px}
+  .live i{width:7px;height:7px;border-radius:50%;background:#5FBF8B;display:inline-block}
+  .mapctl{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:9px}
+  .mapchk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);font-weight:500;margin:0}
+  .mapchk input{width:auto}
+  .mapwrap{overflow-x:auto;margin-top:10px;border:1px solid var(--rule);border-radius:var(--r);background:#FBFCFD}
+  .mapwrap>div{min-width:760px}
+  .maptag{font-size:12.5px;color:var(--ink2);margin-top:9px}
+  .maptag b{color:var(--ink)}
+  .mapwarn{color:var(--bad);font-weight:500}
+  .legend{display:flex;gap:15px;font-size:12.5px;color:var(--ink);font-weight:500;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .sw{display:inline-block;width:15px;height:6px;border-radius:2px;vertical-align:middle;margin-right:5px}
+
+  .btn{background:var(--bore);color:#fff;border:1px solid var(--bore);padding:8px 15px;border-radius:var(--r);font-weight:500}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn.danger{background:transparent;color:var(--bad);border-color:#E0BFB5}
+  .btn:hover{filter:brightness(.95)}
+  .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  .note{font-size:13px;color:var(--ink2);margin-top:9px}
+  .flash{color:var(--ok)}
+  textarea{min-height:120px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+  ol.steps{margin:9px 0 0;padding-left:19px;font-size:12.5px;color:var(--ink2)}
+  details summary{cursor:pointer;font-size:13px;color:var(--bore);font-weight:500}
+  @media(max-width:900px){.cols,.cols3{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{
+    body{background:#fff}nav,.noprint,.actions{display:none!important}
+    header{background:#fff;color:#000;border-bottom:2px solid #000}
+    .mast h1,.mast .meta,.right{color:#000}
+    .panel{display:none!important}#p-dash{display:block!important}
+    .mapwrap{overflow:visible;border:0;background:#fff}.mapwrap>div{min-width:0}
+    .card{break-inside:avoid}@page{size:A4 landscape;margin:11mm}
+  }
+</style>
+
+</head><body><header><div class="wrap" style="padding-bottom:0">
+  <div class="mast">
+    <div>
+      <h1>Micro-tunnel boring progress — SIBS 1 &amp; 2</h1>
+      <div class="meta">Sheikh Isa Bin Salman Highway Trunk Sewer · SPP-24/026 &amp; SPP-24/027 · supervision consultant progress record</div>
+    </div>
+    <div class="right">
+      <div class="asat noprint"><span>Data date</span><input type="date" id="asAt"></div>
+      <div id="asAtPrint" style="display: none;">Data date 08 Sept 26</div>
+      <span class="savestate" id="saveState">Saved in this browser</span>
+      <span class="savestate" id="ghHead"></span>
+      <span class="savestate" id="bkHead">Last backup 08 Sept 26 · today</span>
+    </div>
+  </div>
+  <nav role="tablist" class="noprint">
+    <button class="tab" role="tab" aria-selected="false" data-p="dash">Dashboard</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="sheet">Progress entry</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="gantt">Timeline</button>
+    <button class="tab" role="tab" aria-selected="true" data-p="data">Save &amp; export</button>
+  </nav>
+</div></header>
+
+<div class="wrap">
+
+<div class="recover" id="recBar"></div>
+<div class="roflag" id="roFlag"></div>
+<div class="bkbar" id="bkBanner">
+  <span id="bkMsg">Your last backup was 08 Sept 26, 0 days ago. Take a fresh one so nothing depends on this browser alone.</span>
+  <button class="btn" id="bkNow">Download backup</button>
+  <button class="linkbtn" id="bkLater">Not now</button>
+</div>
+
+<section class="panel" id="p-dash">
+  <div class="kpis" id="kpis"></div>
+  <div class="cols" id="contractRow"></div>
+  <div class="card">
+    <h3>Alignment map &mdash; drive status</h3>
+    <p class="sub">Laid out like the TS-01 / TS-02 progress drawings, but built from the register &mdash; every drive re-colours the moment progress is entered, so the sheet never has to be redrawn by hand. Hover a drive for its figures.</p>
+    <div class="mapctl noprint">
+      <label class="mapchk"><input type="checkbox" id="mapMh" checked> Manhole labels</label>
+      <label class="mapchk"><input type="checkbox" id="mapDn"> DN labels</label>
+      <label class="mapchk"><input type="checkbox" id="mapSn"> Drive S/N</label>
+      <label class="mapchk"><input type="checkbox" id="mapLR" checked> Direction arrows</label>
+      <label class="mapchk">Zoom <select id="mapZoom" style="width:auto;padding:3px 7px"><option value="1">Fit width</option><option value="1.5">1.5&times;</option><option value="2">2&times;</option><option value="3">3&times;</option></select></label>
+    </div>
+    <div class="mapwrap"><div id="mapSvg"></div></div>
+    <div class="legend" id="mapLeg"></div>
+    <p class="maptag" id="mapNote"></p>
+  </div>
+  <div class="cols3">
+    <div class="card"><h3>Overall completion</h3><div id="ring"></div><div id="ringNote" class="sub" style="margin-top:6px"></div></div>
+    <div class="card"><h3>Total against completed length, by diameter</h3><div id="dnChart" style="margin-top:10px"></div><div class="legend" id="dnLeg"></div></div>
+  </div>
+  <div class="cols">
+    <div class="card"><h3>Total against completed length, by contract</h3><div id="prChart" style="margin-top:10px"></div><div class="legend" id="prLeg"></div></div>
+    <div class="card"><h3>Metres bored each month</h3><p class="sub">Each drive spread across its actual dates.</p><div id="moChart" style="margin-top:6px"></div></div>
+  </div>
+  <div class="card">
+    <h3>Completion by drive</h3>
+    <p class="sub">Every drive in register order, grouped by diameter. Hover a bar for its figures.</p>
+    <div id="drChart" style="margin-top:8px"></div>
+    <div class="legend" id="drLeg"></div>
+  </div>
+  <div class="card">
+    <h3>Cumulative metres — baseline against actual</h3>
+    <p class="sub">Each drive is spread evenly between its dates. Actual is cut off at the data date.</p>
+    <div id="curve" style="margin-top:6px"></div>
+  </div>
+  <div class="card">
+    <h3>Drives boring now</h3>
+    <div class="tblwrap" style="margin-top:9px"><table id="tRun" class="compact"></table></div>
+  </div>
+  <div class="cols">
+    <div class="card"><h3>By diameter</h3><div class="tblwrap" style="margin-top:9px"><table id="tDn" class="compact"></table></div></div>
+    <div class="card"><h3>By contract</h3><div class="tblwrap" style="margin-top:9px"><table id="tProj" class="compact"></table></div></div>
+  </div>
+  <div class="card">
+    <h3>Drives finished behind baseline</h3>
+    <div class="tblwrap" style="margin-top:9px"><table id="tDelay" class="compact"></table></div>
+  </div>
+</section>
+
+<section class="panel" id="p-sheet">
+  <div class="card" style="padding:12px 15px">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center">
+      <p class="sub" style="margin:0">Same rows and columns as the workbook. Use <b>Progress</b> on a drive\u2019s row to enter its metres, or <b>Edit</b> to change any other field. Double-clicking a row opens Edit too. The shaded columns work themselves out.</p>
+      <div style="display:flex;gap:8px"><button class="btn ghost" id="renumber">Renumber S/N</button><button class="btn ghost" id="addRow">Add drive</button></div>
+    </div>
+  </div>
+  <div class="sheet"><table id="tSheet"></table></div>
+  <div class="card" style="margin-top:14px">
+    <details>
+      <summary>Refresh the whole register from Excel</summary>
+      <ol class="steps">
+        <li>In the MTBM Progress sheet select the drive rows across columns A to O.</li>
+        <li>Copy, then paste below.</li>
+        <li>Load — this replaces every row.</li>
+      </ol>
+      <textarea id="pasteBox" style="margin-top:10px" placeholder="1	MHA-20.1	MHA-20	1200	78	02/12/2025	21/12/2025	09/12/2025	13/12/2025	78	…"></textarea>
+      <div class="actions">
+        <button class="btn" id="pLoad">Load rows</button>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);margin:0"><input type="checkbox" id="pReplace" checked="" style="width:auto"> Replace everything</label>
+        <span class="sub" id="pHint"></span>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="panel" id="p-gantt">
+  <div class="card">
+    <h3>Baseline against actual</h3>
+    <p class="sub">Upper bar is baseline, lower bar is actual. Amber means still boring. The red line is the data date.</p>
+    <div class="gantt" id="gantt" style="margin-top:12px"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:#C4CED4"></i>Baseline</span>
+      <span><i class="sw" style="background:var(--bore)"></i>Bored</span>
+      <span><i class="sw" style="background:var(--amber)"></i>In progress</span>
+      <span><i class="sw" style="background:var(--bad);width:2px;height:12px"></i>Data date</span>
+    </div>
+  </div>
+</section>
+
+<section class="panel on" id="p-data">
+  <div class="card" id="storeBox"></div>
+  <div class="card" id="ghCard">
+    <h3>Live copy for the team</h3>
+    <p class="sub">Publish your figures to a GitHub repository. Anyone with the page link sees the latest set the next time they open or refresh it &mdash; nothing to email round.</p>
+    <div class="mgrid" style="margin-top:13px">
+      <div><label for="ghOwner">GitHub user or organisation</label><input id="ghOwner" placeholder="your-username"></div>
+      <div><label for="ghRepo">Repository</label><input id="ghRepo" placeholder="sibs-progress"></div>
+      <div><label for="ghBranch">Branch</label><input id="ghBranch" placeholder="main"></div>
+      <div><label for="ghName">Publish as</label><input id="ghName" placeholder="Gaurav"></div>
+      <div class="full"><label for="ghToken">Access token &mdash; stays in this browser, never goes into the published file</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_&hellip;"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="ghPub">Publish update</button>
+      <button class="btn ghost" id="ghGet">Load published figures</button>
+      <button class="btn ghost" id="ghSite">Download the page file</button>
+      <span class="sub" id="ghNote"></span>
+    </div>
+    <details style="margin-top:14px"><summary>Setting it up the first time</summary>
+      <ol class="steps">
+        <li>Create a repository on GitHub, for example <b>sibs-progress</b>. It has to be public for free Pages hosting, so keep client-identifying detail out of the register and get the project manager's nod first.</li>
+        <li>In that repository: Settings &rarr; Pages &rarr; deploy from branch <b>main</b>, folder <b>/ (root)</b>.</li>
+        <li>GitHub &rarr; Settings &rarr; Developer settings &rarr; Fine-grained tokens. Give it access to this one repository only, with <b>Contents: Read and write</b>. Copy the token into the box above.</li>
+        <li>Fill in the user and repository above, then press <b>Download the page file</b> and upload the resulting <b>index.html</b> to the repository.</li>
+        <li>Press <b>Publish update</b>. That writes <b>data.json</b> and your figures go live.</li>
+        <li>Send colleagues <b>https://&lt;user&gt;.github.io/&lt;repository&gt;/</b>. They get a view-only dashboard, timeline and alignment map.</li>
+        <li>To edit from the live page yourself, open the same link with <b>#edit</b> on the end and paste your token in once.</li>
+      </ol>
+    </details>
+  </div>
+  <div class="card">
+    <h3>Keep a copy</h3>
+    <p class="sub">Restoring a backup puts you back exactly where you were, on any machine.</p>
+    <div class="actions">
+      <button class="btn" id="xJson">Download backup</button>
+      <button class="btn ghost" id="xIn">Restore from backup</button>
+      <span class="sub" id="bkNote"></span>
+    </div>
+    <input type="file" id="fileIn" accept=".json" style="display:none">
+  </div>
+  <div class="card">
+    <h3>Send it on</h3>
+    <p class="sub">The register exports in your workbook's column order, so it pastes straight back into the sheet.</p>
+    <div class="actions">
+      <button class="btn ghost" id="xReg">Register (CSV)</button>
+      <button class="btn ghost" id="xSum">Summaries (CSV)</button>
+      <button class="btn ghost" id="xPrint">Print the dashboard</button>
+    </div>
+    <h3 style="margin-top:18px">Send someone the file itself</h3>
+    <p class="sub">These write a new HTML file with today\u2019s figures built into it. One file, opens on any machine, nothing to install and no link to your browser.</p>
+    <div class="actions">
+      <button class="btn" id="xShareRO">View-only progress report</button>
+      <button class="btn ghost" id="xShareRW">Working copy they can update</button>
+      <span class="sub" id="shNote"></span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Start again</h3>
+    <div class="actions"><button class="btn danger" id="xReset">Reset to the uploaded workbook</button><span class="sub" id="dNote"></span></div>
+  </div>
+</section>
+</div>
+
+<div class="overlay" id="ovProg">
+  <div class="modal" role="dialog" aria-label="Update progress">
+    <div class="mhead"><b id="pgTitle"></b><span id="pgMeta"></span></div>
+    <div class="mbody">
+      <div class="preview" id="pgNow" style="margin-top:0"></div>
+      <div class="mgrid" style="margin-top:14px">
+        <div><label for="pgDate">Date of this figure</label><input type="date" id="pgDate"></div>
+        <div><label for="pgMode">Figure you are entering</label><select id="pgMode">
+          <option value="total">Total bored to date</option>
+          <option value="add">Metres bored since the last figure</option>
+        </select></div>
+        <div class="full bignum"><label for="pgVal">Metres</label><input type="number" id="pgVal" step="0.01" min="0"></div>
+      </div>
+      <div class="preview" id="pgPrev"></div>
+      <div id="pgGroutRow" style="margin-top:13px;display:none">
+        <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink);margin:0">
+          <input type="checkbox" id="pgGrout" style="width:auto"> Annulus grouting complete and signed off
+        </label>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn ghost" data-close="">Cancel</button>
+      <button class="btn" id="pgSave">Save progress</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ovEdit">
+  <div class="modal" role="dialog" aria-label="Edit drive">
+    <div class="mhead"><b id="efTitle"></b><span id="efMeta"></span></div>
+    <div class="mbody">
+      <div class="mgrid">
+        <div><label for="efSn">S. No</label><input id="efSn" type="text"></div>
+        <div><label for="efPr">Project</label><input id="efPr" type="text"></div>
+        <div><label for="efFrom">Launch shaft</label><input id="efFrom" type="text"></div>
+        <div><label for="efTo">Receiving shaft</label><input id="efTo" type="text"></div>
+        <div><label for="efDn">DN</label><input id="efDn" type="number"></div>
+        <div><label for="efLen">Total drive length (m)</label><input id="efLen" type="number" step="0.01"></div>
+        <div><label for="efPs">Plan start</label><input id="efPs" type="date"></div>
+        <div><label for="efPf">Plan finish</label><input id="efPf" type="date"></div>
+        <div><label for="efAs">Actual start</label><input id="efAs" type="date"></div>
+        <div><label for="efAf">Actual finish</label><input id="efAf" type="date"></div>
+        <div><label for="efP">Current progress (m)</label><input id="efP" type="number" step="0.01"></div>
+        <div><label for="efG">Grouting</label><select id="efG"><option value="0">—</option><option value="1">Done</option></select></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn danger" id="efDel" style="margin-right:auto">Remove drive</button>
+      <button class="btn ghost" data-close="">Cancel</button>
+      <button class="btn" id="efSave">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEED=[{"sn":"1","f":"MHA-20.1","t":"MHA-20","dn":1200,"len":78,"ps":"2025-12-02","pf":"2025-12-21","as":"2025-12-09","af":"2025-12-13","p":78,"g":1,"pr":"SIBS1"},{"sn":"2","f":"MHA-12.1","t":"MHA-12","dn":1200,"len":157,"ps":"2026-03-01","pf":"2026-03-27","as":"2026-04-27","af":"2026-05-06","p":157,"g":1,"pr":"SIBS2"},{"sn":"3","f":"MHB-09","t":"MHB-9.1","dn":1200,"len":30.22,"ps":"2026-05-17","pf":"2026-05-30","as":"2026-05-17","af":"2026-05-20","p":30.22,"g":1,"pr":"SIBS1"},{"sn":"4","f":"MHA-11.1","t":"MHA-11","dn":1200,"len":113.2,"ps":"2026-06-19","pf":"2026-07-03","as":"2026-06-01","af":"2026-06-09","p":113.2,"g":1,"pr":"SIBS2"},{"sn":"5","f":"MHB-3.1","t":"MHB-3","dn":1200,"len":33.4,"ps":"2026-06-13","pf":"2026-06-28","as":"2026-06-20","af":"2026-06-23","p":33.4,"g":1,"pr":"SIBS1"},{"sn":"6","f":"MHA-10.1","t":"MHA-10","dn":1200,"len":90.9,"ps":"2026-06-29","pf":"2026-07-19","as":"2026-07-06","af":"2026-07-15","p":90.9,"g":1,"pr":"SIBS2"},{"sn":"7","f":"MHA-5","t":"MHA-5.1","dn":1200,"len":130.4,"ps":"","pf":"","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"8","f":"MHA-2","t":"MHA-5","dn":1800,"len":777.2,"ps":"2025-12-13","pf":"2026-03-10","as":"2025-12-30","af":"2026-02-24","p":777.2,"g":1,"pr":"SIBS2"},{"sn":"9","f":"MHA-6","t":"MHA-5","dn":1800,"len":231.7,"ps":"2026-03-11","pf":"2026-04-16","as":"2026-03-22","af":"2026-04-08","p":231.7,"g":1,"pr":"SIBS2"},{"sn":"10","f":"MHA-6","t":"MHA-7","dn":1800,"len":365.44,"ps":"2026-04-18","pf":"2026-06-02","as":"2026-04-21","af":"2026-05-16","p":365.44,"g":1,"pr":"SIBS2"},{"sn":"11","f":"MHA-9","t":"MHA-10","dn":1800,"len":187.5,"ps":"2026-06-03","pf":"2026-07-07","as":"2026-06-08","af":"2026-06-23","p":187.5,"g":1,"pr":"SIBS2"},{"sn":"12","f":"MHA-9","t":"MHA-7","dn":1800,"len":518.4,"ps":"2026-07-07","pf":"2026-09-16","as":"2026-07-11","af":"2026-08-21","p":518.4,"g":0,"pr":"SIBS2"},{"sn":"13","f":"MHB-1","t":"MHA-20","dn":1600,"len":113.2,"ps":"2025-12-22","pf":"2026-01-18","as":"2025-12-31","af":"2026-01-05","p":113.2,"g":1,"pr":"SIBS1"},{"sn":"14","f":"MHB-1","t":"MHB-2","dn":1600,"len":252.3,"ps":"2026-01-19","pf":"2026-02-24","as":"2026-01-15","af":"2026-01-30","p":252.3,"g":1,"pr":"SIBS1"},{"sn":"15","f":"MHB-3","t":"MHB-2","dn":1600,"len":205.7,"ps":"2026-03-25","pf":"2026-04-30","as":"2026-02-12","af":"2026-02-22","p":205.7,"g":1,"pr":"SIBS1"},{"sn":"16","f":"MHA-19A","t":"MHSA-20","dn":1600,"len":97,"ps":"2026-02-25","pf":"2026-03-19","as":"2026-03-15","af":"2026-03-20","p":97,"g":1,"pr":"SIBS2"},{"sn":"17","f":"MHA-19A","t":"MHA-19","dn":1600,"len":176.1,"ps":"2026-03-20","pf":"2026-04-19","as":"2026-03-25","af":"2026-04-04","p":176.1,"g":1,"pr":"SIBS2"},{"sn":"18","f":"MHA-18","t":"MHA-19","dn":1600,"len":132.5,"ps":"2026-05-24","pf":"2026-06-19","as":"2026-04-15","af":"2026-04-20","p":132.5,"g":1,"pr":"SIBS2"},{"sn":"19","f":"MHA-18","t":"MHA-17","dn":1600,"len":176.6,"ps":"2026-04-20","pf":"2026-05-23","as":"2026-04-28","af":"2026-05-06","p":176.6,"g":1,"pr":"SIBS2"},{"sn":"20","f":"MHA-13","t":"MHA-12","dn":1600,"len":205.77,"ps":"2026-05-27","pf":"2026-07-01","as":"2026-05-19","af":"2026-05-28","p":205.77,"g":1,"pr":"SIBS2"},{"sn":"21","f":"MHA-13","t":"MHA-14","dn":1600,"len":372.2,"ps":"2026-07-02","pf":"2026-08-17","as":"2026-06-09","af":"2026-06-29","p":372.2,"g":1,"pr":"SIBS2"},{"sn":"22","f":"MHA-16","t":"MHA-17","dn":1600,"len":156,"ps":"2026-07-22","pf":"2026-08-21","as":"2026-07-16","af":"2026-07-26","p":156,"g":1,"pr":"SIBS2"},{"sn":"23","f":"MHA-16","t":"MHA-14","dn":1600,"len":542.2,"ps":"2026-07-26","pf":"2026-10-05","as":"2026-09-09","af":"2026-09-10","p":8,"g":0,"pr":"SIBS2"},{"sn":"24","f":"MHA-11","t":"MHA-10","dn":1600,"len":543,"ps":"2026-10-06","pf":"2026-11-11","as":"2026-09-10","af":"2026-09-10","p":0,"g":0,"pr":"SIBS2"},{"sn":"25","f":"MHA-11","t":"MHA-12","dn":1600,"len":243.8,"ps":"2026-11-12","pf":"2027-01-19","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"26","f":"MHA-16","t":"MHA-16.1","dn":1400,"len":69.8,"ps":"2026-04-21","pf":"2026-05-10","as":"2026-04-06","af":"2026-04-13","p":69.8,"g":1,"pr":"SIBS2"},{"sn":"27","f":"MHB-07","t":"MHB-08","dn":1400,"len":376,"ps":"2026-07-30","pf":"2026-08-11","as":"2026-07-09","af":"2026-08-21","p":376,"g":1,"pr":"SIBS1"},{"sn":"28","f":"MHB-09","t":"MHB-8","dn":1400,"len":170.1,"ps":"2026-10-08","pf":"2026-11-06","as":"2026-08-10","af":"2026-08-20","p":170.1,"g":1,"pr":"SIBS1"},{"sn":"29","f":"MHB-07","t":"MHB-06","dn":1400,"len":279.1,"ps":"2026-08-11","pf":"2026-09-14","as":"2026-09-03","af":"2026-09-10","p":83,"g":0,"pr":"SIBS1"},{"sn":"30","f":"MHB-09","t":"MHB-10","dn":1400,"len":398.2,"ps":"2026-11-07","pf":"2026-12-22","as":"2026-09-03","af":"2026-09-10","p":107,"g":0,"pr":"SIBS1"},{"sn":"31","f":"MHB-03","t":"MHB-04","dn":1400,"len":399.6,"ps":"2026-08-22","pf":"2026-10-07","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"32","f":"MHB-05","t":"MHB-06","dn":1400,"len":281.2,"ps":"2026-09-15","pf":"2026-10-21","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"33","f":"MHB-05","t":"MHB-04","dn":1400,"len":366.9,"ps":"2026-10-22","pf":"2026-12-04","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"34","f":"MHB-11","t":"MHB-11.1","dn":1400,"len":45.3,"ps":"2026-12-05","pf":"2026-12-19","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"35","f":"MHB-11","t":"MHB-10","dn":1400,"len":306.3,"ps":"2026-12-20","pf":"2027-01-29","as":"","af":"","p":0,"g":0,"pr":"SIBS1"}];
+/* Shaft positions traced from the SIBS TS-01 and TS-02 progress sheets
+   (8 Sept 2026 issue), joined at MHA-20. Sheet units, not metres. Edit an
+   X/Y pair to move a shaft; add a pair to bring a new shaft onto the sheet. */
+const NODES={"MHB-11.1":[0,35],"MHB-11":[70,4],"MHB-10":[318,0],"MHB-9.1":[436,128],"MHB-9":[478,68],"MHB-8":[581,91],"MHB-7":[788,189],"MHB-6":[931,277],"MHB-5":[1080,369],"MHB-4":[1332,431],"MHB-3":[1464,615],"MHB-3.1":[1484,688],"MHB-2":[1581,692],"MHA-20.1":[1602,872],"MHB-1":[1635,825],"MHA-20":[1677,889],"MHA-19A":[1721,888],"MHA-19":[1762,953],"MHA-18":[1826,951],"MHA-17":[1891,922],"MHA-16.1":[1951,859],"MHA-16":[1958,910],"MHA-14":[2177,1037],"MHA-13":[2292,1108],"MHA-12.1":[2312,1166],"MHA-12":[2373,1145],"MHA-11.1":[2432,1126],"MHA-11":[2475,1173],"MHA-10.1":[2689,1284],"MHA-10":[2696,1232],"MHA-9":[2779,1242],"MHA-7":[2999,1250],"MHA-6":[3155,1262],"MHA-5.1":[3245,1316],"MHA-5":[3251,1272],"MHA-2":[3583,1325]};
+/* Live copy. Filled in for you by "Download the page file"; blank means the
+   file just works on its own, saving to this browser only. */
+const GH={owner:'',repo:'',branch:'main',path:'data.json'};
+const RO=false;
+const ISSUED='2026-09-10';
+const KEY='mtbm:sibs:report-20260909-r2';
+let D=[],AS='',mode='none',bkDate='';
+const $=id=>document.getElementById(id);
+let localPub='',VIEWER=false;
+const n=(v,d=1)=>Number(v||0).toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
+const iso=d=>d.toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const dd=(a,b)=>(a&&b)?Math.round((new Date(b)-new Date(a))/864e5):0;
+const addD=(d,k)=>{const x=new Date(d);x.setDate(x.getDate()+k);return iso(x)};
+const fmt=d=>d?new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- storage ---------- */
+const Store={
+  async get(k){
+    if(window.storage){try{const r=await window.storage.get(k);mode='chat';return r&&r.value}catch(e){mode='chat';return null}}
+    try{const v=localStorage.getItem(k);mode='browser';return v}catch(e){mode='none';return null}
+  },
+  async set(k,v){
+    if(window.storage){try{await window.storage.set(k,v);mode='chat';return true}catch(e){}}
+    try{localStorage.setItem(k,v);mode='browser';return true}catch(e){mode='none';return false}
+  }
+};
+const modeText=()=>mode==='chat'?'saved in this chat':mode==='browser'?'saved in this browser':'not saving — download a backup before you close this';
+let sv,prevPayload=null,bkSnooze=false;
+function save(){
+  setSave('Saving…');clearTimeout(sv);
+  sv=setTimeout(async()=>{
+    const payload=JSON.stringify({d:D,as:AS,bk:bkDate,pub:localPub});
+    if(prevPayload&&prevPayload!==payload){try{await Store.set(KEY+':prev',prevPayload)}catch(e){}}
+    const ok=await Store.set(KEY,payload);
+    if(ok)prevPayload=payload;
+    setSave(ok?'Saved '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' · '+modeText():'Not saved · '+modeText(),!ok);
+    storeBox();bkCheck();
+  },400);
+}
+function bkCheck(){
+  if(RO){$('bkBanner').classList.remove('on');$('bkHead').textContent='';return}
+  const age=bkDate?dd(bkDate,today()):null;
+  $('bkHead').textContent=bkDate?('Last backup '+fmt(bkDate)+(age>0?' · '+age+' days ago':' · today')):'No backup taken yet';
+  $('bkHead').className='savestate'+(!bkDate||age>=7?' warn':'');
+  const stale=(!bkDate||age>=7)&&!bkSnooze;
+  $('bkBanner').classList.toggle('on',stale);
+  $('bkMsg').textContent=bkDate
+    ?'Your last backup was '+fmt(bkDate)+', '+age+' days ago. Take a fresh one so nothing depends on this browser alone.'
+    :'No backup has been downloaded yet. If this browser is cleared or the machine is rebuilt, the register goes with it.';
+}
+$('bkLater').onclick=()=>{bkSnooze=true;bkCheck()};
+$('bkNow').onclick=()=>$('xJson').click();
+function setSave(t,w){const e=$('saveState');e.textContent=t;e.className='savestate'+(w?' warn':'')}
+function storeBox(){
+  const t=mode==='chat'
+    ?['Running inside the chat','Edits are held against this conversation. Download the file and it keeps its own copy in whatever browser you open it in — that copy does not expire with the chat.']
+    :mode==='browser'
+    ?['Running from your own copy','Edits save into this browser against this file\u2019s location. Keep the file where it is; moving it to another folder or drive, or clearing site data, starts a fresh store. Download a backup weekly.']
+    :['Storage is blocked','This browser will not let the page store anything, usually private browsing or a policy setting. Everything works, but it is gone when the tab closes. Download a backup before you finish.'];
+  $('storeBox').innerHTML='<h3>'+t[0]+'</h3><p class="sub" style="margin-top:4px">'+t[1]+'</p>'+
+    (bkDate?'<p class="note">Last backup downloaded '+fmt(bkDate)+'.</p>':'<p class="note">No backup downloaded yet.</p>');
+}
+
+/* ---------- calculations ---------- */
+function calc(d){
+  const len=+d.len||0,p=Math.max(0,+d.p||0);
+  const pct=len?Math.min(1,p/len):0;
+  const done=len>0&&p>=len-0.005;
+  const days=dd(d.as,d.af)||(d.as&&!d.af?Math.max(0,dd(d.as,AS)):0);
+  const rate=days>0?p/days:0;
+  const delay=(d.af&&d.pf)?dd(d.pf,d.af):null;
+  let status='idle',label='Not started';
+  if(done&&d.g){status='done';label='Complete + grouted'}
+  else if(done){status='bored';label='Bored'}
+  else if(p>0){status='run';label='In progress'}
+  return{len,p,pct,done,days,rate,delay,status,label,rem:Math.max(0,len-p)};
+}
+function group(l){
+  const t={len:0,p:0,days:0,cnt:0,done:0};
+  l.forEach(d=>{const c=calc(d);t.len+=c.len;t.p+=c.p;t.days+=c.days;t.cnt++;if(c.done)t.done++});
+  t.rem=t.len-t.p;t.pct=t.len?t.p/t.len:0;t.rate=t.days?t.p/t.days:0;return t;
+}
+function cumAt(date,plan){
+  return D.reduce((s,d)=>{
+    const len=+d.len||0,a=plan?d.ps:d.as,b=plan?d.pf:(d.af||AS),q=plan?len:Math.max(0,+d.p||0);
+    if(!a||!b||!len||date<a)return s;
+    if(date>=b)return s+q;
+    return s+q*dd(a,date)/Math.max(1,dd(a,b));
+  },0);
+}
+const dnOrder=()=>[...new Set(D.map(d=>+d.dn))];
+
+/* ---------- entry sheet ---------- */
+const COLS=[
+  {k:'f',   h:'Launch Shaft',       t:'text',   w:92},
+  {k:'t',   h:'Receiving Shaft',    t:'text',   w:92},
+  {k:'dn',  h:'DN',                 t:'number', w:58},
+  {k:'len', h:'Total Drive Length', t:'number', w:78},
+  {k:'ps',  h:'Plan Start',         t:'date',   w:124},
+  {k:'pf',  h:'Plan Finish',        t:'date',   w:124},
+  {k:'as',  h:'Actual Start',       t:'date',   w:124},
+  {k:'af',  h:'Actual Finish',      t:'date',   w:124},
+  {k:'p',   h:'Current Progress',   t:'number', w:78},
+  {k:'g',   h:'Grouting',           t:'select', w:76},
+  {k:'pr',  h:'Project',            t:'text',   w:64}
+];
+function sheet(){
+  let html='<thead><tr><th>S. No</th>'+
+    COLS.map(c=>'<th'+(['dn','len','p'].includes(c.k)?' class="n"':'')+'>'+c.h+'</th>').join('')+
+    '<th class="grp n">Days</th><th class="grp n">m / Day</th><th class="grp n">Completed %</th><th class="grp n">Delay</th><th class="grp">Status</th><th class="grp">Update</th></tr></thead><tbody>';
+  dnOrder().forEach(dn=>{
+    const idx=D.map((d,i)=>[d,i]).filter(([d])=>+d.dn===dn).map(([,i])=>i);
+    const g=group(idx.map(i=>D[i]));
+    html+='<tr class="band"><td colspan="18">DN-'+dn+' · '+idx.length+' drives · '+n(g.len,2)+' m</td></tr>';
+    idx.forEach(i=>{
+      const d=D[i],c=calc(d);
+      html+='<tr data-row="'+i+'"><td class="sn">'+esc(d.sn)+'</td>'+
+        '<td class="pad">'+esc(d.f)+'</td><td class="pad">'+esc(d.t)+'</td>'+
+        '<td class="pad n">'+esc(d.dn)+'</td><td class="pad n">'+n(c.len,2)+'</td>'+
+        '<td class="pad">'+fmt(d.ps)+'</td><td class="pad">'+fmt(d.pf)+'</td>'+
+        '<td class="pad">'+fmt(d.as)+'</td><td class="pad">'+fmt(d.af)+'</td>'+
+        '<td class="prog">'+n(c.p,2)+'</td>'+
+        '<td class="pad">'+(d.g?'Done':'—')+'</td><td class="pad">'+esc(d.pr||'—')+'</td>'+
+        '<td class="calc">'+(c.days||'—')+'</td>'+
+        '<td class="calc">'+(c.rate?n(c.rate,2):'—')+'</td>'+
+        '<td class="calc">'+n(c.pct*100,1)+'%</td>'+
+        '<td class="calc">'+(c.delay===null?'—':'<span class="'+(c.delay>0?'late':'early')+'">'+(c.delay>0?'+':'')+c.delay+'</span>')+'</td>'+
+        '<td class="pad"><span class="chip c-'+c.status+'">'+c.label+'</span></td>'+
+        '<td class="pad" style="white-space:nowrap">'+
+          '<button class="mini pri" data-prog="'+i+'">Progress</button>'+
+          '<button class="mini" data-edit="'+i+'">Edit</button>'+
+          '<button class="rowdel" data-del="'+i+'" title="Remove this drive">×</button></td></tr>';
+    });
+    html+='<tr class="sub"><td></td><td colspan="3">DN-'+dn+' subtotal</td><td class="n">'+n(g.len,2)+'</td><td colspan="3"></td>'+
+      '<td class="n">'+g.done+' of '+g.cnt+' bored</td><td class="n">'+n(g.p,2)+'</td><td colspan="2"></td>'+
+      '<td class="n">'+g.days+'</td><td class="n">'+n(g.rate,2)+'</td><td class="n">'+n(g.pct*100,1)+'%</td><td colspan="3"></td></tr>';
+  });
+  const T=group(D);
+  html+='<tr class="band"><td></td><td colspan="3">Total cumulative · '+T.cnt+' drives</td><td class="n">'+n(T.len,2)+'</td><td colspan="3"></td>'+
+    '<td class="n">'+T.done+' bored</td><td class="n">'+n(T.p,2)+'</td><td colspan="2"></td>'+
+    '<td class="n">'+T.days+'</td><td class="n">'+n(T.rate,2)+'</td><td class="n">'+n(T.pct*100,1)+'%</td><td colspan="3"></td></tr>';
+  $('tSheet').innerHTML=html+'</tbody>';
+}
+$('tSheet').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.prog!==undefined)return openProg(+b.dataset.prog);
+  if(b.dataset.edit!==undefined)return openEdit(+b.dataset.edit);
+  if(b.dataset.del!==undefined){
+    const i=+b.dataset.del;
+    if(!confirm('Remove '+(D[i].f||'')+' → '+(D[i].t||'')+' from the register?'))return;
+    D.splice(i,1);save();render();
+  }
+});
+$('tSheet').addEventListener('dblclick',e=>{const tr=e.target.closest('tr[data-row]');if(tr)openEdit(+tr.dataset.row)});
+
+/* ---------- progress dialog ---------- */
+let cur=-1;
+function openProg(i){
+  cur=i;const d=D[i],c=calc(d);
+  $('pgTitle').textContent=d.sn+'. '+d.f+' → '+d.t;
+  $('pgMeta').textContent='DN'+d.dn+' · '+n(c.len,2)+' m drive'+(d.pr?' · '+d.pr:'')+(d.as?' · launched '+fmt(d.as):' · not launched yet');
+  $('pgNow').innerHTML='Recorded now: <b>'+n(c.p,2)+' m</b> of '+n(c.len,2)+' m — '+n(c.pct*100,1)+'%, '+n(c.rem,2)+' m remaining'+
+    '<div class="bar" style="margin-top:7px"><i style="width:'+(c.pct*100)+'%"></i></div>';
+  $('pgDate').value=AS||today();
+  $('pgMode').value='total';$('pgVal').value='';
+  $('pgGrout').checked=!!d.g;
+  $('pgGroutRow').style.display=c.done?'block':'none';
+  pgPreview();
+  $('ovProg').classList.add('on');setTimeout(()=>$('pgVal').focus(),50);
+}
+function pgPreview(){
+  const d=D[cur];if(!d)return;const c=calc(d);
+  const raw=$('pgVal').value,v=parseFloat(raw);
+  $('pgVal').placeholder=$('pgMode').value==='total'?n(c.p,2):'0.00';
+  if(raw===''||isNaN(v)){$('pgPrev').innerHTML='Enter a figure to see where it puts the drive.';return}
+  const tot=Math.max(0,$('pgMode').value==='total'?v:c.p+v);
+  const add=tot-c.p,capped=Math.min(tot,c.len),pc=c.len?capped/c.len*100:0;
+  let msg='New total <b>'+n(tot,2)+' m</b> · '+n(pc,1)+'% · '+(add>=0?'+':'')+n(add,2)+' m since the last figure';
+  if(tot>c.len+0.005)msg+='<br><span class="late">That is '+n(tot-c.len,2)+' m past the drive length of '+n(c.len,2)+' m.</span>';
+  else if(tot>=c.len-0.005)msg+='<br><span class="early">Holes through — the actual finish date will be set to '+fmt($('pgDate').value)+'.</span>';
+  else if(!d.as)msg+='<br>The actual start date will be set to '+fmt($('pgDate').value)+'.';
+  $('pgPrev').innerHTML=msg;
+}
+$('pgVal').addEventListener('input',pgPreview);
+$('pgMode').addEventListener('change',()=>{$('pgVal').value='';pgPreview()});
+$('pgDate').addEventListener('change',pgPreview);
+$('pgSave').onclick=()=>{
+  const d=D[cur];if(!d)return;
+  const c=calc(d),date=$('pgDate').value||AS,v=parseFloat($('pgVal').value);
+  if(!isNaN(v)){
+    const tot=Math.max(0,$('pgMode').value==='total'?v:c.p+v);
+    if(tot>c.len+0.005&&!confirm('That is past the drive length of '+n(c.len,2)+' m. Save anyway?'))return;
+    d.p=Math.round(tot*100)/100;
+    if(d.p>0&&!d.as)d.as=date;
+    if(d.p>=(+d.len||0)-0.005){if(!d.af)d.af=date}else d.af='';
+    if(date>AS){AS=date;$('asAt').value=AS}
+  }
+  if($('pgGroutRow').style.display!=='none')d.g=$('pgGrout').checked?1:0;
+  close();save();render();
+};
+/* ---------- edit dialog ---------- */
+const EF=[['efSn','sn'],['efFrom','f'],['efTo','t'],['efDn','dn'],['efLen','len'],['efPs','ps'],['efPf','pf'],['efAs','as'],['efAf','af'],['efP','p'],['efPr','pr']];
+function openEdit(i){
+  cur=i;const d=D[i];
+  $('efTitle').textContent='Edit '+(d.f||'new drive')+(d.t?' → '+d.t:'');
+  $('efMeta').textContent='Every field on this drive\u2019s row. The calculated columns follow from these.';
+  EF.forEach(([id,k])=>$(id).value=d[k]??'');
+  $('efG').value=d.g?'1':'0';
+  $('ovEdit').classList.add('on');setTimeout(()=>$('efFrom').focus(),50);
+}
+$('efSave').onclick=()=>{
+  const d=D[cur];if(!d)return;
+  EF.forEach(([id,k])=>{const el=$(id);d[k]=el.type==='number'?(el.value===''?0:+el.value):el.value});
+  d.g=+$('efG').value;
+  close();save();render();
+};
+$('efDel').onclick=()=>{
+  const d=D[cur];if(!d)return;
+  if(!confirm('Remove '+(d.f||'')+' → '+(d.t||'')+' from the register?'))return;
+  D.splice(cur,1);close();save();render();
+};
+function close(){$('ovProg').classList.remove('on');$('ovEdit').classList.remove('on');cur=-1}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)close()}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+$('addRow').onclick=()=>{
+  const last=D[D.length-1]||{};
+  const nextSn=D.reduce((m,d)=>Math.max(m,parseInt(d.sn,10)||0),0)+1;
+  D.push({sn:String(nextSn),f:'',t:'',dn:+last.dn||1200,len:0,ps:'',pf:'',as:'',af:'',p:0,g:0,pr:last.pr||''});
+  save();render();openEdit(D.length-1);
+};
+$('renumber').onclick=()=>{
+  if(!confirm('Renumber every drive 1 to '+D.length+' in the order shown?'))return;
+  D.forEach((d,i)=>d.sn=String(i+1));save();render();
+};
+
+/* ---------- dashboard ---------- */
+function render(){try{render_()}catch(e){
+  $('recBar').textContent='Something in the data could not be drawn ('+e.message+'). Your figures are safe — download a backup from Save & export and send it on so it can be looked at.';
+  $('recBar').classList.add('on');
+  try{sheet()}catch(x){}
+}}
+function render_(){
+  const T=group(D);
+  const run=D.filter(d=>{const c=calc(d);return c.p>0&&!c.done});
+  const idle=D.filter(d=>calc(d).p===0);
+  const doneN=D.filter(d=>calc(d).done).length;
+  const grouted=D.filter(d=>calc(d).done&&d.g).length;
+  $('asAtPrint').textContent='Data date '+fmt(AS);
+  $('kpis').innerHTML=[
+    ['hi',n(T.pct*100,1)+'%','Bored by length',n(T.p,0)+' of '+n(T.len,0)+' m',''],
+    ['',n(T.len,0)+' m','Total drive length',D.length+' drives in the register',''],
+    ['',n(T.p,0)+' m','Completed length',doneN+' drives holed through, '+grouted+' grouted','var(--comp)'],
+    ['',n(T.rem,0)+' m','Remaining length',(D.length-doneN)+' drives outstanding',''],
+    ['',run.length,'Boring now',idle.length+' yet to launch',''],
+    ['',n(T.rate,1)+' m','Average per boring day',T.days+' boring days recorded','']
+  ].map(k=>'<div class="kpi '+k[0]+'"><b class="num"'+(k[4]?' style="color:'+k[4]+'"':'')+'>'+k[1]+'</b><span>'+k[2]+'</span><small>'+k[3]+'</small></div>').join('');
+  ring(T);contracts();alignMap();dnChart();prChart();moChart();drChart();curve();
+  $('tRun').innerHTML=run.length
+    ?'<thead><tr><th>S/N</th><th>Drive</th><th class="n">DN</th><th class="n">Total m</th><th class="n">Bored m</th><th class="n">Left m</th><th style="width:110px">Progress</th><th class="n">m/day</th><th>Started</th></tr></thead><tbody>'+
+     run.map(d=>{const c=calc(d);
+      return '<tr><td>'+esc(d.sn)+'</td><td>'+esc(d.f)+' → '+esc(d.t)+'</td><td class="n">'+d.dn+'</td><td class="n">'+n(c.len,1)+'</td><td class="n">'+n(c.p,1)+
+      '</td><td class="n">'+n(c.rem,1)+'</td><td><div class="bar"><i style="width:'+(c.pct*100)+'%"></i></div></td><td class="n">'+n(c.rate,1)+'</td><td>'+fmt(d.as)+'</td></tr>'}).join('')+'</tbody>'
+    :'<tbody><tr><td class="sub">No drive is boring at the data date.</td></tr></tbody>';
+  sumTable('tDn','Diameter',dnOrder().sort((a,b)=>a-b).map(x=>['DN-'+x,D.filter(d=>+d.dn===x)]));
+  sumTable('tProj','Contract',[...new Set(D.map(d=>d.pr).filter(Boolean))].sort().map(p=>[p,D.filter(d=>d.pr===p)]));
+  const late=D.map(d=>[d,calc(d)]).filter(([,c])=>c.delay!==null&&c.delay>0).sort((a,b)=>b[1].delay-a[1].delay);
+  $('tDelay').innerHTML=late.length
+    ?'<thead><tr><th>S/N</th><th>Drive</th><th class="n">DN</th><th>Baseline finish</th><th>Actual finish</th><th class="n">Days late</th><th class="n">m/day</th></tr></thead><tbody>'+
+     late.map(([d,c])=>'<tr><td>'+esc(d.sn)+'</td><td>'+esc(d.f)+' → '+esc(d.t)+'</td><td class="n">'+d.dn+'</td><td>'+fmt(d.pf)+'</td><td>'+fmt(d.af)+
+      '</td><td class="n late">+'+c.delay+'</td><td class="n">'+n(c.rate,1)+'</td></tr>').join('')+'</tbody>'
+    :'<tbody><tr><td class="sub">Nothing finished behind baseline.</td></tr></tbody>';
+  sheet();gantt();
+}
+function sumTable(id,head,rows){
+  const T=group(D);
+  $(id).innerHTML='<thead><tr><th>'+head+'</th><th class="n">Total m</th><th class="n">Bored m</th><th class="n">Left m</th><th class="n">%</th><th class="n">Drives</th><th class="n">Done</th><th class="n">Days</th><th class="n">m/day</th></tr></thead><tbody>'+
+    rows.filter(r=>r[1].length).map(([nm,l])=>{const g=group(l);
+      return '<tr><td>'+esc(nm)+'</td><td class="n">'+n(g.len,2)+'</td><td class="n">'+n(g.p,2)+'</td><td class="n">'+n(g.rem,2)+'</td><td class="n">'+n(g.pct*100,1)+
+      '</td><td class="n">'+g.cnt+'</td><td class="n">'+g.done+'</td><td class="n">'+g.days+'</td><td class="n">'+n(g.rate,2)+'</td></tr>'}).join('')+
+    '</tbody><tfoot><tr><td>All drives</td><td class="n">'+n(T.len,2)+'</td><td class="n">'+n(T.p,2)+'</td><td class="n">'+n(T.rem,2)+'</td><td class="n">'+n(T.pct*100,1)+
+    '</td><td class="n">'+T.cnt+'</td><td class="n">'+T.done+'</td><td class="n">'+T.days+'</td><td class="n">'+n(T.rate,2)+'</td></tr></tfoot>';
+}
+function ring(T){
+  const R=52,C=2*Math.PI*R;
+  $('ring').innerHTML='<svg viewBox="0 0 140 140" style="width:100%;max-width:185px;height:auto;display:block;margin:12px auto 0">'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="var(--soft)" stroke-width="15"/>'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="var(--bore)" stroke-width="15" stroke-dasharray="'+(C*T.pct).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 70 70)"/>'+
+    '<text x="70" y="70" text-anchor="middle" font-size="27" font-weight="600" fill="var(--ink)" style="font-variant-numeric:tabular-nums">'+n(T.pct*100,1)+'%</text>'+
+    '<text x="70" y="88" text-anchor="middle" font-size="11.5" fill="var(--ink2)" font-weight="500">bored</text></svg>';
+  $('ringNote').textContent=n(T.p,0)+' m complete, '+n(T.rem,0)+' m remaining across '+T.cnt+' drives.';
+}
+function barPair(host,rows,acc){
+  if(!rows.length){$(host).innerHTML='';return}
+  const max=Math.max(...rows.map(r=>r[1].len),1),W=600,rh=48,H=rows.length*rh+4,BW=W-176;
+  $(host).innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+rows.map(([nm,g],i)=>{
+    const y=i*rh+3,tw=BW*g.len/max,cw=BW*g.p/max;
+    return '<text x="0" y="'+(y+12)+'" font-size="12" font-weight="600" fill="var(--ink)">'+esc(nm)+'</text>'+
+      '<text x="0" y="'+(y+29)+'" font-size="11" fill="var(--ink2)">'+g.cnt+' drives</text>'+
+      '<rect x="62" y="'+y+'" width="'+Math.max(1,tw).toFixed(1)+'" height="14" fill="var(--total)" rx="2"/>'+
+      '<rect x="62" y="'+(y+17)+'" width="'+Math.max(1,cw).toFixed(1)+'" height="14" fill="'+acc+'" rx="2"/>'+
+      '<text x="'+(W-2)+'" y="'+(y+11)+'" font-size="11" font-weight="600" fill="var(--ink)" text-anchor="end" style="font-variant-numeric:tabular-nums">'+n(g.len,0)+' m total</text>'+
+      '<text x="'+(W-2)+'" y="'+(y+28)+'" font-size="11" font-weight="600" fill="'+acc+'" text-anchor="end" style="font-variant-numeric:tabular-nums">'+n(g.p,0)+' m · '+n(g.pct*100,0)+'%</text>'}).join('')+'</svg>';
+}
+function legend(host,items){
+  $(host).innerHTML=items.map(([c,t])=>'<span><i class="sw" style="background:'+c+'"></i>'+t+'</span>').join('');
+}
+function contracts(){
+  const names=[...new Set(D.map(d=>d.pr).filter(Boolean))].sort();
+  const acc=['var(--comp2)','var(--comp)'];
+  $('contractRow').innerHTML=names.map((nm,k)=>{
+    const list=D.filter(d=>d.pr===nm),g=group(list),c=acc[k%2];
+    const run=list.filter(d=>{const x=calc(d);return x.p>0&&!x.done}).length;
+    const R=44,C=2*Math.PI*R;
+    const dnRows=dnOrder().sort((a,b)=>a-b).map(x=>[x,group(list.filter(d=>+d.dn===x))]).filter(r=>r[1].cnt);
+    return '<div class="card cpanel">'+
+      '<div class="cphead" style="background:'+c+'"><h3>'+esc(nm)+'</h3><span>'+g.cnt+' drives · '+g.done+' holed through</span></div>'+
+      '<div class="cpbody">'+
+        '<svg viewBox="0 0 120 120" style="width:120px;height:120px;flex:0 0 120px">'+
+          '<circle cx="60" cy="60" r="'+R+'" fill="none" stroke="var(--rule)" stroke-width="13"/>'+
+          '<circle cx="60" cy="60" r="'+R+'" fill="none" stroke="'+c+'" stroke-width="13" stroke-dasharray="'+(C*g.pct).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 60 60)"/>'+
+          '<text x="60" y="62" text-anchor="middle" font-size="23" font-weight="700" fill="var(--ink)" style="font-variant-numeric:tabular-nums">'+n(g.pct*100,1)+'%</text>'+
+          '<text x="60" y="78" text-anchor="middle" font-size="10.5" font-weight="500" fill="var(--ink2)">bored</text></svg>'+
+        '<div class="cpstats">'+
+          '<div class="cprow"><span>Total drive length</span><b>'+n(g.len,0)+' m</b></div>'+
+          '<div class="cprow"><span>Completed length</span><b style="color:'+c+'">'+n(g.p,0)+' m</b></div>'+
+          '<div class="cprow"><span>Remaining length</span><b>'+n(g.rem,0)+' m</b></div>'+
+          '<div class="cprow"><span>Boring now</span><b>'+run+' of '+(g.cnt-g.done)+' outstanding</b></div>'+
+          '<div class="cprow"><span>Average rate</span><b>'+n(g.rate,1)+' m/day</b></div>'+
+        '</div></div>'+
+      '<div class="cpdn">'+dnRows.map(([x,gg])=>
+        '<div class="l"><span>DN-'+x+' · '+gg.cnt+' drives</span><em>'+n(gg.p,0)+' / '+n(gg.len,0)+' m · '+n(gg.pct*100,0)+'%</em></div>'+
+        '<div class="bar"><i style="width:'+(gg.pct*100)+'%;background:'+c+'"></i></div>').join('')+
+      '</div></div>';
+  }).join('');
+}
+function dnChart(){
+  barPair('dnChart',dnOrder().sort((a,b)=>a-b).map(x=>['DN-'+x,group(D.filter(d=>+d.dn===x))]).filter(r=>r[1].cnt),'var(--comp)');
+  legend('dnLeg',[['var(--total)','Total drive length'],['var(--comp)','Completed length']]);
+}
+function prChart(){
+  barPair('prChart',[...new Set(D.map(d=>d.pr).filter(Boolean))].sort().map(p=>[p,group(D.filter(d=>d.pr===p))]),'var(--comp2)');
+  legend('prLeg',[['var(--total)','Total drive length'],['var(--comp2)','Completed length']]);
+}
+function moChart(){
+  const m={};
+  D.forEach(d=>{const st=d.as,en=d.af||AS,p=Math.max(0,+d.p||0);
+    if(!st||!p)return;
+    const span=Math.max(1,dd(st,en)),per=p/span;
+    for(let i=0;i<span;i++){const dt=addD(st,i);if(dt>AS)break;const k=dt.slice(0,7);m[k]=(m[k]||0)+per}});
+  const keys=Object.keys(m).sort().slice(-14);
+  if(!keys.length){$('moChart').innerHTML='<p class="note">No actual dates recorded yet.</p>';return}
+  const max=Math.max(...keys.map(k=>m[k]),1),W=600,H=190,pad={l:44,r:6,t:12,b:34},bw=(W-pad.l-pad.r)/keys.length;
+  let g='';for(let i=0;i<=3;i++){const v=max*i/3,y=H-pad.b-(H-pad.t-pad.b)*i/3;
+    g+='<line x1="'+pad.l+'" x2="'+(W-pad.r)+'" y1="'+y+'" y2="'+y+'" stroke="var(--rule)"/><text x="'+(pad.l-6)+'" y="'+(y+4)+'" font-size="10" fill="var(--ink3)" text-anchor="end">'+n(v,0)+'</text>'}
+  $('moChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+keys.map((k,i)=>{
+    const hgt=(H-pad.t-pad.b)*m[k]/max,x=pad.l+i*bw+bw*0.16,w=bw*0.68,y=H-pad.b-hgt;
+    const lab=new Date(k+'-01').toLocaleDateString('en-GB',{month:'short'});
+    return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1,hgt).toFixed(1)+'" fill="var(--mo)" rx="2"><title>'+k+' — '+n(m[k],0)+' m</title></rect>'+
+      '<text x="'+(x+w/2).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" font-size="10.5" font-weight="600" fill="var(--ink)" text-anchor="middle" style="font-variant-numeric:tabular-nums">'+n(m[k],0)+'</text>'+
+      '<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-19)+'" font-size="10.5" fill="var(--ink2)" text-anchor="middle">'+lab+'</text>'+
+      (i===0||k.slice(5)==='01'?'<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-7)+'" font-size="9.5" fill="var(--ink3)" text-anchor="middle">'+k.slice(2,4)+'</text>':'')}).join('')+'</svg>';
+}
+function drChart(){
+  if(!D.length){$('drChart').innerHTML='';return}
+  const col={done:'var(--ok)',bored:'var(--comp2)',run:'var(--amber)',idle:'var(--idle)'};
+  const W=980,H=170,pad={l:34,r:6,t:10,b:30},bw=(W-pad.l-pad.r)/D.length,ch=H-pad.t-pad.b;
+  let g='';for(let i=0;i<=4;i++){const y=H-pad.b-ch*i/4;
+    g+='<line x1="'+pad.l+'" x2="'+(W-pad.r)+'" y1="'+y+'" y2="'+y+'" stroke="var(--rule)"/><text x="'+(pad.l-6)+'" y="'+(y+4)+'" font-size="10" fill="var(--ink3)" text-anchor="end">'+(i*25)+'%</text>'}
+  $('drChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+D.map((d,i)=>{
+    const c=calc(d),x=pad.l+i*bw+bw*0.13,w=bw*0.74,hgt=ch*c.pct,y=H-pad.b-hgt;
+    return '<rect x="'+x.toFixed(1)+'" y="'+(H-pad.b-ch)+'" width="'+w.toFixed(1)+'" height="'+ch+'" fill="var(--rule)" rx="1"/>'+
+      '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1,hgt).toFixed(1)+'" fill="'+col[c.status]+'" rx="1"><title>'+esc(d.f)+' → '+esc(d.t)+' · DN'+d.dn+' · '+n(c.p,1)+' of '+n(c.len,1)+' m · '+n(c.pct*100,1)+'%</title></rect>'+
+      '<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-17)+'" font-size="9" fill="var(--ink2)" text-anchor="middle">'+esc(d.sn)+'</text>'+
+      (i===0||+D[i-1].dn!==+d.dn?'<text x="'+x.toFixed(1)+'" y="'+(H-5)+'" font-size="10" font-weight="600" fill="var(--ink)">DN'+d.dn+'</text>':'')}).join('')+'</svg>';
+  legend('drLeg',[[col.done,'Complete + grouted'],[col.bored,'Bored, grouting due'],[col.run,'In progress'],[col.idle,'Not started']]);
+}
+
+/* ---------- alignment map ---------- */
+/* Shaft names are matched loosely against NODES so MHB-09 / MHB-9 and the
+   MHSA-20 typo in the workbook all land on the same manhole. */
+const nodeKey=s=>{
+  const v=String(s||'').trim().toUpperCase().replace(/\s+/g,'').replace(/^MHSA-/,'MHA-');
+  const m=v.match(/^(MH[AB])-0*(\d+(?:\.\d+)?[A-Z]?)$/);
+  return m?m[1]+'-'+m[2]:v;
+};
+function alignMap(){
+  const host=$('mapSvg');if(!host)return;
+  const zEl=$('mapZoom'),z=zEl?(+zEl.value||1):1;
+  host.style.width=(z*100)+'%';
+  const showMh=$('mapMh')?$('mapMh').checked:true,
+        showDn=$('mapDn')?$('mapDn').checked:false,
+        showSn=$('mapSn')?$('mapSn').checked:false,
+        showAr=$('mapLR')?$('mapLR').checked:true;
+  const C={plan:'#E03A2B',run:'#F79009',done:'#12B76A',ink:'#16242C',
+           frame:'#8FA0A9',mag:'#CC00CC',callout:'#FFF6E8',tag:'#AEBBC2'};
+  const dcol=st=>st==='idle'?C.plan:st==='run'?C.run:C.done;
+
+  const seg=[],miss=[],used=new Set();
+  D.forEach(d=>{
+    const ka=nodeKey(d.f),kb=nodeKey(d.t),a=NODES[ka],b=NODES[kb];
+    if(!a||!b){miss.push((d.f||'?')+' \u2192 '+(d.t||'?'));return}
+    used.add(ka);used.add(kb);
+    seg.push({d:d,c:calc(d),ka:ka,kb:kb});
+  });
+  const warn=miss.length?'<span class="mapwarn">'+miss.length+' drive'+(miss.length>1?'s':'')+
+    ' not on the sheet \u2014 '+esc(miss.slice(0,3).join(', '))+(miss.length>3?' and others':'')+
+    '. Add the shaft to NODES in the file, or check the spelling in the register.</span>':'';
+  if(!seg.length){host.innerHTML='<p class="note" style="padding:14px">No drive in the register matches a shaft on the alignment.</p>';
+    $('mapLeg').innerHTML='';$('mapNote').innerHTML=warn;return}
+
+  /* ---- layout: each drive keeps its direction from the TS sheets and takes
+     its length from the register, so spacing is real. The register is a tree
+     (one drive between any two shafts), so walking it from one end places
+     every shaft exactly once. ---- */
+  const keys=[...used],PD={l:66,r:58,t:62,b:62},W=1240,inner=W-PD.l-PD.r;
+  const adj={};
+  seg.forEach(o=>{(adj[o.ka]=adj[o.ka]||[]).push([o.kb,o]);(adj[o.kb]=adj[o.kb]||[]).push([o.ka,o])});
+  const walk=minM=>{
+    const raw={},order=keys.slice().sort((a,b)=>NODES[a][0]-NODES[b][0]);
+    order.forEach(st=>{
+      if(raw[st])return;
+      raw[st]=[NODES[st][0]*2,-NODES[st][1]*2];   /* only the first shaft uses its sheet position */
+      const q=[st];
+      while(q.length){const k=q.shift();
+        (adj[k]||[]).forEach(e=>{const nb=e[0];if(raw[nb])return;
+          const dx=NODES[nb][0]-NODES[k][0],dy=-(NODES[nb][1]-NODES[k][1]),L=Math.hypot(dx,dy)||1;
+          const len=Math.max(+e[1].d.len||0,minM);
+          raw[nb]=[raw[k][0]+dx/L*len,raw[k][1]+dy/L*len];q.push(nb)});
+      }
+    });
+    return raw;
+  };
+  let raw=walk(0),bx0=1e9,bx1=-1e9;
+  keys.forEach(k=>{bx0=Math.min(bx0,raw[k][0]);bx1=Math.max(bx1,raw[k][0])});
+  let sc=inner/Math.max(1,bx1-bx0);
+  raw=walk(22/sc);                  /* a floor of ~22 px so two shafts never touch */
+  bx0=1e9;bx1=-1e9;let by0=1e9;
+  keys.forEach(k=>{bx0=Math.min(bx0,raw[k][0]);bx1=Math.max(bx1,raw[k][0]);by0=Math.min(by0,raw[k][1])});
+  sc=inner/Math.max(1,bx1-bx0);
+  const pos={};
+  keys.forEach(k=>pos[k]=[PD.l+(raw[k][0]-bx0)*sc,PD.t+(raw[k][1]-by0)*sc]);
+  let hy=0;keys.forEach(k=>hy=Math.max(hy,pos[k][1]));
+  const H=Math.round(hy)+PD.b;
+
+  const lw=dn=>Math.max(4,(+dn||1200)/1200*5);
+  const halo='paint-order:stroke;stroke:#fff;stroke-width:3.4;stroke-linejoin:round';
+  const box=(x,y,w,hh,fill,stroke,sw,rx)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+hh+
+    '" fill="'+(fill||'#fff')+'" stroke="'+(stroke||C.ink)+'" stroke-width="'+(sw||1)+'"'+(rx?' rx="'+rx+'"':'')+'/>';
+  const txt=(x,y,t,o)=>{o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.fs||9)+'"'+
+    (o.w?' font-weight="'+o.w+'"':'')+' fill="'+(o.c||C.ink)+'"'+(o.a?' text-anchor="'+o.a+'"':'')+
+    (o.st?' style="'+o.st+'"':'')+'>'+t+'</text>'};
+  const taken=[];
+  const clash=(r,skip)=>r[0]<14||r[1]<14||r[0]+r[2]>W-14||r[1]+r[3]>H-14||
+    taken.some((t,i)=>!(skip&&i>=skip[0]&&i<skip[1])&&!(r[0]+r[2]<t[0]||t[0]+t[2]<r[0]||r[1]+r[3]<t[1]||t[1]+t[3]<r[1]));
+
+  /* ---- frame, title, legend, scale: reserved before anything is placed ---- */
+  let g=box(5,5,W-10,H-10,'#fff',C.frame,1.2)+box(9,9,W-18,H-18,'none',C.frame,0.5);
+  const TW=520,TX=(W-TW)/2;
+  g+=box(TX,9,TW,29,'#fff',C.ink,1.3)+
+     txt(W/2,28,'SIBS-1 &amp; SIBS-2 \u2014 MICRO-TUNNELLING PROGRESS \u00b7 as at '+esc(fmt(AS)),{fs:13,w:700,a:'middle'});
+  taken.push([TX,9,TW,29]);
+  const items=[[C.plan,'line','Not started'],
+               [C.run,'line','Boring in progress'],
+               [C.done,'line','Complete'],
+               [C.done,'dash','Holed through, grouting due'],
+               [C.done,'node','Shaft in use'],
+               ['#fff','node','Shaft not yet used'],
+               [C.ink,'arrow','Boring direction']];
+  const LW=214,LH=34+items.length*17,LX=W-22-LW,LY=H-22-LH;
+  taken.push([LX,LY,LW,LH]);
+  taken.push([PD.l-10,H-46,180,30]);
+
+  /* ---- contract boundary at MHA-20 ---- */
+  if(NODES['MHA-20']&&used.has('MHA-20')){
+    const BX=pos['MHA-20'][0],BY=pos['MHA-20'][1];
+    g+='<line x1="'+BX.toFixed(1)+'" y1="'+(PD.t-4)+'" x2="'+BX.toFixed(1)+'" y2="'+(H-PD.b+28)+
+       '" stroke="'+C.mag+'" stroke-width="1.2" stroke-dasharray="11 5 2 5"/>'+
+       txt(BX-9,PD.t-9,'SIBS-1',{fs:10.5,w:700,a:'end',c:C.mag,st:halo})+
+       txt(BX+9,PD.t-9,'SIBS-2',{fs:10.5,w:700,c:C.mag,st:halo});
+    taken.push([BX-94,PD.t-21,188,15]);
+  }
+
+  /* ---- drives: nothing sits on a line, so the colour reads end to end ---- */
+  const R=9,deg={};
+  seg.forEach(o=>{deg[o.ka]=(deg[o.ka]||0)+1;deg[o.kb]=(deg[o.kb]||0)+1});
+  let lines='',arrows='',faces='';const runs=[],dnLab=[];
+  seg.forEach(o=>{
+    const d=o.d,c=o.c,w=lw(d.dn),col=dcol(c.status);
+    const A=pos[o.ka],B=pos[o.kb];
+    const px=Math.hypot(B[0]-A[0],B[1]-A[1])||1,ux=(B[0]-A[0])/px,uy=(B[1]-A[1])/px;
+    const AH=showAr?12:0,trim=Math.min(R,px*0.3),tEnd=Math.min(R+AH,px*0.45);
+    const ax=A[0]+ux*trim,ay=A[1]+uy*trim,bx=B[0]-ux*tEnd,by=B[1]-uy*tEnd;
+    const tip=esc(d.sn)+'. '+esc(d.f)+' \u2192 '+esc(d.t)+' \u00b7 DN'+esc(d.dn)+' \u00b7 L='+n(c.len,1)+' m \u00b7 '+
+      n(c.p,1)+' m bored ('+n(c.pct*100,1)+'%) \u00b7 '+c.label+
+      (d.as?' \u00b7 launched '+fmt(d.as):'')+(d.af?', holed through '+fmt(d.af):'');
+    const t='<title>'+tip+'</title>';
+    lines+='<line x1="'+ax.toFixed(1)+'" y1="'+ay.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+by.toFixed(1)+
+      '" stroke="#fff" stroke-width="'+(w+4).toFixed(1)+'" stroke-linecap="round"/>';
+    if(c.status==='run'){
+      const fx=ax+(bx-ax)*c.pct,fy=ay+(by-ay)*c.pct;
+      lines+='<line x1="'+fx.toFixed(1)+'" y1="'+fy.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+by.toFixed(1)+
+        '" stroke="'+C.plan+'" stroke-width="'+w.toFixed(1)+'" stroke-linecap="round">'+t+'</line>'+
+        '<line x1="'+ax.toFixed(1)+'" y1="'+ay.toFixed(1)+'" x2="'+fx.toFixed(1)+'" y2="'+fy.toFixed(1)+
+        '" stroke="'+C.run+'" stroke-width="'+w.toFixed(1)+'" stroke-linecap="round">'+t+'</line>';
+      faces+='<circle cx="'+fx.toFixed(1)+'" cy="'+fy.toFixed(1)+'" r="'+(w*0.72+1.4).toFixed(1)+
+        '" fill="'+C.run+'" stroke="#fff" stroke-width="1.6">'+t+'</circle>';
+      runs.push({d:d,c:c,fx:fx,fy:fy,ux:ux,uy:uy});
+    }else{
+      lines+='<line x1="'+ax.toFixed(1)+'" y1="'+ay.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+by.toFixed(1)+
+        '" stroke="'+col+'" stroke-width="'+w.toFixed(1)+'" stroke-linecap="round">'+t+'</line>';
+      if(c.status==='bored')
+        lines+='<line x1="'+ax.toFixed(1)+'" y1="'+ay.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+by.toFixed(1)+
+          '" stroke="#fff" stroke-width="1.5" stroke-dasharray="5 5" pointer-events="none"/>';
+    }
+    if(showAr){   /* the arrowhead is the end of the drive, not something laid over it */
+      const tx=B[0]-ux*R,ty=B[1]-uy*R,hw=w*0.72+1.6;
+      arrows+='<polygon points="'+tx.toFixed(1)+','+ty.toFixed(1)+' '+
+        (bx-uy*hw).toFixed(1)+','+(by+ux*hw).toFixed(1)+' '+(bx+uy*hw).toFixed(1)+','+(by-ux*hw).toFixed(1)+
+        '" fill="'+(c.status==='run'?C.plan:col)+'"/>';
+    }
+    /* keep every later label off the line itself */
+    const steps=Math.max(2,Math.ceil(px/9)),own0=taken.length;
+    for(let i=0;i<=steps;i++){
+      const qx=A[0]+(B[0]-A[0])*i/steps,qy=A[1]+(B[1]-A[1])*i/steps;
+      taken.push([qx-6.5,qy-6.5,13,13]);
+    }
+    if(showDn||showSn){
+      const label=(showSn?esc(d.sn)+(showDn?'  ':''):'')+(showDn?'DN'+esc(d.dn):'');
+      let ang=Math.atan2(B[1]-A[1],B[0]-A[0])*180/Math.PI;if(ang>90)ang-=180;if(ang<-90)ang+=180;
+      dnLab.push({ax:A[0],ay:A[1],bx:B[0],by:B[1],ux:ux,uy:uy,w:w,px:px,ka:o.ka,kb:o.kb,own:[own0,taken.length],t:label,a:px<44?0:ang});
+    }
+  });
+
+  /* ---- shafts ---- */
+  const live={};
+  seg.forEach(o=>{if(o.c.p>0){live[o.ka]=1;live[o.kb]=1}});
+  let dots='';const order=keys.slice().sort((a,b)=>pos[a][0]-pos[b][0]);
+  order.forEach(k=>{
+    const cx=pos[k][0],cy=pos[k][1];
+    dots+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6.4" fill="'+(live[k]?C.done:'#fff')+
+      '" stroke="'+C.ink+'" stroke-width="1.5"><title>'+esc(k)+
+      (live[k]?' \u2014 shaft in use':' \u2014 no drive launched or received yet')+'</title></circle>';
+    taken.push([cx-9,cy-9,18,18]);
+  });
+
+  /* ---- DN labels, only when asked for, and only clear of everything ---- */
+  let dnTxt='';
+  dnLab.forEach(l=>{
+    const tw=l.t.length*5.4+2,rad=l.a*Math.PI/180;
+    const bw=Math.abs(tw*Math.cos(rad))+Math.abs(11*Math.sin(rad)),
+          bh=Math.abs(tw*Math.sin(rad))+Math.abs(11*Math.cos(rad));
+    const nx=-l.uy,ny=l.ux;
+    let best=null;
+    /* a short spur: its DN goes just past the spur's free end, so it can only be read as that spur's */
+    const free=deg[l.ka]===1?'a':deg[l.kb]===1?'b':null;
+    if(free&&l.px<80){
+      const dir=free==='a'?-1:1,ex=free==='a'?l.ax:l.bx,ey=free==='a'?l.ay:l.by;
+      const reach=R+8+Math.abs(l.ux)*tw/2+Math.abs(l.uy)*6;
+      for(let k2=0;k2<3&&!best;k2++){
+        const cx2=ex+l.ux*dir*(reach+k2*9),cy2=ey+l.uy*dir*(reach+k2*9);
+        const r=[cx2-tw/2-4,cy2-7,tw+8,14];
+        if(!clash(r,l.own))best=[cx2,cy2,r,0];
+      }
+    }
+    /* otherwise: close to its own line, the lower side first */
+    const fr=[0.5,0.4,0.6,0.3,0.7,0.2,0.8],offs=[l.w/2+9,l.w/2+15,l.w/2+22],sides=ny>=0?[1,-1]:[-1,1];
+    for(let b=0;b<offs.length&&!best;b++)for(let s2=0;s2<2&&!best;s2++)for(let a=0;a<fr.length&&!best;a++){
+      const sg=sides[s2],cx2=l.ax+(l.bx-l.ax)*fr[a]+nx*offs[b]*sg,cy2=l.ay+(l.by-l.ay)*fr[a]+ny*offs[b]*sg;
+      const r=[cx2-bw/2-4,cy2-bh/2-2,bw+8,bh+4];
+      if(!clash(r,l.own))best=[cx2,cy2,r,l.a];
+    }
+    if(!best)return;
+    l.a=best[3];
+    taken.push(best[2]);
+    dnTxt+='<text x="'+best[0].toFixed(1)+'" y="'+(best[1]+3).toFixed(1)+'" font-size="8.4" font-weight="600"'+
+      ' fill="#3D4C55" text-anchor="middle" style="'+halo+'"'+
+      (l.a?' transform="rotate('+l.a.toFixed(1)+' '+best[0].toFixed(1)+' '+best[1].toFixed(1)+')"':'')+
+      '>'+l.t+'</text>';
+  });
+
+  /* ---- manhole numbers, clear of every line and of each other ---- */
+  let tags='';
+  if(showMh)order.forEach(k=>{
+    const cx=pos[k][0],cy=pos[k][1],tw=k.length*6.5+12,th=16;
+    const cand=[];
+    [0,-1,1,-2,2,-3,3,-4,4,-5,5].forEach(row=>[0,-1,1,-2,2,-3,3].forEach(colm=>{
+      cand.push([colm*(tw/2+13),row?row*18:(colm?0:-18)]);
+    }));
+    cand.sort((a,b)=>Math.hypot(a[0],a[1]*1.15)-Math.hypot(b[0],b[1]*1.15));   /* nearest spot first */
+    const crosses=(mx,my)=>keys.some(o=>{if(o===k)return false;
+      const p=pos[o],vx=mx-cx,vy=my-cy,L2=vx*vx+vy*vy||1;
+      const t=Math.max(0,Math.min(1,((p[0]-cx)*vx+(p[1]-cy)*vy)/L2));
+      return Math.hypot(p[0]-(cx+vx*t),p[1]-(cy+vy*t))<11});             /* leader would cut another shaft */
+    let r=null;
+    for(let i=0;i<cand.length&&!r;i++){
+      const q=[cx+cand[i][0]-tw/2,cy+cand[i][1]-th/2,tw,th];
+      if(!clash(q)&&!crosses(cx+cand[i][0],cy+cand[i][1]))r=q;
+    }
+    if(!r)r=[Math.max(14,Math.min(W-14-tw,cx-tw/2)),Math.max(14,Math.min(H-14-th,cy-19-th/2)),tw,th];
+    taken.push(r);
+    const mx=r[0]+tw/2,my=r[1]+th/2,d2=Math.hypot(mx-cx,my-cy);
+    if(d2>24)tags+='<line x1="'+cx.toFixed(1)+'" y1="'+cy.toFixed(1)+'" x2="'+mx.toFixed(1)+'" y2="'+my.toFixed(1)+
+      '" stroke="#93A2AA" stroke-width="0.9"/>';
+    tags+=box(r[0].toFixed(1),r[1].toFixed(1),tw.toFixed(1),th,'#fff',C.tag,0.9,2)+
+      txt(mx.toFixed(1),(my+4).toFixed(1),esc(k),{fs:10.4,w:700,a:'middle'});
+  });
+
+  /* ---- legend ---- */
+  g+=box(LX,LY,LW,LH,'#fff',C.ink,1.3)+
+     txt(LX+11,LY+18,'CONSTRUCTION WORKS',{fs:10.5,w:700})+
+     '<line x1="'+LX+'" x2="'+(LX+LW)+'" y1="'+(LY+25)+'" y2="'+(LY+25)+'" stroke="'+C.frame+'" stroke-width="0.7"/>';
+  items.forEach((it,i)=>{
+    const y=LY+42+i*17;
+    if(it[1]==='line'||it[1]==='dash')
+      g+='<line x1="'+(LX+12)+'" x2="'+(LX+48)+'" y1="'+y+'" y2="'+y+'" stroke="'+it[0]+'" stroke-width="5" stroke-linecap="round"/>';
+    if(it[1]==='dash')
+      g+='<line x1="'+(LX+12)+'" x2="'+(LX+48)+'" y1="'+y+'" y2="'+y+'" stroke="#fff" stroke-width="1.5" stroke-dasharray="5 5"/>';
+    if(it[1]==='node')g+='<circle cx="'+(LX+30)+'" cy="'+y+'" r="6.4" fill="'+it[0]+'" stroke="'+C.ink+'" stroke-width="1.5"/>';
+    if(it[1]==='arrow')g+='<line x1="'+(LX+12)+'" x2="'+(LX+38)+'" y1="'+y+'" y2="'+y+'" stroke="'+C.ink+'" stroke-width="3.4" stroke-linecap="round"/>'+
+      '<polygon points="'+(LX+50)+','+y+' '+(LX+38)+','+(y-5)+' '+(LX+38)+','+(y+5)+'" fill="'+C.ink+'"/>';
+    g+=txt(LX+58,y+3.5,it[2],{fs:9.4});
+  });
+
+  let calls='';
+  host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+
+    g+lines+arrows+faces+dots+dnTxt+tags+calls+
+    '<g><line x1="'+PD.l+'" y1="'+(H-28)+'" x2="'+(PD.l+500*sc).toFixed(1)+'" y2="'+(H-28)+'" stroke="#42525C" stroke-width="1.4"/>'+
+    '<line x1="'+PD.l+'" y1="'+(H-32)+'" x2="'+PD.l+'" y2="'+(H-24)+'" stroke="#42525C" stroke-width="1.4"/>'+
+    '<line x1="'+(PD.l+500*sc).toFixed(1)+'" y1="'+(H-32)+'" x2="'+(PD.l+500*sc).toFixed(1)+'" y2="'+(H-24)+'" stroke="#42525C" stroke-width="1.4"/>'+
+    txt((PD.l+500*sc+8).toFixed(1),(H-24.5).toFixed(1),'500 m',{fs:9.4,w:600,c:'#42525C'})+
+    '</g></svg>';
+
+  $('mapLeg').innerHTML='';
+  const st={done:0,bored:0,run:0,idle:0};seg.forEach(o=>st[o.c.status]++);
+  const T=group(seg.map(o=>o.d));
+  $('mapNote').innerHTML='<b>'+seg.length+'</b> drive'+(seg.length===1?'':'s')+' on the sheet \u00b7 '+
+    '<b>'+(st.done+st.bored)+'</b> holed through ('+st.done+' grouted) \u00b7 <b>'+st.run+'</b> boring now \u00b7 '+
+    '<b>'+st.idle+'</b> yet to launch \u00b7 <b>'+n(T.p,0)+'</b> of '+n(T.len,0)+' m bored.'+
+    (warn?'<br>'+warn:'');
+}
+function curve(){
+  const ds=D.filter(d=>d.ps&&d.pf&&d.len);if(!ds.length){$('curve').innerHTML='';return}
+  const dts=D.flatMap(d=>[d.ps,d.pf,d.as,d.af]).filter(Boolean).concat([AS]).sort();
+  const s=dts[0],e=dts[dts.length-1],span=Math.max(1,dd(s,e)),total=group(D).len,step=Math.max(1,Math.round(span/70));
+  const P=[],A=[];
+  for(let i=0;i<=span;i+=step){const dt=addD(s,i);P.push([i,cumAt(dt,true)]);if(dt<=AS)A.push([i,cumAt(dt,false)])}
+  P.push([span,cumAt(e,true)]);A.push([dd(s,AS),cumAt(AS,false)]);
+  const W=980,H=250,pad={l:56,r:14,t:10,b:26};
+  const X=v=>pad.l+(W-pad.l-pad.r)*v/span,Y=v=>H-pad.b-(H-pad.t-pad.b)*(total?v/total:0);
+  const path=a=>a.map((p,i)=>(i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(' ');
+  let g='';for(let k=0;k<=4;k++){const v=total*k/4;g+='<line x1="'+pad.l+'" x2="'+(W-pad.r)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--rule)"/><text x="'+(pad.l-7)+'" y="'+(Y(v)+4)+'" font-size="11" fill="var(--ink2)" text-anchor="end">'+n(v,0)+'</text>'}
+  let mk='';const c=new Date(s);c.setDate(1);
+  while(c<=new Date(e)){const d0=iso(c);if(dd(s,d0)>=0&&c.getMonth()%3===0)mk+='<text x="'+X(dd(s,d0))+'" y="'+(H-8)+'" font-size="11" fill="var(--ink2)" font-weight="500">'+c.toLocaleDateString('en-GB',{month:'short',year:'2-digit'})+'</text>';c.setMonth(c.getMonth()+1)}
+  $('curve').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;margin-top:8px">'+g+
+    '<line x1="'+X(dd(s,AS))+'" x2="'+X(dd(s,AS))+'" y1="'+pad.t+'" y2="'+(H-pad.b)+'" stroke="var(--bad)" stroke-dasharray="3 3"/>'+
+    '<path d="'+path(P)+'" fill="none" stroke="#A9B6BE" stroke-width="2" stroke-dasharray="6 5"/>'+
+    '<path d="'+path(A)+'" fill="none" stroke="var(--bore)" stroke-width="2.5"/>'+
+    '<circle cx="'+X(dd(s,AS))+'" cy="'+Y(cumAt(AS,false))+'" r="4" fill="var(--bore)"/>'+mk+'</svg>'+
+    '<div class="legend"><span><i class="sw" style="background:#A9B6BE"></i>Baseline</span><span><i class="sw" style="background:var(--bore)"></i>Actual</span><span><i class="sw" style="background:var(--bad);width:2px;height:12px"></i>Data date</span></div>';
+}
+function gantt(){
+  const ds=D.filter(d=>d.ps||d.as);if(!ds.length){$('gantt').innerHTML='<p class="note" style="padding:14px">No dates yet.</p>';return}
+  const all=ds.flatMap(d=>[d.ps,d.pf,d.as,d.af]).filter(Boolean).concat([AS]).sort();
+  const s=all[0],e=all[all.length-1],span=Math.max(1,dd(s,e));
+  const X=v=>Math.max(0,Math.min(100,dd(s,v)/span*100));
+  let mo='';const c=new Date(s);c.setDate(1);
+  while(c<=new Date(e)){const d0=iso(c);if(dd(s,d0)>=0)mo+='<span class="gm" style="left:'+X(d0)+'%">'+c.toLocaleDateString('en-GB',{month:'short',year:'2-digit'})+'</span>';c.setMonth(c.getMonth()+1)}
+  $('gantt').innerHTML='<div class="gmonths"><div class="glabel">Drive</div><div class="gtrack">'+mo+'</div></div>'+
+    ds.map(d=>{const cc=calc(d);
+      const pl=(d.ps&&d.pf)?'<div class="gplan" style="left:'+X(d.ps)+'%;width:'+Math.max(.4,X(d.pf)-X(d.ps))+'%"></div>':'';
+      const ac=d.as?'<div class="gact'+(cc.done?'':' part')+'" style="left:'+X(d.as)+'%;width:'+Math.max(.4,X(d.af||AS)-X(d.as))+'%"></div>':'';
+      return '<div class="grow"><div class="glabel" title="'+esc(d.f)+' → '+esc(d.t)+'">'+esc(d.sn)+'. '+esc(d.f)+' → '+esc(d.t)+'</div><div class="gtrack">'+pl+ac+'<div class="gnow" style="left:'+X(AS)+'%"></div></div></div>'}).join('');
+}
+
+/* ---------- paste ---------- */
+function pdate(v){v=String(v||'').trim();if(!v||v==='-')return'';
+  if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.slice(0,10);
+  const m=v.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if(m){let[,a,b,y]=m;y=y.length===2?'20'+y:y;return y+'-'+String(b).padStart(2,'0')+'-'+String(a).padStart(2,'0')}
+  const t=Date.parse(v);return isNaN(t)?'':iso(new Date(t));}
+$('pLoad').onclick=()=>{
+  const out=[];
+  $('pasteBox').value.split(/\r?\n/).map(l=>l.split('\t')).forEach(r=>{
+    if(r.length<5)return;const g=i=>String(r[i]??'').trim();
+    const len=parseFloat(g(4).replace(/,/g,''));if(!g(1)||isNaN(len))return;
+    out.push({sn:g(0),f:g(1),t:g(2),dn:parseInt(g(3))||0,len,ps:pdate(g(5)),pf:pdate(g(6)),as:pdate(g(7)),af:pdate(g(8)),
+      p:parseFloat(g(9).replace(/,/g,''))||0,g:/done|yes/i.test(g(13))?1:0,pr:g(14)});
+  });
+  if(!out.length){$('pHint').textContent='No drive rows found. Copy the cells from Excel and include columns A to O.';return}
+  D=$('pReplace').checked?out:D.concat(out);save();render();$('pasteBox').value='';
+  $('pHint').innerHTML='<span class="flash">'+out.length+' rows loaded.</span>';
+};
+
+/* ---------- export ---------- */
+const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+function dl(name,txt,type){const b=new Blob([txt],{type:type||'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+$('xReg').onclick=()=>dl('drive-register-'+AS+'.csv',
+  ['S. No,Launch Shaft,Receiving Shaft,DN,Total Drive Length,Plan Start Date,Plan Finish Date,Actual Start Date,Actual Finish Date,Current Progress,No of days to comp,Pipe Jacking/ Day,Completed %,Grouting,Project,Delay vs plan,Status']
+  .concat(D.map(d=>{const c=calc(d);return [d.sn,d.f,d.t,d.dn,c.len,d.ps,d.pf,d.as,d.af,c.p,c.days||'',c.rate?c.rate.toFixed(2):'',(c.pct*100).toFixed(1)+'%',d.g?'Done':'',d.pr,c.delay??'',c.label].map(q).join(',')})).join('\n'));
+$('xSum').onclick=()=>{
+  const R=[['Data date',AS],[],['Diameter','Total m','Bored m','Left m','Completed %','Drives','Drives done','Days','m/day']];
+  dnOrder().sort((a,b)=>a-b).forEach(x=>{const g=group(D.filter(d=>+d.dn===x));R.push(['DN-'+x,g.len.toFixed(2),g.p.toFixed(2),g.rem.toFixed(2),(g.pct*100).toFixed(2),g.cnt,g.done,g.days,g.rate.toFixed(2)])});
+  R.push([]);[...new Set(D.map(d=>d.pr).filter(Boolean))].sort().forEach(p=>{const g=group(D.filter(d=>d.pr===p));R.push([p,g.len.toFixed(2),g.p.toFixed(2),g.rem.toFixed(2),(g.pct*100).toFixed(2),g.cnt,g.done,g.days,g.rate.toFixed(2)])});
+  const T=group(D);R.push([]);R.push(['Total cumulative',T.len.toFixed(2),T.p.toFixed(2),T.rem.toFixed(2),(T.pct*100).toFixed(2),T.cnt,T.done,T.days,T.rate.toFixed(2)]);
+  dl('progress-summary-'+AS+'.csv',R.map(r=>r.map(q).join(',')).join('\n'));
+};
+$('xJson').onclick=()=>{bkDate=today();dl('mtbm-backup-'+AS+'-'+D.length+'drives.json',JSON.stringify({d:D,as:AS,bk:bkDate},null,1),'application/json');
+  bkSnooze=false;save();bkCheck();$('bkNote').innerHTML='<span class="flash">Backup downloaded. Keep it somewhere outside this machine.</span>'};
+$('xIn').onclick=()=>$('fileIn').click();
+$('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const o=JSON.parse(r.result),nd=Array.isArray(o)?o:o.d;if(!Array.isArray(nd))throw 0;
+    D=nd;AS=o.as||today();$('asAt').value=AS;save();render();$('bkNote').innerHTML='<span class="flash">Restored '+D.length+' drives.</span>'}
+  catch(x){$('bkNote').textContent='That is not a backup from this tool.'}};
+  r.readAsText(f);e.target.value='';};
+function shareCopy(ro){
+  const clone=document.documentElement.cloneNode(true);
+  ['tSheet','gantt','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','recBar','roFlag','storeBox'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
+  const pb=clone.querySelector('#pasteBox');if(pb)pb.textContent='';
+  const sc=[...clone.querySelectorAll('script')].pop();
+  let src=sc.textContent;
+  src=src.replace(/const SEED=\[[\s\S]*?\];/,'const SEED='+JSON.stringify(D).replace(/</g,'\\u003c')+';');
+  src=src.replace(/const RO=false;/,'const RO='+(ro?'true':'false')+';');
+  src=src.replace(/const KEY='[^']*';/,"const KEY='mtbm:sibs:"+(ro?'report':'copy')+'-'+Date.now()+"';");
+  src=src.replace(/const ISSUED='[^']*';/,"const ISSUED='"+AS+"';");
+  sc.textContent=src;
+  dl('SIBS-progress-'+AS+(ro?'-report':'-working-copy')+'.html','<!doctype html>\n'+clone.outerHTML,'text/html;charset=utf-8');
+  $('shNote').innerHTML='<span class="flash">File created with the figures as at '+fmt(AS)+'. Attach it to your email.</span>';
+}
+$('xShareRO').onclick=()=>shareCopy(true);
+$('xShareRW').onclick=()=>shareCopy(false);
+$('xPrint').onclick=()=>{document.querySelector('.tab[data-p="dash"]').click();$('asAtPrint').style.display='block';setTimeout(()=>{window.print();$('asAtPrint').style.display='none'},250)};
+$('xReset').onclick=()=>{if(!confirm('Discard your edits and go back to the uploaded workbook figures?'))return;
+  D=JSON.parse(JSON.stringify(SEED));AS=today();$('asAt').value=AS;save();render();$('dNote').textContent='Back to the workbook figures.'};
+
+/* ---------- live copy on GitHub ---------- */
+const GHKEY='mtbm:sibs:gh';
+let gh={owner:GH.owner||'',repo:GH.repo||'',branch:GH.branch||'main',path:GH.path||'data.json',token:'',name:''};
+let ghSha='';
+try{const o=JSON.parse(localStorage.getItem(GHKEY)||'{}');Object.keys(o).forEach(k=>{if(o[k])gh[k]=o[k]})}catch(e){}
+const ghOn=()=>!!(gh.owner&&gh.repo);
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));
+const b64d=s=>decodeURIComponent(escape(atob(String(s||'').replace(/\s/g,''))));
+const stamp=v=>v?new Date(v).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+function ghCfgSave(){try{localStorage.setItem(GHKEY,JSON.stringify(gh))}catch(e){}}
+function ghRead(){
+  if(!$('ghOwner'))return;
+  gh.owner=$('ghOwner').value.trim();gh.repo=$('ghRepo').value.trim();
+  gh.branch=$('ghBranch').value.trim()||'main';gh.name=$('ghName').value.trim();
+  gh.token=$('ghToken').value.trim();
+}
+function ghFill(){
+  if(!$('ghOwner'))return;
+  $('ghOwner').value=gh.owner;$('ghRepo').value=gh.repo;$('ghBranch').value=gh.branch;
+  $('ghName').value=gh.name;$('ghToken').value=gh.token;
+}
+function ghHead(extra){
+  const e=$('ghHead');if(!e)return;
+  if(!ghOn()){e.textContent='';return}
+  e.innerHTML='<span class="live"><i></i>'+(VIEWER?'Live copy':'Live copy \u2014 you are the editor')+
+    (localPub?' \u00b7 published '+esc(stamp(localPub)):'')+(extra?' \u00b7 '+esc(extra):'')+'</span>';
+}
+const ghApi=()=>'https://api.github.com/repos/'+gh.owner+'/'+gh.repo+'/contents/'+gh.path;
+async function ghPull(){
+  if(!ghOn())return null;
+  if(gh.token){
+    const r=await fetch(ghApi()+'?ref='+encodeURIComponent(gh.branch)+'&t='+Date.now(),
+      {cache:'no-store',headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+gh.token}});
+    if(r.status===404){ghSha='';return null}
+    if(!r.ok)throw new Error('GitHub returned '+r.status);
+    const j=await r.json();ghSha=j.sha;return JSON.parse(b64d(j.content));
+  }
+  const r=await fetch('https://raw.githubusercontent.com/'+gh.owner+'/'+gh.repo+'/'+gh.branch+'/'+gh.path+'?t='+Date.now(),{cache:'no-store'});
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error('GitHub returned '+r.status);
+  return r.json();
+}
+async function ghPublish(){
+  ghRead();
+  if(!ghOn()){$('ghNote').textContent='Fill in the user and repository first.';return}
+  if(!gh.token){$('ghNote').textContent='Paste an access token first \u2014 without one this browser can only read.';return}
+  ghCfgSave();$('ghNote').textContent='Publishing\u2026';
+  try{
+    try{await ghPull()}catch(e){}
+    const payload={d:D,as:AS,pub:new Date().toISOString(),by:gh.name||'',n:D.length};
+    const body={message:'Progress as at '+AS+(gh.name?' \u2014 '+gh.name:''),content:b64e(JSON.stringify(payload,null,1)),branch:gh.branch};
+    if(ghSha)body.sha=ghSha;
+    const res=await fetch(ghApi(),{method:'PUT',headers:{'Accept':'application/vnd.github+json',
+      'Authorization':'Bearer '+gh.token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){
+      const t=await res.text();
+      throw new Error(res.status===401?'the token was refused':res.status===403?'the token has no write access to that repository':
+        res.status===409||res.status===422?'someone published after you loaded \u2014 press Load published figures, then publish again':
+        res.status+' '+t.slice(0,90));
+    }
+    const j=await res.json();ghSha=(j.content&&j.content.sha)||ghSha;localPub=payload.pub;
+    save();ghHead();
+    $('ghNote').innerHTML='<span class="flash">Published '+esc(stamp(localPub))+'. Colleagues see it on their next refresh.</span>';
+  }catch(e){$('ghNote').textContent='Could not publish: '+e.message}
+}
+async function ghLoad(){
+  ghRead();
+  if(!ghOn()){$('ghNote').textContent='Fill in the user and repository first.';return}
+  ghCfgSave();$('ghNote').textContent='Loading\u2026';
+  try{
+    const o=await ghPull();
+    if(!o||!Array.isArray(o.d)||!o.d.length){$('ghNote').textContent='Nothing published there yet.';return}
+    apply(o);$('asAt').value=AS;save();render();ghHead();
+    $('ghNote').innerHTML='<span class="flash">Loaded '+o.d.length+' drives, published '+esc(stamp(o.pub))+(o.by?' by '+esc(o.by):'')+'.</span>';
+  }catch(e){$('ghNote').textContent='Could not load: '+e.message}
+}
+function ghSite(){
+  ghRead();
+  if(!ghOn()){$('ghNote').textContent='Fill in the user and repository first.';return}
+  ghCfgSave();
+  const clone=document.documentElement.cloneNode(true);
+  ['tSheet','gantt','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','recBar','roFlag','storeBox','ghNote'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
+  const pb=clone.querySelector('#pasteBox');if(pb)pb.textContent='';
+  ['ghOwner','ghRepo','ghBranch','ghName','ghToken'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.setAttribute('value','')});
+  const sc=[...clone.querySelectorAll('script')].pop();
+  let src=sc.textContent;
+  src=src.replace(/const SEED=\[[\s\S]*?\];/,'const SEED='+JSON.stringify(D).replace(/</g,'\\u003c')+';');
+  src=src.replace(/const GH=\{[^}]*\};/,"const GH={owner:'"+gh.owner+"',repo:'"+gh.repo+"',branch:'"+gh.branch+"',path:'"+gh.path+"'};");
+  src=src.replace(/const KEY='[^']*';/,"const KEY='mtbm:sibs:live-"+gh.owner+'-'+gh.repo+"';");
+  src=src.replace(/const ISSUED='[^']*';/,"const ISSUED='"+AS+"';");
+  sc.textContent=src;
+  dl('index.html','<!doctype html>\n'+clone.outerHTML,'text/html;charset=utf-8');
+  $('ghNote').innerHTML='<span class="flash">index.html downloaded. Upload it to '+esc(gh.owner+'/'+gh.repo)+', then press Publish update.</span>';
+}
+if($('ghPub')){$('ghPub').onclick=ghPublish;$('ghGet').onclick=ghLoad;$('ghSite').onclick=ghSite}
+
+/* ---------- boot ---------- */
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.panel').forEach(s=>s.classList.toggle('on',s.id==='p-'+b.dataset.p));
+  window.scrollTo({top:0,behavior:'smooth'});});
+$('asAt').onchange=()=>{AS=$('asAt').value||today();save();render()};
+['mapMh','mapDn','mapSn','mapLR','mapZoom'].forEach(id=>{const e=$(id);if(e)e.onchange=alignMap});
+function apply(o){D=Array.isArray(o.d)?o.d:[];AS=o.as||today();bkDate=o.bk||'';localPub=o.pub||''}
+(async()=>{
+  let raw=null,note='';
+  try{raw=await Store.get(KEY)}catch(e){}
+  let ok=false;
+  if(raw){try{const o=JSON.parse(raw);if(Array.isArray(o.d)&&o.d.length){apply(o);prevPayload=raw;ok=true}}catch(e){}}
+  if(!ok){
+    let p=null;try{p=await Store.get(KEY+':prev')}catch(e){}
+    if(p){try{const o=JSON.parse(p);if(Array.isArray(o.d)&&o.d.length){apply(o);prevPayload=p;ok=true;
+      note='The main saved copy could not be read, so the previous saved copy has been loaded instead. Check the register, then download a backup.'}}catch(e){}}
+  }
+  if(!ok){D=JSON.parse(JSON.stringify(SEED));
+    if(raw)note='The saved data could not be read and no previous copy was found, so the original workbook figures have been loaded. If you have a backup file, restore it from Save & export before entering anything.';}
+  if(!AS)AS=today();
+  $('asAt').value=AS;
+  if(note){$('recBar').textContent=note;$('recBar').classList.add('on')}
+  ghFill();
+  VIEWER=ghOn()&&!gh.token&&location.hash!=='#edit';
+  if(ghOn()){
+    try{
+      const o=await ghPull();
+      if(o&&Array.isArray(o.d)&&o.d.length){
+        if(VIEWER||!ok){apply(o);$('asAt').value=AS}
+        else if(o.pub&&o.pub>(localPub||'')){
+          note='A newer set was published '+stamp(o.pub)+(o.by?' by '+o.by:'')+'. Your own figures are still on screen \u2014 open Save & export and press Load published figures to take theirs.';
+          $('recBar').textContent=note;$('recBar').classList.add('on');
+        }
+      }else if(VIEWER){
+        note='Nothing has been published to this page yet, so the figures below are the ones built into the file.';
+        $('recBar').textContent=note;$('recBar').classList.add('on');
+      }
+    }catch(e){
+      $('recBar').textContent='Could not reach GitHub ('+e.message+'), so these figures may not be the latest. Refresh in a minute.';
+      $('recBar').classList.add('on');
+    }
+  }
+  ghHead();
+  if(VIEWER){
+    const tick=async()=>{try{const o=await ghPull();
+      if(o&&Array.isArray(o.d)&&o.d.length&&o.pub&&o.pub!==localPub){apply(o);$('asAt').value=AS;render();ghHead('just updated')}
+    }catch(e){}};
+    setInterval(tick,300000);window.addEventListener('focus',tick);
+  }
+  if(RO||VIEWER){document.body.classList.add('ro');
+    $('roFlag').textContent=VIEWER
+      ?'Live progress record, published by the supervision consultant'+(localPub?' on '+stamp(localPub):'')+'. Dashboard, timeline and alignment map update on their own \u2014 refresh the page for the latest figures.'
+      :'View-only progress report'+(ISSUED?', figures as at '+fmt(ISSUED):'')+'. Dashboard and timeline only \u2014 nothing here can be edited. Ask Gaurav for a working copy if you need to enter progress.';
+    const t=document.querySelector('.tab[aria-selected="true"]');
+    if(t&&(t.dataset.p==='sheet'||t.dataset.p==='data'))document.querySelector('.tab[data-p="dash"]').click();}
+  setSave(RO||VIEWER?'':modeText().charAt(0).toUpperCase()+modeText().slice(1),mode==='none'&&!RO&&!VIEWER);
+  storeBox();
+  if(VIEWER){$('bkHead').style.display='none';$('bkBanner').classList.remove('on')}else bkCheck();
+  render();
+})();
+</script>
+</body></html>
