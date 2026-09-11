@@ -171,10 +171,10 @@
     </div>
     <div class="right">
       <div class="asat noprint"><span>Data date</span><input type="date" id="asAt"></div>
-      <div id="asAtPrint" style="display: none;">Data date 08 Sept 26</div>
-      <span class="savestate" id="saveState">Saved in this browser</span>
-      <span class="savestate" id="ghHead"></span>
-      <span class="savestate" id="bkHead">Last backup 08 Sept 26 · today</span>
+      <div id="asAtPrint" style="display: none;">Data date 11 Sept 26</div>
+      <span class="savestate" id="saveState">Saved 07:44 · saved in this browser</span>
+      <span class="savestate" id="ghHead"><span class="live"><i></i>Live copy — you are the editor · published 11 Sept 26, 07:44</span></span>
+      <span class="savestate warn" id="bkHead">No backup taken yet</span>
     </div>
   </div>
   <nav role="tablist" class="noprint">
@@ -189,8 +189,8 @@
 
 <div class="recover" id="recBar"></div>
 <div class="roflag" id="roFlag"></div>
-<div class="bkbar" id="bkBanner">
-  <span id="bkMsg">Your last backup was 08 Sept 26, 0 days ago. Take a fresh one so nothing depends on this browser alone.</span>
+<div class="bkbar on" id="bkBanner">
+  <span id="bkMsg">No backup has been downloaded yet. If this browser is cleared or the machine is rebuilt, the register goes with it.</span>
   <button class="btn" id="bkNow">Download backup</button>
   <button class="linkbtn" id="bkLater">Not now</button>
 </div>
@@ -199,16 +199,16 @@
   <div class="kpis" id="kpis"></div>
   <div class="cols" id="contractRow"></div>
   <div class="card">
-    <h3>Alignment map &mdash; drive status</h3>
-    <p class="sub">Laid out like the TS-01 / TS-02 progress drawings, but built from the register &mdash; every drive re-colours the moment progress is entered, so the sheet never has to be redrawn by hand. Hover a drive for its figures.</p>
+    <h3>Alignment map — drive status</h3>
+    <p class="sub">Laid out like the TS-01 / TS-02 progress drawings, but built from the register — every drive re-colours the moment progress is entered, so the sheet never has to be redrawn by hand. Hover a drive for its figures.</p>
     <div class="mapctl noprint">
-      <label class="mapchk"><input type="checkbox" id="mapMh" checked> Manhole labels</label>
+      <label class="mapchk"><input type="checkbox" id="mapMh" checked=""> Manhole labels</label>
       <label class="mapchk"><input type="checkbox" id="mapDn"> DN labels</label>
       <label class="mapchk"><input type="checkbox" id="mapSn"> Drive S/N</label>
-      <label class="mapchk"><input type="checkbox" id="mapLR" checked> Direction arrows</label>
-      <label class="mapchk">Zoom <select id="mapZoom" style="width:auto;padding:3px 7px"><option value="1">Fit width</option><option value="1.5">1.5&times;</option><option value="2">2&times;</option><option value="3">3&times;</option></select></label>
+      <label class="mapchk"><input type="checkbox" id="mapLR" checked=""> Direction arrows</label>
+      <label class="mapchk">Zoom <select id="mapZoom" style="width:auto;padding:3px 7px"><option value="1">Fit width</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="3">3×</option></select></label>
     </div>
-    <div class="mapwrap"><div id="mapSvg"></div></div>
+    <div class="mapwrap"><div id="mapSvg" style="width: 100%;"></div></div>
     <div class="legend" id="mapLeg"></div>
     <p class="maptag" id="mapNote"></p>
   </div>
@@ -289,13 +289,13 @@
   <div class="card" id="storeBox"></div>
   <div class="card" id="ghCard">
     <h3>Live copy for the team</h3>
-    <p class="sub">Publish your figures to a GitHub repository. Anyone with the page link sees the latest set the next time they open or refresh it &mdash; nothing to email round.</p>
+    <p class="sub">Publish your figures to a GitHub repository. Anyone with the page link sees the latest set the next time they open or refresh it — nothing to email round.</p>
     <div class="mgrid" style="margin-top:13px">
-      <div><label for="ghOwner">GitHub user or organisation</label><input id="ghOwner" placeholder="your-username"></div>
-      <div><label for="ghRepo">Repository</label><input id="ghRepo" placeholder="sibs-progress"></div>
-      <div><label for="ghBranch">Branch</label><input id="ghBranch" placeholder="main"></div>
-      <div><label for="ghName">Publish as</label><input id="ghName" placeholder="Gaurav"></div>
-      <div class="full"><label for="ghToken">Access token &mdash; stays in this browser, never goes into the published file</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_&hellip;"></div>
+      <div><label for="ghOwner">GitHub user or organisation</label><input id="ghOwner" placeholder="your-username" value=""></div>
+      <div><label for="ghRepo">Repository</label><input id="ghRepo" placeholder="sibs-progress" value=""></div>
+      <div><label for="ghBranch">Branch</label><input id="ghBranch" placeholder="main" value=""></div>
+      <div><label for="ghName">Publish as</label><input id="ghName" placeholder="Gaurav" value=""></div>
+      <div class="full"><label for="ghToken">Access token — stays in this browser, never goes into the published file</label><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…" value=""></div>
     </div>
     <div class="actions">
       <button class="btn" id="ghPub">Publish update</button>
@@ -306,8 +306,8 @@
     <details style="margin-top:14px"><summary>Setting it up the first time</summary>
       <ol class="steps">
         <li>Create a repository on GitHub, for example <b>sibs-progress</b>. It has to be public for free Pages hosting, so keep client-identifying detail out of the register and get the project manager's nod first.</li>
-        <li>In that repository: Settings &rarr; Pages &rarr; deploy from branch <b>main</b>, folder <b>/ (root)</b>.</li>
-        <li>GitHub &rarr; Settings &rarr; Developer settings &rarr; Fine-grained tokens. Give it access to this one repository only, with <b>Contents: Read and write</b>. Copy the token into the box above.</li>
+        <li>In that repository: Settings → Pages → deploy from branch <b>main</b>, folder <b>/ (root)</b>.</li>
+        <li>GitHub → Settings → Developer settings → Fine-grained tokens. Give it access to this one repository only, with <b>Contents: Read and write</b>. Copy the token into the box above.</li>
         <li>Fill in the user and repository above, then press <b>Download the page file</b> and upload the resulting <b>index.html</b> to the repository.</li>
         <li>Press <b>Publish update</b>. That writes <b>data.json</b> and your figures go live.</li>
         <li>Send colleagues <b>https://&lt;user&gt;.github.io/&lt;repository&gt;/</b>. They get a view-only dashboard, timeline and alignment map.</li>
@@ -338,7 +338,7 @@
     <div class="actions">
       <button class="btn" id="xShareRO">View-only progress report</button>
       <button class="btn ghost" id="xShareRW">Working copy they can update</button>
-      <span class="sub" id="shNote"></span>
+      <span class="sub" id="shNote"><span class="flash">File created with the figures as at 11 Sept 26. Attach it to your email.</span></span>
     </div>
   </div>
   <div class="card">
@@ -377,7 +377,7 @@
 
 <div class="overlay" id="ovEdit">
   <div class="modal" role="dialog" aria-label="Edit drive">
-    <div class="mhead"><b id="efTitle"></b><span id="efMeta"></span></div>
+    <div class="mhead"><b id="efTitle">Edit MHA-16 → MHA-14</b><span id="efMeta">Every field on this drive’s row. The calculated columns follow from these.</span></div>
     <div class="mbody">
       <div class="mgrid">
         <div><label for="efSn">S. No</label><input id="efSn" type="text"></div>
@@ -403,17 +403,17 @@
 </div>
 
 <script>
-const SEED=[{"sn":"1","f":"MHA-20.1","t":"MHA-20","dn":1200,"len":78,"ps":"2025-12-02","pf":"2025-12-21","as":"2025-12-09","af":"2025-12-13","p":78,"g":1,"pr":"SIBS1"},{"sn":"2","f":"MHA-12.1","t":"MHA-12","dn":1200,"len":157,"ps":"2026-03-01","pf":"2026-03-27","as":"2026-04-27","af":"2026-05-06","p":157,"g":1,"pr":"SIBS2"},{"sn":"3","f":"MHB-09","t":"MHB-9.1","dn":1200,"len":30.22,"ps":"2026-05-17","pf":"2026-05-30","as":"2026-05-17","af":"2026-05-20","p":30.22,"g":1,"pr":"SIBS1"},{"sn":"4","f":"MHA-11.1","t":"MHA-11","dn":1200,"len":113.2,"ps":"2026-06-19","pf":"2026-07-03","as":"2026-06-01","af":"2026-06-09","p":113.2,"g":1,"pr":"SIBS2"},{"sn":"5","f":"MHB-3.1","t":"MHB-3","dn":1200,"len":33.4,"ps":"2026-06-13","pf":"2026-06-28","as":"2026-06-20","af":"2026-06-23","p":33.4,"g":1,"pr":"SIBS1"},{"sn":"6","f":"MHA-10.1","t":"MHA-10","dn":1200,"len":90.9,"ps":"2026-06-29","pf":"2026-07-19","as":"2026-07-06","af":"2026-07-15","p":90.9,"g":1,"pr":"SIBS2"},{"sn":"7","f":"MHA-5","t":"MHA-5.1","dn":1200,"len":130.4,"ps":"","pf":"","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"8","f":"MHA-2","t":"MHA-5","dn":1800,"len":777.2,"ps":"2025-12-13","pf":"2026-03-10","as":"2025-12-30","af":"2026-02-24","p":777.2,"g":1,"pr":"SIBS2"},{"sn":"9","f":"MHA-6","t":"MHA-5","dn":1800,"len":231.7,"ps":"2026-03-11","pf":"2026-04-16","as":"2026-03-22","af":"2026-04-08","p":231.7,"g":1,"pr":"SIBS2"},{"sn":"10","f":"MHA-6","t":"MHA-7","dn":1800,"len":365.44,"ps":"2026-04-18","pf":"2026-06-02","as":"2026-04-21","af":"2026-05-16","p":365.44,"g":1,"pr":"SIBS2"},{"sn":"11","f":"MHA-9","t":"MHA-10","dn":1800,"len":187.5,"ps":"2026-06-03","pf":"2026-07-07","as":"2026-06-08","af":"2026-06-23","p":187.5,"g":1,"pr":"SIBS2"},{"sn":"12","f":"MHA-9","t":"MHA-7","dn":1800,"len":518.4,"ps":"2026-07-07","pf":"2026-09-16","as":"2026-07-11","af":"2026-08-21","p":518.4,"g":0,"pr":"SIBS2"},{"sn":"13","f":"MHB-1","t":"MHA-20","dn":1600,"len":113.2,"ps":"2025-12-22","pf":"2026-01-18","as":"2025-12-31","af":"2026-01-05","p":113.2,"g":1,"pr":"SIBS1"},{"sn":"14","f":"MHB-1","t":"MHB-2","dn":1600,"len":252.3,"ps":"2026-01-19","pf":"2026-02-24","as":"2026-01-15","af":"2026-01-30","p":252.3,"g":1,"pr":"SIBS1"},{"sn":"15","f":"MHB-3","t":"MHB-2","dn":1600,"len":205.7,"ps":"2026-03-25","pf":"2026-04-30","as":"2026-02-12","af":"2026-02-22","p":205.7,"g":1,"pr":"SIBS1"},{"sn":"16","f":"MHA-19A","t":"MHSA-20","dn":1600,"len":97,"ps":"2026-02-25","pf":"2026-03-19","as":"2026-03-15","af":"2026-03-20","p":97,"g":1,"pr":"SIBS2"},{"sn":"17","f":"MHA-19A","t":"MHA-19","dn":1600,"len":176.1,"ps":"2026-03-20","pf":"2026-04-19","as":"2026-03-25","af":"2026-04-04","p":176.1,"g":1,"pr":"SIBS2"},{"sn":"18","f":"MHA-18","t":"MHA-19","dn":1600,"len":132.5,"ps":"2026-05-24","pf":"2026-06-19","as":"2026-04-15","af":"2026-04-20","p":132.5,"g":1,"pr":"SIBS2"},{"sn":"19","f":"MHA-18","t":"MHA-17","dn":1600,"len":176.6,"ps":"2026-04-20","pf":"2026-05-23","as":"2026-04-28","af":"2026-05-06","p":176.6,"g":1,"pr":"SIBS2"},{"sn":"20","f":"MHA-13","t":"MHA-12","dn":1600,"len":205.77,"ps":"2026-05-27","pf":"2026-07-01","as":"2026-05-19","af":"2026-05-28","p":205.77,"g":1,"pr":"SIBS2"},{"sn":"21","f":"MHA-13","t":"MHA-14","dn":1600,"len":372.2,"ps":"2026-07-02","pf":"2026-08-17","as":"2026-06-09","af":"2026-06-29","p":372.2,"g":1,"pr":"SIBS2"},{"sn":"22","f":"MHA-16","t":"MHA-17","dn":1600,"len":156,"ps":"2026-07-22","pf":"2026-08-21","as":"2026-07-16","af":"2026-07-26","p":156,"g":1,"pr":"SIBS2"},{"sn":"23","f":"MHA-16","t":"MHA-14","dn":1600,"len":542.2,"ps":"2026-07-26","pf":"2026-10-05","as":"2026-09-09","af":"2026-09-10","p":8,"g":0,"pr":"SIBS2"},{"sn":"24","f":"MHA-11","t":"MHA-10","dn":1600,"len":543,"ps":"2026-10-06","pf":"2026-11-11","as":"2026-09-10","af":"2026-09-10","p":0,"g":0,"pr":"SIBS2"},{"sn":"25","f":"MHA-11","t":"MHA-12","dn":1600,"len":243.8,"ps":"2026-11-12","pf":"2027-01-19","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"26","f":"MHA-16","t":"MHA-16.1","dn":1400,"len":69.8,"ps":"2026-04-21","pf":"2026-05-10","as":"2026-04-06","af":"2026-04-13","p":69.8,"g":1,"pr":"SIBS2"},{"sn":"27","f":"MHB-07","t":"MHB-08","dn":1400,"len":376,"ps":"2026-07-30","pf":"2026-08-11","as":"2026-07-09","af":"2026-08-21","p":376,"g":1,"pr":"SIBS1"},{"sn":"28","f":"MHB-09","t":"MHB-8","dn":1400,"len":170.1,"ps":"2026-10-08","pf":"2026-11-06","as":"2026-08-10","af":"2026-08-20","p":170.1,"g":1,"pr":"SIBS1"},{"sn":"29","f":"MHB-07","t":"MHB-06","dn":1400,"len":279.1,"ps":"2026-08-11","pf":"2026-09-14","as":"2026-09-03","af":"2026-09-10","p":83,"g":0,"pr":"SIBS1"},{"sn":"30","f":"MHB-09","t":"MHB-10","dn":1400,"len":398.2,"ps":"2026-11-07","pf":"2026-12-22","as":"2026-09-03","af":"2026-09-10","p":107,"g":0,"pr":"SIBS1"},{"sn":"31","f":"MHB-03","t":"MHB-04","dn":1400,"len":399.6,"ps":"2026-08-22","pf":"2026-10-07","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"32","f":"MHB-05","t":"MHB-06","dn":1400,"len":281.2,"ps":"2026-09-15","pf":"2026-10-21","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"33","f":"MHB-05","t":"MHB-04","dn":1400,"len":366.9,"ps":"2026-10-22","pf":"2026-12-04","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"34","f":"MHB-11","t":"MHB-11.1","dn":1400,"len":45.3,"ps":"2026-12-05","pf":"2026-12-19","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"35","f":"MHB-11","t":"MHB-10","dn":1400,"len":306.3,"ps":"2026-12-20","pf":"2027-01-29","as":"","af":"","p":0,"g":0,"pr":"SIBS1"}];
+const SEED=[{"sn":"1","f":"MHA-20.1","t":"MHA-20","dn":1200,"len":78,"ps":"2025-12-02","pf":"2025-12-21","as":"2025-12-09","af":"2025-12-13","p":78,"g":1,"pr":"SIBS1"},{"sn":"2","f":"MHA-12.1","t":"MHA-12","dn":1200,"len":157,"ps":"2026-03-01","pf":"2026-03-27","as":"2026-04-27","af":"2026-05-06","p":157,"g":1,"pr":"SIBS2"},{"sn":"3","f":"MHB-09","t":"MHB-9.1","dn":1200,"len":30.22,"ps":"2026-05-17","pf":"2026-05-30","as":"2026-05-17","af":"2026-05-20","p":30.22,"g":1,"pr":"SIBS1"},{"sn":"4","f":"MHA-11.1","t":"MHA-11","dn":1200,"len":113.2,"ps":"2026-06-19","pf":"2026-07-03","as":"2026-06-01","af":"2026-06-09","p":113.2,"g":1,"pr":"SIBS2"},{"sn":"5","f":"MHB-3.1","t":"MHB-3","dn":1200,"len":33.4,"ps":"2026-06-13","pf":"2026-06-28","as":"2026-06-20","af":"2026-06-23","p":33.4,"g":1,"pr":"SIBS1"},{"sn":"6","f":"MHA-10.1","t":"MHA-10","dn":1200,"len":90.9,"ps":"2026-06-29","pf":"2026-07-19","as":"2026-07-06","af":"2026-07-15","p":90.9,"g":1,"pr":"SIBS2"},{"sn":"7","f":"MHA-5","t":"MHA-5.1","dn":1200,"len":130.4,"ps":"","pf":"","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"8","f":"MHA-2","t":"MHA-5","dn":1800,"len":777.2,"ps":"2025-12-13","pf":"2026-03-10","as":"2025-12-30","af":"2026-02-24","p":777.2,"g":1,"pr":"SIBS2"},{"sn":"9","f":"MHA-6","t":"MHA-5","dn":1800,"len":231.7,"ps":"2026-03-11","pf":"2026-04-16","as":"2026-03-22","af":"2026-04-08","p":231.7,"g":1,"pr":"SIBS2"},{"sn":"10","f":"MHA-6","t":"MHA-7","dn":1800,"len":365.44,"ps":"2026-04-18","pf":"2026-06-02","as":"2026-04-21","af":"2026-05-16","p":365.44,"g":1,"pr":"SIBS2"},{"sn":"11","f":"MHA-9","t":"MHA-10","dn":1800,"len":187.5,"ps":"2026-06-03","pf":"2026-07-07","as":"2026-06-08","af":"2026-06-23","p":187.5,"g":1,"pr":"SIBS2"},{"sn":"12","f":"MHA-9","t":"MHA-7","dn":1800,"len":518.4,"ps":"2026-07-07","pf":"2026-09-16","as":"2026-07-11","af":"2026-08-21","p":518.4,"g":0,"pr":"SIBS2"},{"sn":"13","f":"MHB-1","t":"MHA-20","dn":1600,"len":113.2,"ps":"2025-12-22","pf":"2026-01-18","as":"2025-12-31","af":"2026-01-05","p":113.2,"g":1,"pr":"SIBS1"},{"sn":"14","f":"MHB-1","t":"MHB-2","dn":1600,"len":252.3,"ps":"2026-01-19","pf":"2026-02-24","as":"2026-01-15","af":"2026-01-30","p":252.3,"g":1,"pr":"SIBS1"},{"sn":"15","f":"MHB-3","t":"MHB-2","dn":1600,"len":205.7,"ps":"2026-03-25","pf":"2026-04-30","as":"2026-02-12","af":"2026-02-22","p":205.7,"g":1,"pr":"SIBS1"},{"sn":"16","f":"MHA-19A","t":"MHSA-20","dn":1600,"len":97,"ps":"2026-02-25","pf":"2026-03-19","as":"2026-03-15","af":"2026-03-20","p":97,"g":1,"pr":"SIBS2"},{"sn":"17","f":"MHA-19A","t":"MHA-19","dn":1600,"len":176.1,"ps":"2026-03-20","pf":"2026-04-19","as":"2026-03-25","af":"2026-04-04","p":176.1,"g":1,"pr":"SIBS2"},{"sn":"18","f":"MHA-18","t":"MHA-19","dn":1600,"len":132.5,"ps":"2026-05-24","pf":"2026-06-19","as":"2026-04-15","af":"2026-04-20","p":132.5,"g":1,"pr":"SIBS2"},{"sn":"19","f":"MHA-18","t":"MHA-17","dn":1600,"len":176.6,"ps":"2026-04-20","pf":"2026-05-23","as":"2026-04-28","af":"2026-05-06","p":176.6,"g":1,"pr":"SIBS2"},{"sn":"20","f":"MHA-13","t":"MHA-12","dn":1600,"len":205.77,"ps":"2026-05-27","pf":"2026-07-01","as":"2026-05-19","af":"2026-05-28","p":205.77,"g":1,"pr":"SIBS2"},{"sn":"21","f":"MHA-13","t":"MHA-14","dn":1600,"len":372.2,"ps":"2026-07-02","pf":"2026-08-17","as":"2026-06-09","af":"2026-06-29","p":372.2,"g":1,"pr":"SIBS2"},{"sn":"22","f":"MHA-16","t":"MHA-17","dn":1600,"len":156,"ps":"2026-07-22","pf":"2026-08-21","as":"2026-07-16","af":"2026-07-26","p":156,"g":1,"pr":"SIBS2"},{"sn":"23","f":"MHA-16","t":"MHA-14","dn":1600,"len":542.2,"ps":"2026-07-26","pf":"2026-10-05","as":"2026-09-09","af":"2026-09-11","p":18,"g":0,"pr":"SIBS2"},{"sn":"24","f":"MHA-11","t":"MHA-10","dn":1600,"len":543,"ps":"2026-10-06","pf":"2026-11-11","as":"2026-09-10","af":"2026-09-11","p":0,"g":0,"pr":"SIBS2"},{"sn":"25","f":"MHA-11","t":"MHA-12","dn":1600,"len":243.8,"ps":"2026-11-12","pf":"2027-01-19","as":"","af":"","p":0,"g":0,"pr":"SIBS2"},{"sn":"26","f":"MHA-16","t":"MHA-16.1","dn":1400,"len":69.8,"ps":"2026-04-21","pf":"2026-05-10","as":"2026-04-06","af":"2026-04-13","p":69.8,"g":1,"pr":"SIBS2"},{"sn":"27","f":"MHB-07","t":"MHB-08","dn":1400,"len":376,"ps":"2026-07-30","pf":"2026-08-11","as":"2026-07-09","af":"2026-08-21","p":376,"g":1,"pr":"SIBS1"},{"sn":"28","f":"MHB-09","t":"MHB-8","dn":1400,"len":170.1,"ps":"2026-10-08","pf":"2026-11-06","as":"2026-08-10","af":"2026-08-20","p":170.1,"g":1,"pr":"SIBS1"},{"sn":"29","f":"MHB-07","t":"MHB-06","dn":1400,"len":279.1,"ps":"2026-08-11","pf":"2026-09-14","as":"2026-09-03","af":"2026-09-11","p":93,"g":0,"pr":"SIBS1"},{"sn":"30","f":"MHB-09","t":"MHB-10","dn":1400,"len":398.2,"ps":"2026-11-07","pf":"2026-12-22","as":"2026-09-03","af":"2026-09-11","p":121,"g":0,"pr":"SIBS1"},{"sn":"31","f":"MHB-03","t":"MHB-04","dn":1400,"len":399.6,"ps":"2026-08-22","pf":"2026-10-07","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"32","f":"MHB-05","t":"MHB-06","dn":1400,"len":281.2,"ps":"2026-09-15","pf":"2026-10-21","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"33","f":"MHB-05","t":"MHB-04","dn":1400,"len":366.9,"ps":"2026-10-22","pf":"2026-12-04","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"34","f":"MHB-11","t":"MHB-11.1","dn":1400,"len":45.3,"ps":"2026-12-05","pf":"2026-12-19","as":"","af":"","p":0,"g":0,"pr":"SIBS1"},{"sn":"35","f":"MHB-11","t":"MHB-10","dn":1400,"len":306.3,"ps":"2026-12-20","pf":"2027-01-29","as":"","af":"","p":0,"g":0,"pr":"SIBS1"}];
 /* Shaft positions traced from the SIBS TS-01 and TS-02 progress sheets
    (8 Sept 2026 issue), joined at MHA-20. Sheet units, not metres. Edit an
    X/Y pair to move a shaft; add a pair to bring a new shaft onto the sheet. */
 const NODES={"MHB-11.1":[0,35],"MHB-11":[70,4],"MHB-10":[318,0],"MHB-9.1":[436,128],"MHB-9":[478,68],"MHB-8":[581,91],"MHB-7":[788,189],"MHB-6":[931,277],"MHB-5":[1080,369],"MHB-4":[1332,431],"MHB-3":[1464,615],"MHB-3.1":[1484,688],"MHB-2":[1581,692],"MHA-20.1":[1602,872],"MHB-1":[1635,825],"MHA-20":[1677,889],"MHA-19A":[1721,888],"MHA-19":[1762,953],"MHA-18":[1826,951],"MHA-17":[1891,922],"MHA-16.1":[1951,859],"MHA-16":[1958,910],"MHA-14":[2177,1037],"MHA-13":[2292,1108],"MHA-12.1":[2312,1166],"MHA-12":[2373,1145],"MHA-11.1":[2432,1126],"MHA-11":[2475,1173],"MHA-10.1":[2689,1284],"MHA-10":[2696,1232],"MHA-9":[2779,1242],"MHA-7":[2999,1250],"MHA-6":[3155,1262],"MHA-5.1":[3245,1316],"MHA-5":[3251,1272],"MHA-2":[3583,1325]};
 /* Live copy. Filled in for you by "Download the page file"; blank means the
    file just works on its own, saving to this browser only. */
-const GH={owner:'',repo:'',branch:'main',path:'data.json'};
+const GH={owner:'ergauravtyagicivil-cmyk',repo:'SIBS-Progress',branch:'main',path:'data.json'};
 const RO=false;
-const ISSUED='2026-09-10';
-const KEY='mtbm:sibs:report-20260909-r2';
+const ISSUED='2026-09-11';
+const KEY='mtbm:sibs:live-ergauravtyagicivil-cmyk-SIBS-Progress';
 let D=[],AS='',mode='none',bkDate='';
 const $=id=>document.getElementById(id);
 let localPub='',VIEWER=false;
