@@ -421,6 +421,77 @@ i.lg.solid{background:var(--muted)} i.lg.hatch{background:repeating-linear-gradi
 .rdy{display:flex;flex-wrap:wrap;gap:6px}
 .rchip{font:inherit;font-family:var(--cond);font-weight:700;font-size:14px;padding:4px 10px;border-radius:7px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);cursor:pointer}
 .rchip:hover{border-color:var(--focus)}
+/* ---------- manhole construction by type and line ---------- */
+.mtx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mtp{border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0;background:var(--panel)}
+.mtp.all{grid-column:1/-1}
+.mth{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:var(--ink);color:var(--panel)}
+.mth b{font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.01em}
+.mth span{font-size:13px;opacity:.8}
+.mts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;padding:16px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.mts .ring .rg-n{font-size:34px}
+.mtc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mtc div{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:8px;padding:8px 10px 7px}
+.mtc b{display:block;font-family:var(--cond);font-weight:700;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.mtc span{display:block;font-size:13px;font-weight:600;margin-top:4px}
+.mtc em{display:block;font-style:normal;font-size:12px;color:var(--muted)}
+.mtpr{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.mtpr b{font-family:var(--cond);font-size:18px;color:var(--ink)}
+.mtpr i{display:block;height:8px;border-radius:4px;background:var(--gl-none);overflow:hidden}
+.mtpr i s{display:block;height:100%;background:var(--a-done)}
+.mtsum{display:flex;flex-direction:column;justify-content:center}
+.mtw{overflow-x:auto}
+.mtt{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+.mtt th{font-weight:600;font-size:12px;color:var(--muted);text-align:right;padding:9px 10px;background:var(--panel-2);border-bottom:2px solid var(--line);white-space:nowrap}
+.mtt th i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.mtt th:first-child,.mtt td:first-child{text-align:left}
+.mtt td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle;font-family:var(--cond);font-weight:600;font-size:17px}
+.mtt td:first-child{font-family:var(--sans);font-weight:600;font-size:14px;white-space:nowrap}
+.mtt td .tn{display:flex;align-items:center;gap:8px}
+.mtt td .tn i{width:12px;height:12px;border-radius:3px;flex:none}
+.mtt tbody tr.grp:nth-child(4n+1) td,.mtt tbody tr.grp:nth-child(4n+1)+tr.chr td{background:transparent}
+.mtt tr.hc td{border-bottom:0;padding-bottom:3px}
+.mtt tr.chr td{text-align:left;padding:0 10px 9px 30px}
+.mtt .ms{display:flex;flex-wrap:wrap;gap:4px}
+.mtt .ms button{font:inherit;font-family:var(--cond);font-weight:600;font-size:12.5px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.mtt .ms button.d{color:var(--ink);background:color-mix(in srgb,var(--a-done) 14%,var(--panel));border-color:var(--a-done)}
+.mtt .ms button.o{color:var(--ink);background:color-mix(in srgb,var(--focus) 12%,var(--panel));border-color:var(--focus)}
+.mtt .ms button:hover{border-color:var(--ink)}
+.mtt tr.sub td{background:var(--panel-2);font-weight:700}
+.mtt tr.sub td:first-child{font-weight:600;color:var(--ink);padding-left:30px}
+.mtt tr.tot td{background:var(--panel-2);border-top:2px solid var(--ink);border-bottom:0;font-weight:700;font-size:18px}
+.mtt tr.tot td:first-child{font-size:14px;font-weight:700;text-transform:none}
+.mtt .z{color:var(--muted);font-weight:500;opacity:.6}
+.mtt .pg{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+.mtt .pg i{display:inline-block;width:52px;height:6px;border-radius:3px;background:var(--gl-none);overflow:hidden}
+.mtt .pg i s{display:block;height:100%;background:var(--a-done)}
+.mtt .pg em{font-style:normal;min-width:38px}
+.mtp.all .mtin{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr)}
+.mtp.all .mts{border-bottom:0;border-right:1px solid var(--line);grid-template-columns:1fr;justify-items:center;text-align:center}
+.mtp.all .mtc{width:100%}
+.mtp.all .mtpr{width:100%;justify-self:stretch;text-align:left}
+.mtnote{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 16px}
+.mtnote div{border-left:4px solid var(--c);padding:8px 14px;background:var(--panel-2);border-radius:0 8px 8px 0;font-size:13.5px}
+.mtnote b{display:block;font-family:var(--cond);font-size:16px;margin-bottom:2px}
+.mtkey{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+@media (max-width: 1150px){ .mtx{grid-template-columns:1fr} .mtp.all .mtin{grid-template-columns:1fr} .mtp.all .mts{border-right:0;border-bottom:1px solid var(--line)} }
+@media (max-width: 700px){ .mtnote{grid-template-columns:1fr} .mts{grid-template-columns:1fr;justify-items:center} .mtc b{font-size:24px} }
+/* activity-only strip, EI gate, baffle tag */
+.mtt .ms button small{font-size:11px;font-weight:600;margin-left:4px;padding:0 5px;border-radius:999px;background:var(--t-cis);color:var(--panel)}
+.mtx2{padding:10px 12px 12px;border-top:1px dashed var(--line)}
+.mtx2 .h{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.xr{font:inherit;width:100%;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;text-align:left;padding:8px 12px;border:1px dashed var(--line);border-radius:8px;background:var(--panel-2);color:var(--ink);cursor:pointer}
+.xr:hover{border-color:var(--focus)}
+.xr b{font-family:var(--cond);font-size:16px}
+.xr .xm{font-size:12.5px;color:var(--muted);align-self:center}
+.xr .xa{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;font-size:13px;border-top:1px solid var(--line);padding-top:4px}
+.xd,.xo,.xn{font-weight:700;font-size:12.5px}
+.xd{color:var(--a-done)} .xo{color:var(--focus)} .xn{color:var(--muted)}
+.eib{border:1px solid var(--warn);background:var(--warn-bg);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:13.5px}
+.eib>b{display:block;font-family:var(--cond);font-size:16px;color:var(--warn);margin-bottom:4px}
+.eir{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;cursor:pointer;padding:3px 0}
+.eir input{width:18px;height:18px;accent-color:var(--a-done)}
+.eir em{grid-column:2;font-style:normal;font-size:12.5px;color:var(--muted)}
 /* ---------- per-line shaft & manhole split ---------- */
 .spl{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .spp{background:var(--panel-2);border-radius:10px;padding:14px 16px 4px;min-width:0}
@@ -636,6 +707,43 @@ table.wt input:disabled{background:var(--panel-2);color:var(--muted)}
 .wprev b{color:var(--ink);font-family:var(--cond);font-size:16px}
 @media (max-width:900px){ .wgrid{grid-template-columns:1fr} }
 @media print{ .hx-ctl,.rtools{display:none!important} .hx-band{-webkit-print-color-adjust:exact;print-color-adjust:exact} .card,.hx-strip{break-inside:avoid} }
+
+/* ---------- full print / PDF (A3 landscape keeps the desktop layout) ---------- */
+@page{size:A3 landscape;margin:8mm}
+html.pr #map{width:1500px!important;height:840px!important;flex:none}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;transition:none!important;animation:none!important}
+  html,body{height:auto!important;overflow:visible!important;background:var(--ground)}
+  .hx-ctl,.rtools,.hx-dr button,#goXl,#goBackup,#goWts,#goTypes,.tools,#tip,#placeBar,.themebtn,#searchWrap,.tabs,.lnk.danger,.hx-wl{display:none!important}
+  .tbw,.barsc,.mtw,.wtw,.list,aside,.hx-planbox{overflow:visible!important;max-height:none!important}
+  .barsc svg,.bars{max-width:100%!important;height:auto!important}
+  .card,.hx-strip,.mtp,.spp,.dg2>*,.dg3>*{break-inside:avoid;page-break-inside:avoid}
+  #cReg,#cMhType{break-inside:auto;page-break-inside:auto}
+  h3,h4,.mth{break-after:avoid;page-break-after:avoid}
+  #cSplit{break-before:page;page-break-before:always}
+  .rgt tr{break-inside:avoid}
+  .app{display:block!important;height:auto!important;break-before:page;page-break-before:always}
+  #map{width:1500px!important;max-width:100%;height:840px!important;overflow:visible!important;margin-bottom:170px;break-inside:avoid;border:1px solid var(--line)}
+  #map .legend{position:absolute;top:calc(100% + 10px);bottom:auto;left:0;right:0;max-width:none}
+  #map .lyr{display:none!important}
+  aside{border:0!important;break-before:page;page-break-before:always}
+  aside .list{columns:3;column-gap:18px}
+  aside .list>*{break-inside:avoid}
+  .eib input{accent-color:var(--a-done)}
+  /* keep the desktop layout on paper */
+  .hx-hero{grid-template-columns:minmax(300px,380px) minmax(0,1fr)!important}
+  .hx-head{display:flex!important;flex-direction:column!important;gap:18px!important}
+  .hx-head .hx-hstat{grid-column:auto!important}
+  .hx-strip{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  .hx-m:nth-child(n){border-top:none!important} .hx-m+.hx-m{border-left:1px solid var(--line)!important}
+  .mtx{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .mtp.all .mtin{grid-template-columns:minmax(300px,380px) minmax(0,1fr)!important}
+  .mtp.all .mts{border-right:1px solid var(--line)!important;border-bottom:0!important}
+  .spl{grid-template-columns:1fr 1fr!important}
+  .dg3{grid-template-columns:1.25fr 1fr 1fr!important} .dg3>#cLines{grid-column:auto!important}
+  .dg2{grid-template-columns:1.2fr 1fr!important}
+  .wgrid{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)!important}
+}
 </style>
 </head>
 <body>
@@ -645,7 +753,7 @@ table.wt input:disabled{background:var(--panel-2);color:var(--muted)}
       <div class="hx-ttl"><div class="hx-proj">Sheikh Isa Bin Salman Highway, Kingdom of Bahrain</div><h1>SIBS Trunk Sewer progress</h1>
         <div class="hx-sub" id="dsub"></div></div>
       <div class="hx-asof hx-date"><label for="asofIn">Progress as of</label><div class="hx-dr"><input type="date" id="asofIn" aria-label="Progress as of date"><button class="hx-btn" id="asofToday" type="button">Today</button></div></div>
-      <div class="hx-ctl"><button class="hx-btn" id="dxl">Load newer Excel</button><a class="hx-btn pri" href="#layout">Go to layout</a><button class="hx-btn icon" id="theme2" aria-label="Switch light or dark">◐</button></div>
+      <div class="hx-ctl"><button class="hx-btn pri" id="dprint" type="button">Print / Save PDF</button><button class="hx-btn" id="dxl">Load newer Excel</button><a class="hx-btn pri" href="#layout">Go to layout</a><button class="hx-btn icon" id="theme2" aria-label="Switch light or dark">◐</button></div>
     </div>
     <div class="hx-hero">
       <div class="hx-head" id="hxHead"></div>
@@ -654,6 +762,7 @@ table.wt input:disabled{background:var(--panel-2);color:var(--muted)}
   </div></header>
   <div class="hx-main">
   <section class="hx-strip" id="kpis" aria-label="Key figures"></section>
+  <article class="card" id="cMhType" aria-label="Manhole construction by type and line"></article>
   <article class="card" id="cSplit" aria-label="Shaft and manhole progress by line"></article>
   <div class="dg3">
     <article class="card" id="cLines"></article>
@@ -1082,7 +1191,8 @@ function renderShafts(){
   });
   const modeBar = `<div class="modebar" role="tablist"><button class="mb${typeMode?'':' on'}" data-mode="0">Progress</button><button class="mb${typeMode?' on':''}" data-mode="1">Types &amp; segments</button></div>`;
   const top = modeBar + (typeMode ? addForm() + `<p class="hint" style="margin:6px 8px">Change each manhole's type and add or remove precast segments and CIS lifts. Changes show on the layout and in the sections straight away.${canEditProgress()?'':' You need edit access to change them.'}</p><div id="tmsgBox" class="note" style="display:none;margin:6px 8px"></div>` : (bulk ? bulkPanel() : ((files && canEditProgress()) ? `<div class="bulkbar"><button class="btn" id="bulkbtn">Add drawings for several manholes</button></div>` : '')));
-  list.innerHTML = top + (h || '<p class="notes">No shaft matches that name.</p>') + (typeMode ? removedList() : '');
+  list.innerHTML = top + (h || '<p class="notes">No shaft matches that name.</p>') + eiBox() + (typeMode ? removedList() : '');
+  wireEi(list);
   wireBulk();
   list.querySelectorAll('.mb').forEach(b => b.onclick = () => { typeMode = b.dataset.mode==='1'; renderShafts(); });
   if(typeMode){ wireTypeEditors(list); wireAddRemove(); list.querySelectorAll('.tnm').forEach(b => b.onclick = () => selectShaft(byName[b.dataset.open.replace(/&amp;/g,'&')])); }
@@ -1437,7 +1547,20 @@ const fmtDate = d => { const t = TS(d); return t ? new Date(t).toLocaleDateStrin
 /* Excel dashboard baseline (SIBS_Manhole_Progress_Dashboard). Replaced when a newer workbook is loaded. */
 const BASE_EMBED = {"asOf":"2026-09-13","importedAt":"2026-09-13T23:59:59.000Z","source":"SIBS_Manhole_Progress_Dashboard_v26.xlsx","mh":{"MHB11.1":{"name":"MHB-11.1","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Blind","act":"No Activity Ongoing","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHB11":{"name":"MHB-11","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":4,"inter":0,"non":1,"cl":51.691,"il":39.52,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHB10":{"name":"MHB-10","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":0},"type":"Precast","typ":6,"inter":0,"non":1,"cl":62.5,"il":46.125,"act":"Base Plug","bd":false,"lifts":0},"MHB9.1":{"name":"MHB-9.1","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Blind","act":"No Activity Ongoing","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHB9":{"name":"MHB-9","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","special":"Backdrop","typ":6,"inter":1,"non":1,"cl":64.366,"il":45.721,"act":"No Activity Ongoing","rem":"CHECK: Layout 08-Sep says Cast-in-situ; Element Study R2 lists precast (6 typ + 1 inter + 1 non-typ). Kept Precast.","bd":true,"lifts":0},"MHB8":{"name":"MHB-8","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Cast-In-Situ","typ":7,"inter":0,"non":1,"cl":63.45,"il":45.544,"act":"No Activity Ongoing","rem":"Type = PRECAST per Element Study R2 + Layout 08-Sep.","bd":false,"lifts":0},"MHB7":{"name":"MHB-7","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":7,"inter":0,"non":1,"cl":64.17,"il":45.162,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHB6":{"name":"MHB-6","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":6,"inter":0,"non":1,"cl":62.15,"il":44.876,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHB5":{"name":"MHB-5","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":6,"inter":0,"non":1,"cl":61.029,"il":44.588,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHB4":{"name":"MHB-4","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1},"type":"Precast","typ":4,"inter":0,"non":1,"cl":56.71,"il":44.215,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHB3.1":{"name":"MHB-3.1","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Blind","act":"No Activity Ongoing","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHB3":{"name":"MHB-3","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Cast-In-Situ","special":"Backdrop","lifts":4,"act":"No Activity Ongoing","rem":"CIS lifts = 8 assumed (not covered by Element Study R2).","bd":true,"typ":0,"inter":0,"non":0},"MHB2":{"name":"MHB-2","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"t3":1,"n1":1,"bf":0.8},"type":"Precast","typ":3,"inter":0,"non":1,"cl":53.579,"il":43.397,"act":"Backfilling","bd":false,"lifts":0},"MHB1":{"name":"MHB-1","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"t3":1,"n1":1,"bf":0.8},"type":"Precast","typ":3,"inter":0,"non":1,"cl":53.43,"il":43.14,"act":"Backfilling","bd":false,"lifts":0},"MHA20":{"name":"MHA-20","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"scr":1,"cbase":1,"l1":1,"l2":1,"l3":1,"l4":1,"bf":0.9,"spc":1},"type":"Cast-In-Situ","lifts":4,"act":"Backfilling","rem":"CIS lifts = 8 assumed (not covered by Element Study R2).","bd":false,"typ":0,"inter":0,"non":0},"MHA20.1":{"name":"MHA-20.1","line":"SIBS-1","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"bf":1},"type":"Blind","act":"No Activity Ongoing","rem":"Scope accomplished per Layout 08-Sep - pipe connection & backfilling complete.","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHA19A":{"name":"MHA-19A","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"t3":1,"n1":1,"bf":0.8},"type":"Precast","typ":3,"inter":0,"non":1,"cl":53.239,"il":42.78,"act":"Backfilling","bd":false,"lifts":0},"MHA19":{"name":"MHA-19","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"t3":1,"n1":1,"bf":0.8},"type":"Precast","typ":3,"inter":0,"non":1,"cl":53.421,"il":42.49,"act":"Backfilling","bd":false,"lifts":0},"MHA18":{"name":"MHA-18","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"t3":1,"n1":1,"bf":0.8},"type":"Precast","typ":3,"inter":0,"non":1,"cl":53.302,"il":42.25,"act":"Backfilling","bd":false,"lifts":0},"MHA17":{"name":"MHA-17","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"base":1,"bot":0},"type":"Precast","typ":3,"inter":0,"non":2,"cl":53.421,"il":41.98,"act":"Precast Segment","bd":false,"lifts":0},"MHA16":{"name":"MHA-16","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Cast-In-Situ","lifts":4,"act":"No Activity Ongoing","rem":"CIS lifts = 8 assumed (not covered by Element Study R2).","bd":false,"typ":0,"inter":0,"non":0},"MHA16.1":{"name":"MHA-16.1","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"bf":0.1},"type":"Blind","act":"Backfilling","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHA14":{"name":"MHA-14","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":3,"inter":0,"non":2,"cl":52.649,"il":40.86,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHA13":{"name":"MHA-13","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":1,"t2":1,"bf":0.1},"type":"Precast","typ":4,"inter":0,"non":1,"cl":52.779,"il":40.26,"act":"Backfilling","bd":false,"lifts":0},"MHA12":{"name":"MHA-12","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","special":"Backdrop","typ":2,"inter":1,"non":2,"cl":52.715,"il":39.92,"act":"No Activity Ongoing","rem":"CHECK: Layout 08-Sep says Cast-in-situ; Element Study R2 lists precast (2 typ + 1 inter + 2 non-typ). Kept Precast.","bd":true,"lifts":0},"MHA12.1":{"name":"MHA-12.1","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"scr":1,"cbase":1,"l1":1,"l2":1,"l3":1,"l4":1,"bf":0.9,"cov":0},"type":"Cast-In-Situ","lifts":3,"act":"Backfilling","rem":"Type = CAST-IN-SITU per Layout 08-Sep. CIS lifts = 8 assumed.","bd":false,"typ":0,"inter":0,"non":0},"MHA11":{"name":"MHA-11","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Cast-In-Situ","special":"Backdrop","lifts":4,"act":"No Activity Ongoing","rem":"CHECK: Layout 08-Sep says Precast; not in Element Study R2. Kept Cast-In-Situ, 8 lifts assumed.","bd":true,"typ":0,"inter":0,"non":0},"MHA11.1":{"name":"MHA-11.1","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"bf":1},"type":"Blind","act":"No Activity Ongoing","rem":"Scope accomplished per Layout 08-Sep - pipe connection & backfilling complete.","bd":false,"typ":0,"inter":0,"non":0,"lifts":0},"MHA10":{"name":"MHA-10","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","special":"Backdrop","typ":4,"inter":1,"non":0,"cl":52.4,"il":38.46,"act":"No Activity Ongoing","rem":"CHECK: Layout 08-Sep says Cast-in-situ; Element Study R2 lists precast (4 typ + 1 inter). Kept Precast.","bd":true,"lifts":0},"MHA10.1":{"name":"MHA-10.1","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"scr":1,"cbase":1,"l1":1,"l2":1,"l3":0,"bf":0.3},"type":"Cast-In-Situ","special":"Baffle Shaft","lifts":5,"act":"CIS Lift","rem":"Baffle drop shaft. CIS lifts = 8 assumed.","bd":false,"typ":0,"inter":0,"non":0},"MHA9":{"name":"MHA-9","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":5,"inter":0,"non":1,"cl":52.1,"il":38.15,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHA7":{"name":"MHA-7","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Precast","typ":5,"inter":0,"non":1,"cl":51.897,"il":37.32,"act":"No Activity Ongoing","bd":false,"lifts":0},"MHA6":{"name":"MHA-6","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1,"pipe":1,"base":1,"bot":1,"t1":0,"bf":0.1},"type":"Precast","typ":5,"inter":0,"non":1,"cl":51.961,"il":36.73,"act":"Precast Segment","bd":false,"lifts":0},"MHA5":{"name":"MHA-5","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":1,"exc":1,"bl":1,"plug":1},"type":"Cast-In-Situ","lifts":4,"act":"No Activity Ongoing","rem":"CIS lifts = 5 assumed (not covered by Element Study R2).","bd":false,"typ":0,"inter":0,"non":0},"MHA5.1":{"name":"MHA-5.1","line":"SIBS-2","s":{"tp":1,"gw":1,"sp":1,"cb":0},"type":"Blind","act":"Capping Beam","bd":false,"typ":0,"inter":0,"non":0,"lifts":0}}};
 let BASE = BASE_EMBED;
-const baseOf = n => BASE.mh[bKey(short(n))] || null;
+/* Manholes on the layout that the Excel doesn't list, and shafts built by others (existing).
+   MHA2 ADD: existing blind shaft. Our scope is pipe connection & concrete, then backfilling only. */
+const EXTRA_MH = {'MHA2ADD': {name:'MHA2 ADD', line:'SIBS-2', s:{}, type:'Blind', act:'No Activity Ongoing', rem:'Existing blind shaft, built by others. Our scope: pipe connection & concrete, then backfilling.', bd:false, typ:0, inter:0, non:0, lifts:0}};
+const EXIST_SHAFT = new Set(['MHA2ADD']);
+// MHB8.1: waiting for the Engineer's instruction. Hidden everywhere until "EI received" is ticked; then counted on SIBS-1.
+EXTRA_MH['MHB8.1'] = {name:'MHB8.1', line:'SIBS-1', s:{}, act:'No Activity Ongoing', rem:"Added on Engineer's instruction. Type to be confirmed on its page.", bd:false, typ:0, inter:0, non:0, lifts:0};
+const EI_PENDING = new Set(['MHB8.1']);
+const eiKey = n => bKey(short(n));
+const eiWaiting = s => EI_PENDING.has(eiKey(s.name)) && !cfgOf(s.name).ei;
+// MHA2 ADD: not counted as a manhole; only its pipe connection & concrete and backfilling are tracked as activities
+const ACT_ONLY = new Set(['MHA2ADD']);
+const isActOnly = s => ACT_ONLY.has(bKey(short(s.name)));
+const isExisting = n => EXIST_SHAFT.has(bKey(short(n)));
+const baseOf = n => BASE.mh[bKey(short(n))] || EXTRA_MH[bKey(short(n))] || null;
 
 const KIND = {
   shaft:{label:'Shaft construction'}, pipe:{label:'Pipe connection & concrete'}, seg:{label:'Segments / CIS lifts'},
@@ -1493,7 +1616,7 @@ function specOf(n){
   const pick = (k, d) => has(p[k]) ? p[k] : (b && has(b[k]) ? b[k] : d);
   const type = normType(pick('type', null));
   const t = type || 'Precast';
-  const sp = {type: t, known: !!(b || has(p.type)), fromPage: ['type','bd','typ','inter','non','lifts'].some(k=>has(p[k])), bd: !!pick('bd', false), special: (b && b.special) || '',
+  const sp = {type: t, existing: isExisting(n), known: !!(b || has(p.type)), fromPage: ['type','bd','typ','inter','non','lifts'].some(k=>has(p[k])), bd: !!pick('bd', false), special: (b && b.special) || '',
     typ: Math.max(0, +pick('typ', type ? 0 : 4) || 0), inter: Math.max(0, +pick('inter', 0) || 0),
     non: Math.max(0, +pick('non', type ? 0 : 1) || 0), lifts: Math.max(0, +pick('lifts', 0) || 0)};
   // anything already marked (on this page or in the Excel) stays drawn, even if the count is lower
@@ -1565,11 +1688,11 @@ function actEditor(n, compact, dis){
   const box = id => { const v = actOn(n,id,sp), d = actDefault(sp,id), k = ACT_KIND(id);
     const tag = id==='bd' ? '' : v && !d ? '<em>added</em>' : !v && d ? '<em>removed</em>' : '';
     return `<label class="acb${v?'':' off'}"><input type="checkbox" data-act="acton" data-id="${id}" ${v?'checked':''} ${dis}><i style="--c:var(--a-${k})"></i>${ACT_LABEL[id]}${tag}</label>`; };
-  const mh = MH_OPT.map(([id])=>id).filter(id=>av.includes(id)), sh = SHAFT_ACTS.map(([id])=>id);
+  const mh = MH_OPT.map(([id])=>id).filter(id=>av.includes(id)), sh = sp.existing ? [] : SHAFT_ACTS.map(([id])=>id);
   const nOn = [...mh, ...sh].filter(id=>actOn(n,id,sp)).length;
   const sum = ch.add.length || ch.rm.length ? [ch.rm.length?`${ch.rm.length} removed`:'', ch.add.length?`${ch.add.length} added`:''].filter(Boolean).join(', ') : 'standard for this type';
   const reset = (ch.add.length || ch.rm.length) && !dis ? ` <button class="lnk" data-act="actreset">Use standard activities</button>` : '';
-  const body = `<div class="acg"><span class="acgh">Manhole construction</span>${mh.map(box).join('')}</div><div class="acg"><span class="acgh">Shaft construction</span>${sh.map(box).join('')}</div>
+  const body = `<div class="acg"><span class="acgh">Manhole construction</span>${mh.map(box).join('')}</div><div class="acg"><span class="acgh">Shaft construction</span>${sp.existing ? '<span class="hint" style="margin:0">Existing shaft, built by others. Not in our scope.</span>' : sh.map(box).join('')}</div>
     <div class="tinfo">Untick an activity this manhole doesn't have, tick one to add it. Points of removed activities drop out, so the rest are scaled to 100%.${reset}</div>`;
   return `<details class="acts"${compact?'':' open'}><summary>Activities: ${nOn} in use, ${sum}</summary>${body}</details>`;
 }
@@ -1622,10 +1745,12 @@ const ACT_KIND = id => id==='exc' ? 'exc' : SHAFT_ACTS.some(([x])=>x===id) ? 'sh
 // activities a type can carry at all (a blind shaft has no chamber, benching, lining or cover)
 const actAvail = t => [...SHAFT_ACTS.map(([id])=>id), ...(t==='Blind' ? ['pipe','bf','spc'] : MH_OPT.map(([id])=>id))];
 // what a manhole of this type has unless changed on its page
-function actDefault(sp, id){ if(id==='bd') return !!sp.bd; if(id==='spc' && sp.type==='Blind') return false; return actAvail(sp.type).includes(id); }
+const SHAFT_IDS = new Set(SHAFT_ACTS.map(([id])=>id));
+function actDefault(sp, id){ if(sp.existing && SHAFT_IDS.has(id)) return false; if(id==='bd') return !!sp.bd; if(id==='spc' && sp.type==='Blind') return false; return actAvail(sp.type).includes(id); }
 function actOn(n, id, sp){
   sp = sp || specOf(n);
   if(!actAvail(sp.type).includes(id)) return false;
+  if(sp.existing && SHAFT_IDS.has(id)) return false;   // existing shaft: shaft works not in our scope
   if(id==='bd') return !!sp.bd;
   const o = (cfgOf(n).spec||{}).acts;
   return o && typeof o[id]==='boolean' ? o[id] : actDefault(sp, id);
@@ -1665,8 +1790,9 @@ function pctOf(n){
     const st = stOf(n,a.id), e = st.s==='done' ? a.w : (PCT_ACTS.has(a.id) && st.s==='ongoing' ? a.w*st.pct : 0);
     if(a.g==='shaft'){ sw+=a.w; se+=e; } else { mw+=a.w; me+=e; byK[a.k]=(byK[a.k]||0)+e; }
   });
-  const shaft = sw?se/sw:0, mh = mw?me/mw:0;
-  return {shaft, mh, all: wCombine(shaft, mh), byK, mw, ew:me};
+  const ex = !sw && isExisting(n);                 // existing shaft: counts as in place, left out of shaft totals
+  const shaft = ex ? 1 : sw?se/sw:0, mh = mw?me/mw:0;
+  return {shaft, mh, all: ex ? mh : wCombine(shaft, mh), byK, mw, ew:me, ex};
 }
 function stageOf(n){
   const acts = actsOf(n); let on = null, last = null, onAll = [];
@@ -1771,7 +1897,7 @@ function onProgress(){
   const tracked = counted().map(s=>pctOf(s.name));
   const av = sumStats(counted());
   const doneN = counted().filter(s=>s.stage.k==='done').length;
-  tot.innerHTML = `<div class="tot"><div class="n">${pctTxt(av.shaft)}</div><div class="l">Shaft construction, ${tracked.filter(p=>p.shaft>0.9999).length} of ${tracked.length} shafts done</div>${`<i class="pbar2"><b style="width:${av.shaft*100}%;background:var(--a-shaft)"></b></i>`}</div>
+  tot.innerHTML = `<div class="tot"><div class="n">${pctTxt(av.shaft)}</div><div class="l">Shaft construction, ${av.shDone} of ${av.shN} shafts done</div>${`<i class="pbar2"><b style="width:${av.shaft*100}%;background:var(--a-shaft)"></b></i>`}</div>
     <div class="tot"><div class="n">${pctTxt(av.mh)}</div><div class="l">Manhole construction, ${doneN} of ${tracked.length} complete</div>${stackBar(av,'pbar2')}</div>`;
   const gb = document.getElementById('goBackup'); if(gb) gb.onclick = () => { setTab('about'); const b = document.querySelector('.bk'); if(b) b.scrollIntoView({block:'start'}); };
   const gx = document.getElementById('goXl'); if(gx) gx.onclick = () => document.getElementById('xfile').click();
@@ -1872,6 +1998,7 @@ function sectionSVG(s){
   if(on('sp')) g += EL('sp','shaft','Secant pile', [[xL, cutBot, pt, toe-cutBot],[xR, cutBot, pt, toe-cutBot]], 'body pile');
   if(on('plug')) g += EL('plug','shaft','Base plug', [[cx-si, yPlug, si*2, plugH]]);
   if(on('bl')) g += EL('bl','shaft','Blinding concrete', [[cx-si, yBl, si*2, blH]]);
+  if(sp.existing) g += `<g opacity=".5" aria-hidden="true">${rect(xL, pileTop, pt, toe-pileTop, 'class="body pile"')}${rect(xR, pileTop, pt, toe-pileTop, 'class="body pile"')}${rect(cx-si, yPlug, si*2, plugH, 'class="body"')}</g><text class="lvn" x="${cx}" y="${yPlug+plugH/2+4}" text-anchor="middle">Existing shaft, by others</text>`;
 
   // ---- manhole structure ----
   if(!blind){
@@ -2053,7 +2180,7 @@ function openDetail(s){ detailOf = s; currentTab='detail'; setTab('detail'); lis
 function specLine(n){
   const sp = specOf(n);
   const ch = actChanges(n), chTxt = (ch.rm.length?` Removed: ${ch.rm.join(', ')}.`:'') + (ch.add.length?` Added: ${ch.add.join(', ')}.`:'');
-  if(sp.type==='Blind'){ const m = actsOf(n).filter(a=>a.g==='mh').map(a=>a.label.toLowerCase()); return `Blind shaft: ${m.length ? m.join(', ').replace(/, ([^,]*)$/,' and $1') : 'no manhole activities'} only.${chTxt}`; }
+  if(sp.type==='Blind'){ const m = actsOf(n).filter(a=>a.g==='mh').map(a=>a.label.toLowerCase()); return `${sp.existing?'Existing blind shaft (built by others)':'Blind shaft'}: ${m.length ? m.join(', ').replace(/, ([^,]*)$/,' and $1') : 'no manhole activities'} only.${chTxt}`; }
   const rings = [sp.typ?`${sp.typ} typical`:'', sp.inter?`${Math.min(1,sp.inter)} inter`:'', sp.non?`${sp.non} non-typical`:''].filter(Boolean).join(', ');
   const lifts = `${sp.lifts||'no'} CIS lift${sp.lifts===1?'':'s'}`;
   const body = sp.type==='Cast-In-Situ' ? `screed, base and ${lifts}`
@@ -2074,7 +2201,7 @@ function renderDetail(){
     <div class="dh"><h2>${short(s.name)}${side(s.name)?` <span style="font-size:18px;color:var(--muted)">(${side(s.name)})</span>`:''}</h2><span class="pct" id="dpct"></span></div>
     <div class="dmeta">${s.line==='Junction'?'Junction of SIBSTS-01 and 02':s.line}. Shaft ${s.block.length? s.block.join(', ').replace(/M DIA/,' m dia') : 'size not shown'}. ${conn.map(d=>`DN${d.dn} to ${short(d.a===s.name?d.b:d.a)}`).join(', ')}.</div>
     <div class="dmeta" style="color:var(--ink)" id="dspec">${specLine(s.name)}</div>
-    <div class="tbox"><h3>Manhole type and segments</h3><div id="dtype"></div></div>
+    <div id="dei"></div><div class="tbox"><h3>Manhole type and segments</h3><div id="dtype"></div></div>
     ${b ? '' : `<div class="note">This manhole is not in the Excel dashboard, so its type and ring count are assumed. Set them below.</div>`}
     ${b && b.rem ? `<div class="note">Excel remark: ${esc(b.rem)}</div>` : ''}
     <div id="dbars"></div>
@@ -2118,7 +2245,7 @@ async function paintDetail(){
   const s = detailOf; if(!s || !document.getElementById('dsec')) return;
   const p = pctOf(s.name), stg = stageOf(s.name);
   document.getElementById('dpct').textContent = `${pctTxt(p.mh)} manhole`;
-  document.getElementById('dbars').innerHTML = `<div class="dbar"><span>Shaft construction</span>${`<i class="pbar2"><b style="width:${p.shaft*100}%;background:var(--a-shaft)"></b></i>`}<em>${pctTxt(p.shaft)}</em></div>
+  document.getElementById('dbars').innerHTML = `<div class="dbar"><span>Shaft construction</span>${`<i class="pbar2"><b style="width:${p.shaft*100}%;background:var(--a-shaft)"></b></i>`}<em>${p.ex?'Existing':pctTxt(p.shaft)}</em></div>
     <div class="dbar"><span>Manhole construction</span>${stackBar(p,'pbar2')}<em>${pctTxt(p.mh)}</em></div>
     <div class="dnow"><i class="adot" style="background:${stg.k?`var(--a-${stg.k})`:'var(--marker)'};opacity:${stg.on||stg.k==='done'||!stg.k?1:.45}"></i>${stg.on ? `Ongoing: ${stg.all.join(', ')}` : stg.label}</div>`;
   const ds = document.getElementById('dstate');
@@ -2129,6 +2256,7 @@ async function paintDetail(){
   paintDrawings(s);
   document.getElementById('dsec').innerHTML = sectionSVG(s);
   document.getElementById('dkey').innerHTML = secKey(s.name);
+  const de = document.getElementById('dei'); if(de){ de.innerHTML = EI_PENDING.has(eiKey(s.name)) ? eiBox(s) : ''; wireEi(de); }
   const dt = document.getElementById('dtype'); if(dt){ dt.innerHTML = typeEditor(s.name, false) + (canEditProgress() ? `<div class="tacts" style="margin-top:10px">${s.custom?`<button class="lnk" id="dplace">${s.p?'Move on layout':'Place on layout'}</button>`:''}<button class="lnk danger" id="drm">Remove this manhole</button></div>` : ''); wireTypeEditors(dt);
     const dp = document.getElementById('dplace'); if(dp) dp.onclick = () => startPlacing(s);
     const dr = document.getElementById('drm'); if(dr) dr.onclick = () => { if(dr.dataset.armed){ setRemoved(s,true); clearSel(); setTab('shafts'); return; } dr.dataset.armed='1'; dr.textContent='Tap again to remove it from the layout and dashboard'; setTimeout(()=>{ if(dr.isConnected){ delete dr.dataset.armed; dr.textContent='Remove this manhole'; } },4000); }; }
@@ -2165,7 +2293,7 @@ async function paintDetail(){
     const sh = acts.filter(a=>a.g==='shaft'), mh = acts.filter(a=>a.g==='mh');
     const openShaft = chk.querySelector('details') ? chk.querySelector('details').open : p.shaft<1;
     chk.innerHTML = `<h4 class="chh">Manhole construction</h4>${mh.map(row).join('')}
-      <details class="chd" ${openShaft?'open':''}><summary>Shaft construction, ${pctTxt(p.shaft)}</summary>${sh.map(row).join('')}</details>`;
+      ${p.ex ? '<p class="hint" style="margin:10px 0 0"><b>Shaft construction:</b> existing shaft, built by others. Not in our scope, so it is left out of shaft totals.</p>' : `<details class="chd" ${openShaft?'open':''}><summary>Shaft construction, ${pctTxt(p.shaft)}</summary>${sh.map(row).join('')}</details>`}`;
     chk.querySelectorAll('select').forEach(sel => sel.onchange = () => { const id = sel.id.slice(2); setAct(s.name, id, sel.value||null, PCT_ACTS.has(id)&&sel.value==='ongoing' ? stOf(s.name,id).pct : 0); });
     chk.querySelectorAll('input[data-pct]').forEach(pi => pi.onchange = () => { const id = pi.dataset.pct, x = Math.max(0, Math.min(100, +pi.value||0)); setAct(s.name, id, x>=100?'done':'ongoing', x/100, stOf(s.name,id).date); });
     chk.querySelectorAll('input[type=date]').forEach(di => di.onchange = () => { const id = di.id.slice(2), st = stOf(s.name,id); if(di.value && st.s) setAct(s.name, id, st.s, st.pct, di.value); });
@@ -2241,8 +2369,16 @@ document.getElementById('xfile').addEventListener('change', e => { const f = e.t
 
 /* ================= progress dashboard ================= */
 const dashEl = document.getElementById('dash');
-const isHidden = s => !!(s.gone || cfgOf(s.name).removed);
-const counted = () => shafts.filter(s => !isHidden(s) && (baseOf(s.name) || PROG[keyOf(s.name)] || s.custom));
+const isHidden = s => !!(s.gone || cfgOf(s.name).removed || eiWaiting(s));
+const countedAll = () => shafts.filter(s => !isHidden(s) && (baseOf(s.name) || PROG[keyOf(s.name)] || s.custom));
+const counted = () => countedAll().filter(s => !isActOnly(s));
+function eiBox(only){
+  const L = shafts.filter(s => EI_PENDING.has(eiKey(s.name)) && !s.gone && (!only || s===only)); if(!L.length) return '';
+  const ed = canEditProgress();
+  return `<div class="eib"><b>Engineer's instruction</b>${L.map(s => { const got = !!cfgOf(s.name).ei;
+    return `<label class="eir"><input type="checkbox" data-ei="${esc(s.name)}" ${got?'checked':''} ${ed?'':'disabled'}><span><b>${esc(short(s.name))}</b> EI received</span><em>${got ? 'Shown on the layout and counted in all totals.' : 'EI not received. Hidden from the layout, lists and every total until ticked.'}</em></label>`; }).join('')}${ed?'':'<p class="hint" style="margin:4px 0 0">You need edit access to change this.</p>'}</div>`;
+}
+function wireEi(root){ (root||document).querySelectorAll('input[data-ei]').forEach(c => c.onchange = () => { if(!canEditProgress()){ c.checked = !c.checked; return; } writeDoc(c.dataset.ei, {ei: c.checked}); }); }
 function lineOf(s){ const b = baseOf(s.name); if(b && b.line) return /2/.test(b.line) ? 'SIBSTS-02' : 'SIBSTS-01'; return s.line==='SIBSTS-02' ? 'SIBSTS-02' : 'SIBSTS-01'; }
 const alongX = s => s.p ? s.p[0] : 1e9;
 const P0 = v => Math.round(v*100);
@@ -2263,15 +2399,16 @@ function sumStats(T){
   // each manhole scaled by its type's weight in the totals (Progress weights card)
   const ty = new Map(T.map(s => [s, specOf(s.name).type]));
   const fS = s => wFac('shaft', ty.get(s)), fM = s => wFac('mh', ty.get(s));
-  const MW = T.reduce((a,s)=>a+P.get(s).mw*fM(s),0), SW = T.reduce((a,s)=>a+fS(s),0);
-  const avg = f => !T.length ? 0 : f==='mh' ? (MW ? T.reduce((a,s)=>a+P.get(s).mh*P.get(s).mw*fM(s),0)/MW : 0) : (SW ? T.reduce((a,s)=>a+P.get(s)[f]*fS(s),0)/SW : 0);
+  const TS = T.filter(s=>!P.get(s).ex);   // shafts we build (existing shafts left out)
+  const MW = T.reduce((a,s)=>a+P.get(s).mw*fM(s),0), SW = TS.reduce((a,s)=>a+fS(s),0);
+  const avg = f => !T.length ? 0 : f==='mh' ? (MW ? T.reduce((a,s)=>a+P.get(s).mh*P.get(s).mw*fM(s),0)/MW : 0) : (SW ? TS.reduce((a,s)=>a+P.get(s)[f]*fS(s),0)/SW : 0);
   const byK = {}; T.forEach(s => { const p = P.get(s); for(const k in p.byK) byK[k] = (byK[k]||0) + (MW ? p.byK[k]*fM(s)/MW*100 : 0); });
   const el = {pc:{t:0,d:0,o:0}, cis:{t:0,d:0,o:0}};
   T.forEach(s => structOf(s.name).forEach(e => { const g = /^(scr|cbase|l\d+|bw\d+)$/.test(e.id) ? el.cis : el.pc, st = stOf(s.name,e.id); g.t++; if(st.s==='done') g.d++; else if(st.s==='ongoing') g.o++; }));
   let bfSum = 0, bfDone = 0; T.forEach(s => { const st = stOf(s.name,'bf'); bfSum += st.s==='done' ? 1 : (st.s==='ongoing' ? st.pct : 0); if(st.s==='done') bfDone++; });
   const shA = avg('shaft'), mhA = avg('mh');
   return {P, shaft: shA, mh: mhA, all: wCombine(shA, mhA), byK, mw:100, el, bf: T.length ? bfSum/T.length : 0, bfDone,
-    shDone: T.filter(s=>P.get(s).shaft>0.9999).length, shOn: T.filter(s=>{const v=P.get(s).shaft; return v>0 && v<0.9999;}).length,
+    shN: TS.length, shDone: TS.filter(s=>P.get(s).shaft>0.9999).length, shOn: TS.filter(s=>{const v=P.get(s).shaft; return v>0 && v<0.9999;}).length,
     mhDone: T.filter(s=>P.get(s).mh>0.9999).length, mhOn: T.filter(s=>{const v=P.get(s).mh; return (v>0 && v<0.9999) || actsOf(s.name).some(a=>a.g==='mh' && stOf(s.name,a.id).s==='ongoing');}).length,
     active: T.filter(s=>stageOf(s.name).on).length};
 }
@@ -2279,7 +2416,8 @@ let dashRaf = 0;
 function renderDash(){ if(dashRaf) return; dashRaf = requestAnimationFrame(() => { dashRaf = 0; paintDash(); }); }
 function paintDash(){
   const T = counted().sort((a,b) => lineOf(a).localeCompare(lineOf(b)) || alongX(a)-alongX(b));
-  const A = sumStats(T), n = T.length;
+  const TA = countedAll().sort((a,b) => lineOf(a).localeCompare(lineOf(b)) || alongX(a)-alongX(b));   // + activity-only locations (MHA2 ADD)
+  const A = sumStats(T), n = T.length, AA = sumStats(TA), xo = TA.length - n;
   document.getElementById('dsub').innerHTML = `Manhole and shaft construction progress as of <b>${fmtDate(ASOF)}</b>. ${n} manholes counted. Main contractor <b>Haji Hassan Group W.L.L.</b>`;
   const pb = (v, col, o=0) => `<i class="pbar2"><b style="width:${v*100}%;background:${col}"></b>${o?`<b class="og" style="width:${o*100}%;--c:${col}"></b>`:''}</i>`;
   const ai = document.getElementById('asofIn'); if(ai && ai.value!==ASOF) ai.value = ASOF;
@@ -2292,13 +2430,13 @@ function paintDash(){
     <div><div class="hx-seg">${MKS.filter(k=>A.byK[k]>0).map(k=>`<b style="width:${A.byK[k]}%;background:var(--a-${k})" title="${KIND[k].label}: ${A.byK[k].toFixed(1)} of 100 points"></b>`).join('')}</div>
       <div class="hx-segk">${top.map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label} ${A.byK[k].toFixed(1)}</span>`).join('')}</div></div>
     <div class="hx-hstat">
-      <div class="hx-hs"><b>${P0(A.shaft)}<small>%</small></b><span>Shaft construction, ${A.shDone} of ${n} shafts complete</span></div>
+      <div class="hx-hs"><b>${P0(A.shaft)}<small>%</small></b><span>Shaft construction, ${A.shDone} of ${A.shN} shafts complete${A.shN<n?` (${n-A.shN} existing, by others)`:''}</span></div>
       <div class="hx-hs"><b>${A.active}</b><span>Active work fronts today</span></div>
       <div class="hx-hs"><b>${A.mhDone}<small> / ${n}</small></b><span>Manholes complete</span></div>
       <div class="hx-hs"><b>${A.mhOn}</b><span>Manholes with works in progress</span></div>
     </div>`;
   // key-figure strip
-  const cnt = id => { let t=0,d=0,o=0; T.forEach(s => { if(!actsOf(s.name).some(a=>a.id===id)) return; const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return {t,d,o}; };
+  const cnt = id => { let t=0,d=0,o=0; TA.forEach(s => { if(!actsOf(s.name).some(a=>a.id===id)) return; const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return {t,d,o}; };
   const pipe = cnt('pipe'), grp = cnt('grp'), rr = x => x.t ? x.d/x.t : 0, oo = x => x.t ? x.o/x.t : 0;
   const m = (l, big, sub, bar) => `<div class="hx-m"><div class="kl">${l}</div><div class="kn">${big}</div><div class="ks">${sub}</div>${bar}</div>`;
   document.getElementById('kpis').innerHTML =
@@ -2306,9 +2444,10 @@ function paintDash(){
     m('Precast elements', `${A.el.pc.d}<small> / ${A.el.pc.t}</small>`, `${P0(rr(A.el.pc))}% installed${A.el.pc.o?`, ${A.el.pc.o} ongoing`:''}`, pb(rr(A.el.pc),'var(--a-seg)',oo(A.el.pc))) +
     m('CIS screed, base & lifts', `${A.el.cis.d}<small> / ${A.el.cis.t}</small>`, `${P0(rr(A.el.cis))}% cast${A.el.cis.o?`, ${A.el.cis.o} ongoing`:''}`, pb(rr(A.el.cis),'var(--a-seg)',oo(A.el.cis))) +
     m('RTR / GRP lamination', `${grp.d}<small> / ${grp.t}</small>`, `${P0(rr(grp))}% laminated${grp.o?`, ${grp.o} ongoing`:''}`, pb(rr(grp),'var(--a-grp)',oo(grp))) +
-    m('Backfilling', `${P0(A.bf)}<small>%</small>`, `${A.bfDone} of ${n} manholes complete`, pb(A.bf,'var(--a-bf)'));
+    m('Backfilling', `${P0(AA.bf)}<small>%</small>`, `${AA.bfDone} of ${TA.length} complete${xo?' (incl. MHA2 ADD)':''}`, pb(AA.bf,'var(--a-bf)'));
   paintPlan(T, A);
-  paintSplit(T);
+  paintMhType(T, TA);
+  paintSplit(T, TA);
 
   // by line
   const LN = ['SIBSTS-01','SIBSTS-02'];
@@ -2320,8 +2459,8 @@ function paintDash(){
 
   // status donuts
   const st3 = (d, o, total) => [{v:d,color:'var(--a-done)',label:`Complete: ${d}`},{v:o,color:'var(--focus)',label:`In progress: ${o}`},{v:total-d-o,color:'var(--gl-none)',label:`Not started: ${total-d-o}`}];
-  const dn = (title, parts) => `<div class="dnut">${ring(parts,128,18,`<text x="64" y="68" text-anchor="middle" class="rg-n">${n}</text><text x="64" y="84" text-anchor="middle" class="rg-l">total</text>`)}<div class="dnl"><b>${title}</b>${parts.map(p=>`<span><i style="background:${p.color}"></i>${p.label}</span>`).join('')}</div></div>`;
-  document.getElementById('cStatus').innerHTML = `<h3>Status</h3><div class="dnuts">${dn('Shafts', st3(A.shDone, A.shOn, n))}${dn('Manholes', st3(A.mhDone, A.mhOn, n))}</div>`;
+  const dn = (title, parts, tot=n) => `<div class="dnut">${ring(parts,128,18,`<text x="64" y="68" text-anchor="middle" class="rg-n">${tot}</text><text x="64" y="84" text-anchor="middle" class="rg-l">total</text>`)}<div class="dnl"><b>${title}</b>${parts.map(p=>`<span><i style="background:${p.color}"></i>${p.label}</span>`).join('')}</div></div>`;
+  document.getElementById('cStatus').innerHTML = `<h3>Status</h3><div class="dnuts">${dn('Shafts', st3(A.shDone, A.shOn, A.shN), A.shN)}${dn('Manholes', st3(A.mhDone, A.mhOn, n))}</div>`;
 
   // type mix
   const tc = {}; TYPES.forEach(t => tc[t] = 0); let bds = 0; T.forEach(s => { const sp = specOf(s.name); tc[sp.type]++; if(sp.bd) bds++; });
@@ -2337,7 +2476,7 @@ function paintDash(){
   const rowsS = SHAFT_ACTS.map(([id,label]) => [id,label,ACT_KIND(id)]);
   const actRow = ([id,label,k]) => {
     let t = 0, d = 0, o = 0, part = 0;
-    T.forEach(s => {
+    TA.forEach(s => {
       if(id==='#seg'){ structOf(s.name).forEach(e => { const x = stOf(s.name,e.id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return; }
       if(!actsOf(s.name).some(a=>a.id===id)) return;
       const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing'){ o++; part += x.pct||0; }
@@ -2350,25 +2489,67 @@ function paintDash(){
     <div class="ag">Manhole construction</div>${rowsM.map(actRow).join('')}<div class="ag">Shaft construction</div>${rowsS.map(actRow).join('')}`;
 
   // ongoing now + ready
-  const on = T.filter(s=>stageOf(s.name).on), ready = T.filter(s => A.P.get(s).shaft>0.9999 && A.P.get(s).mh===0 && !stageOf(s.name).on);
+  const on = TA.filter(s=>stageOf(s.name).on), ready = T.filter(s => A.P.get(s).shaft>0.9999 && A.P.get(s).mh===0 && !stageOf(s.name).on);
   document.getElementById('cNow').innerHTML = `<h3>Ongoing now <span class="h3s">${on.length} manholes</span></h3>
     <div class="now">${on.length ? on.map(s => { const g = stageOf(s.name); const items = actsOf(s.name).filter(a=>stOf(s.name,a.id).s==='ongoing');
-      return `<button class="nr" data-s="${esc(s.name)}"><span class="nn">${short(s.name)}<em>${lineOf(s).replace('SIBSTS-','TS-')}</em></span><span class="nc">${items.map(a=>{const x=stOf(s.name,a.id); return `<span class="chip" style="--c:var(--a-${a.k})"><i></i>${PCT_ACTS.has(a.id)&&x.pct?`${a.id==='bf'?'Backfilling':a.label} ${P0(x.pct)}%`:a.label.replace(/ \+ W\/P$/,'')}</span>`;}).join('')}</span><span class="np">${P0(A.P.get(s).mh)}%</span></button>`; }).join('') : '<p class="hint">No activity is marked ongoing.</p>'}</div>
+      return `<button class="nr" data-s="${esc(s.name)}"><span class="nn">${short(s.name)}<em>${lineOf(s).replace('SIBSTS-','TS-')}</em></span><span class="nc">${items.map(a=>{const x=stOf(s.name,a.id); return `<span class="chip" style="--c:var(--a-${a.k})"><i></i>${PCT_ACTS.has(a.id)&&x.pct?`${a.id==='bf'?'Backfilling':a.label} ${P0(x.pct)}%`:a.label.replace(/ \+ W\/P$/,'')}</span>`;}).join('')}</span><span class="np">${P0(pctOf(s.name).mh)}%</span></button>`; }).join('') : '<p class="hint">No activity is marked ongoing.</p>'}</div>
     <h3 style="margin-top:16px">Shaft complete, manhole works not started <span class="h3s">${ready.length}</span></h3>
     <div class="rdy">${ready.map(s=>`<button class="rchip" data-s="${esc(s.name)}">${short(s.name)}</button>`).join('') || '<p class="hint">None.</p>'}</div>`;
 
   paintBars(T, A);
-  paintReg(T, A);
+  paintReg(TA, AA);
   paintWts(T, A);
   const gw = document.getElementById('goWts'); if(gw) gw.onclick = () => openWts();
   const skipped = shafts.filter(s => !isHidden(s) && !(baseOf(s.name) || PROG[keyOf(s.name)] || s.custom));
-  const removed = shafts.filter(s => isHidden(s) && !s.gone);
+  const removed = shafts.filter(s => isHidden(s) && !s.gone && !eiWaiting(s));
   document.getElementById('dfoot').innerHTML = [skipped.length ? `Not counted (on the layout but not in the Excel): ${skipped.map(s=>short(s.name)).join(', ')}. Set a type for one to count it, or remove it.` : '',
     removed.length ? `Removed from tracking: ${removed.map(s=>short(s.name)).join(', ')}.` : ''].filter(Boolean).join(' ');
   dashEl.querySelectorAll('[data-s]').forEach(b => b.onclick = () => goShaft(byName[b.dataset.s.replace(/&amp;/g,'&')]));
   const gt = document.getElementById('goTypes'); if(gt) gt.onclick = () => { typeMode = true; setTab('shafts'); document.getElementById('layout').scrollIntoView({behavior:'smooth'}); };
 }
-function paintSplit(T){
+function paintMhType(T, TA){
+  TA = TA || T;
+  const box = document.getElementById('cMhType'); if(!box) return;
+  const LN = [['SIBSTS-01','SIBS-1','Trunk sewer line SIBSTS-01'],['SIBSTS-02','SIBS-2','Trunk sewer line SIBSTS-02'],['all','SIBS-1 + SIBS-2','Project total, both lines']];
+  const ROWS = [['Precast'],['Cast-In-Situ'],['Precast + CIS'],['#ch','Total CIS + Precast'],['Blind'],['#all','Total manholes']];
+  const C = {d:'var(--a-done)', o:'var(--focus)', n:'var(--gl-none)'};
+  const stOfMh = s => { const p = pctOf(s.name); if(p.mh>0.9999) return 'd';
+    return (p.mh>0 || actsOf(s.name).some(a=>a.g==='mh' && stOf(s.name,a.id).s==='ongoing')) ? 'o' : 'n'; };
+  const cnt = ms => { const st = ms.map(stOfMh); const d = st.filter(x=>x==='d').length, o = st.filter(x=>x==='o').length; return {st, d, o, n: ms.length-d-o, t: ms.length, pc: ms.length ? sumStats(ms).mh : 0}; };
+  const pc = (v, t) => t ? Math.round(v/t*100) : 0;
+  const panel = ([L, lab, sub]) => {
+    const t = T.filter(s => L==='all' || lineOf(s)===L), c = cnt(t);
+    const donut = ring([{v:c.d,color:C.d,label:`Completed: ${c.d}`},{v:c.o,color:C.o,label:`Ongoing: ${c.o}`},{v:c.n,color:C.n,label:`Not started: ${c.n}`}], 136, 17,
+      `<text x="68" y="72" text-anchor="middle" class="rg-n">${c.t}</text><text x="68" y="91" text-anchor="middle" class="rg-l">total manholes</text>`);
+    const tile = (k, v, l) => `<div style="--c:${C[k]}"><b>${v}</b><span>${l}</span><em>${pc(v,c.t)}% of ${c.t}</em></div>`;
+    const summary = `<div class="mts">${donut}<div class="mtsum"><div class="mtc">${tile('d',c.d,'Completed')}${tile('o',c.o,'Ongoing')}${tile('n',c.n,'Not started')}</div></div>
+      <div class="mtpr"><span>Manhole construction</span><i><s style="width:${c.pc*100}%"></s></i><b>${P0(c.pc)}%</b></div></div>`;
+    const tr = ([k, lbl]) => {
+      const ms = k==='#all' ? t : k==='#ch' ? t.filter(s=>specOf(s.name).type!=='Blind') : t.filter(s=>specOf(s.name).type===k);
+      const x = cnt(ms), z = v => v ? v : `<span class="z">0</span>`, sub = k==='#ch', tot = k==='#all';
+      const name = sub || tot ? esc(lbl) : `<span class="tn"><i style="background:${TCOL[k]}"></i>${k==='Precast + CIS'?'Hybrid (Precast + CIS)':TYPE_SHORT[k]}</span>`;
+      const chips = L!=='all' && !sub && !tot && ms.length ? `<tr class="chr"><td colspan="6"><div class="ms">${ms.map((s,i)=>[s,x.st[i]]).sort((p,q)=>alongX(p[0])-alongX(q[0])).map(([s,st])=>`<button class="${st}" data-s="${esc(s.name)}" title="${esc(short(s.name))}: ${st==='d'?'completed':st==='o'?'ongoing':'not started'}, manhole ${P0(pctOf(s.name).mh)}%${pctOf(s.name).ex?', existing shaft by others':''}">${esc(short(s.name))}${/baffle/i.test(specOf(s.name).special)?' <small>Baffle shaft</small>':''}</button>`).join('')}</div></td></tr>` : '';
+      const prog = ms.length ? `<span class="pg"><i><s style="width:${x.pc*100}%"></s></i><em>${P0(x.pc)}%</em></span>` : '<span class="z">—</span>';
+      return `<tr class="${sub?'sub':tot?'tot':'grp'}${chips?' hc':''}"><td>${name}</td><td>${ms.length || '<span class="z">0</span>'}</td><td>${z(x.d)}</td><td>${z(x.o)}</td><td>${z(x.n)}</td><td>${prog}</td></tr>${chips}`;
+    };
+    const table = `<div class="mtw"><table class="mtt"><thead><tr><th>Manhole type</th><th>Nos</th><th><i style="background:${C.d}"></i>Completed</th><th><i style="background:${C.o}"></i>Ongoing</th><th><i style="background:${C.n}"></i>Not started</th><th>Progress</th></tr></thead>
+      <tbody>${ROWS.map(tr).join('')}</tbody></table></div>`;
+    const xs = TA.filter(s => isActOnly(s) && (L==='all' || lineOf(s)===L));
+    const xst = st => st.s==='done' ? '<span class="xd">Completed</span>' : st.s==='ongoing' ? `<span class="xo">Ongoing${st.pct?` ${P0(st.pct)}%`:''}</span>` : '<span class="xn">Not started</span>';
+    const extra = xs.length ? `<div class="mtx2"><div class="h">Activity only, not counted as a manhole</div>${xs.map(s => `<button class="xr" data-s="${esc(s.name)}"><b>${esc(short(s.name))}</b><span class="xm">Existing blind shaft by others</span><span class="xa">Pipe connection &amp; concrete ${xst(stOf(s.name,'pipe'))}</span><span class="xa">Backfilling ${xst(stOf(s.name,'bf'))}</span></button>`).join('')}</div>` : '';
+    return `<section class="mtp${L==='all'?' all':''}" aria-label="${esc(lab)}"><div class="mth"><b>${esc(lab)}</b><span>${sub}</span></div>${L==='all' ? `<div class="mtin">${summary}<div>${table}${extra}</div></div>` : summary+table+extra}</section>`;
+  };
+  box.innerHTML = `<h3>Manhole construction by type <span class="h3s">Manholes of each type on each line, and where their manhole construction stands</span></h3>
+    <div class="mtnote">
+      <div style="--c:var(--a-shaft)"><b>Shaft construction</b>The temporary earth-retaining shaft that makes a dry pit for the MTBM launch or reception: trial pit, guide wall, secant piles, capping beam, excavation, blinding and base plug. It finishes when the base plug is cast.</div>
+      <div style="--c:var(--a-done)"><b>Manhole construction</b>The permanent manhole built inside that shaft after pipe jacking: pipe connection &amp; concrete, precast rings or CIS lifts, back drop, benching, RTR/GRP lining, backfilling, secant pile cutting, cover slab and DI cover. A blind shaft has no chamber, so it only gets pipe connection &amp; concrete and backfilling.</div>
+    </div>
+    <div class="mtx">${LN.map(panel).join('')}</div>
+    <p class="mtkey">Completed: every manhole activity is done. Ongoing: at least one manhole activity started. Not started: no manhole activity begun yet. Progress is the weighted manhole construction %. Tap a manhole name to open it. MHA2 ADD is an existing blind shaft built by others: it is not counted as a manhole, and only its pipe connection &amp; concrete and backfilling are tracked in the activity lists. MHA10.1 is a baffle drop shaft (cast-in-situ).</p>`;
+  wireEi(box);
+}
+function paintSplit(T, TA){
+  TA = TA || T;
   const box = document.getElementById('cSplit'); if(!box) return;
   const LN = ['SIBSTS-01','SIBSTS-02'];
   const rowsM = [['pipe','Pipe connection & concrete','pipe'],['#seg','Segments & CIS lifts','seg'],['bd','Back drop','bd'],['bench','Benching','bench'],['grp','RTR / GRP lamination','grp'],['bf','Backfilling','bf'],['spc','Secant pile cutting','spc'],['cov','Cover slab','cov'],['di','DI cover & frame','di']];
@@ -2387,11 +2568,11 @@ function paintSplit(T){
     <span class="ab spsb" title="${d} of ${n} ${noun} complete, ${o} in progress"><b style="width:${n?d/n*100:0}%;background:${col}"></b><b class="og" style="width:${n?o/n*100:0}%;--c:${col}"></b></span>`;
   box.innerHTML = `<h3>Shaft and manhole progress by line <span class="h3s">SIBSTS-01 and SIBSTS-02 shown separately. <i class="lg solid"></i>complete <i class="lg hatch"></i>ongoing <i class="lg none"></i>remaining</span></h3>
     <div class="spl">${LN.map(L => {
-      const t = T.filter(s => lineOf(s)===L), a = sumStats(t), n = t.length;
-      const blk = (title, v, col, d, o, rows, noun, grp) => `<div class="spb"><div class="spg"><h4>${title}</h4>${gauge(v, col, 112)}${cnt3(d, o, n, col, noun)}</div>
-        <div class="spr"><div class="ag">${grp}</div>${rows.map(actRow(t)).join('') || '<p class="hint">No activities.</p>'}</div></div>`;
+      const t = T.filter(s => lineOf(s)===L), ta = TA.filter(s => lineOf(s)===L), a = sumStats(t), n = t.length;
+      const blk = (title, v, col, d, o, rows, noun, grp, cn=n) => `<div class="spb"><div class="spg"><h4>${title}</h4>${gauge(v, col, 112)}${cnt3(d, o, cn, col, noun)}</div>
+        <div class="spr"><div class="ag">${grp}</div>${rows.map(actRow(grp==='Manhole activities'?ta:t)).join('') || '<p class="hint">No activities.</p>'}</div></div>`;
       return `<div class="spp"><div class="spph"><span class="t">${L}</span><span class="m">${n} shafts / manholes · overall <b>${P0(a.all)}%</b></span></div>
-        ${blk('Shaft construction', a.shaft, 'var(--a-shaft)', a.shDone, a.shOn, rowsS, 'shafts', 'Shaft activities')}
+        ${blk('Shaft construction', a.shaft, 'var(--a-shaft)', a.shDone, a.shOn, rowsS, 'shafts', 'Shaft activities', a.shN)}
         ${blk('Manhole construction', a.mh, 'var(--a-done)', a.mhDone, a.mhOn, rowsM, 'manholes', 'Manhole activities')}</div>`;
     }).join('')}</div>`;
 }
@@ -2527,9 +2708,9 @@ function paintRegRows(){
   const rb = document.getElementById('rb'); if(!rb) return;
   rb.innerHTML = rows.map(s => { const p = A.P.get(s), sp = specOf(s.name), sd = side(s.name);
     return `<tr tabindex="0" data-s="${esc(s.name)}"><td class="rn">${esc(short(s.name))}${sd?`<small>(${sd})</small>`:''}</td><td class="mut">${lineOf(s)}</td>
-    <td><span class="tp"><i style="background:${TCOL[sp.type]}"></i>${TYPE_SHORT[sp.type]}${sp.bd?', back drop':''}</span></td>
+    <td><span class="tp"><i style="background:${TCOL[sp.type]}"></i>${TYPE_SHORT[sp.type]}${sp.bd?', back drop':''}${/baffle/i.test(sp.special)?', baffle shaft':''}${isActOnly(s)?', activity only':''}</span></td>
     <td class="mut">${s.dia?`${s.dia} m${s.sp?' SP':''}`:'—'}</td>
-    <td><div class="rcb"><i class="pbar2"><b style="width:${p.shaft*100}%;background:var(--a-shaft)"></b></i><em>${P0(p.shaft)}%</em></div></td>
+    <td>${p.ex ? '<span class="mut">Existing, by others</span>' : `<div class="rcb"><i class="pbar2"><b style="width:${p.shaft*100}%;background:var(--a-shaft)"></b></i><em>${P0(p.shaft)}%</em></div>`}</td>
     <td><div class="rcb">${stackBar(p,'pbar2')}<em>${P0(p.mh)}%</em></div></td>
     <td class="rov">${P0(p.all)}%</td>
     <td>${stg(s)}</td></tr>`; }).join('') || `<tr><td colspan="8" class="mut">No manhole matches. Clear the search or pick All.</td></tr>`;
@@ -2718,7 +2899,7 @@ map.addEventListener('click', e => {
 document.addEventListener('keydown', e => { if(e.key==='Escape' && placing) stopPlacing(); });
 function setRemoved(s, v){ if(!canEditProgress()) return; writeDoc(s.name, {removed: v}); }
 function removedList(){
-  const rm = shafts.filter(s => isHidden(s) && !s.gone);
+  const rm = shafts.filter(s => isHidden(s) && !s.gone && !eiWaiting(s));
   if(!rm.length) return '';
   return `<div class="rml"><h3>Removed manholes</h3>${rm.map(s=>`<div class="rmi"><span>${short(s.name)}${s.custom?' <em>(added)</em>':''}</span>${canEditProgress()?`<button class="lnk" data-restore="${esc(s.name)}">Restore</button>`:''}</div>`).join('')}</div>`;
 }
@@ -3047,6 +3228,41 @@ requestAnimationFrame(()=>fitBox(CONTENT));
   document.getElementById('mtReload').onclick = function(){ f.src = MT_URL + '?t=' + Date.now(); };
   document.addEventListener('keydown',function(e){ if(e.key==='Escape' && v.classList.contains('on')) close(); });
   if(/microtunnel/i.test(location.hash)) open();
+})();
+
+/* ---------- Print / Save PDF: everything expanded, the whole layout in view ---------- */
+(function(){
+  let saved = null;
+  function prep(){
+    if(saved) return;
+    const qEl = document.getElementById('q');
+    saved = {reg:{...REG}, tab: currentTab, det: detailOf, q: qEl ? qEl.value : '', view: {S, TX, TY},
+      open: [...document.querySelectorAll('details')].map(d => [d, d.open])};
+    REG.f = 'all'; REG.q = '';
+    document.querySelectorAll('details').forEach(d => d.open = true);
+    if(qEl) qEl.value = '';
+    if(currentTab!=='shafts') setTab('shafts'); else renderShafts();
+    document.documentElement.classList.add('pr');
+    fitBox(CONTENT);
+    paintDash();
+    const rs = document.getElementById('rq'); if(rs) rs.value = '';
+    draw && draw();
+  }
+  function done(){
+    if(!saved) return;
+    const s = saved; saved = null;
+    document.documentElement.classList.remove('pr');
+    Object.assign(REG, s.reg);
+    s.open.forEach(([d,o]) => { if(d.isConnected) d.open = o; });
+    const qEl = document.getElementById('q'); if(qEl) qEl.value = s.q;
+    S = s.view.S; TX = s.view.TX; TY = s.view.TY;
+    if(s.tab==='detail' && s.det) openDetail(s.det); else setTab(s.tab==='detail' ? 'shafts' : s.tab);
+    paintDash(); render();
+  }
+  window.addEventListener('beforeprint', prep);
+  window.addEventListener('afterprint', done);
+  const b = document.getElementById('dprint');
+  if(b) b.onclick = () => { prep(); requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => window.print(), 150))); };
 })();
 </script>
 </body>
