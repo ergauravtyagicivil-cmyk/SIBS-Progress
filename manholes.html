@@ -605,6 +605,8 @@ html{scroll-behavior:smooth}
 .hx-pkey i.l{display:inline-block;width:20px;height:4px;border-radius:2px}
 .hx-planbox{flex:1;min-height:360px;position:relative}
 .hx-planbox>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hx-scale line{stroke:var(--band-muted);stroke-width:1.4}
+.hx-scale text{fill:var(--band-muted);font-family:var(--cond);font-weight:600;font-size:11.5px}
 .hx-north{position:absolute;right:14px;bottom:12px;font-family:var(--cond);font-weight:700;font-size:12px;color:var(--band-muted);text-align:center;line-height:1}
 .hx-nd{cursor:pointer}
 .hx-nd:focus{outline:none}
@@ -626,6 +628,10 @@ html{scroll-behavior:smooth}
 .bars .avg{pointer-events:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:5 4;opacity:.55}
 .bars .avgt{font-family:var(--cond);font-weight:700;font-size:12px;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:3px}
 .bars .trk{stroke:var(--line);stroke-width:.6}
+.bars .trkb{stroke:var(--a-blind);stroke-width:1.2;stroke-dasharray:4 3}
+.bars .btag{fill:var(--a-blind);fill-opacity:.14;stroke:var(--a-blind);stroke-width:1}
+.bars .btagt{font-family:var(--cond);font-weight:700;font-size:11px;fill:var(--a-blind);letter-spacing:.02em}
+.bkeys em.btagk{font-style:normal;font-family:var(--cond);font-weight:700;font-size:10.5px;color:var(--a-blind);border:1px solid var(--a-blind);background:color-mix(in srgb,var(--a-blind) 14%,transparent);border-radius:8px;padding:0 6px;line-height:15px}
 /* register */
 .rgh{display:flex;justify-content:space-between;align-items:flex-end;gap:10px 16px;flex-wrap:wrap;margin-bottom:10px}
 .rgh h3{margin:0}
@@ -708,6 +714,43 @@ table.wt input:disabled{background:var(--panel-2);color:var(--muted)}
 @media (max-width:900px){ .wgrid{grid-template-columns:1fr} }
 @media print{ .hx-ctl,.rtools{display:none!important} .hx-band{-webkit-print-color-adjust:exact;print-color-adjust:exact} .card,.hx-strip{break-inside:avoid} }
 
+.rnm{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin:2px 0 4px}
+.rnm .lnk{font-size:13px;padding:2px 0}
+.rnf{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted);width:100%}
+.rnf input,.nmr input{font:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--panel-2);color:var(--ink);width:100%}
+.rnm .btns{margin-top:6px}
+.nmlist{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.nmr{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;padding:6px 2px;border-bottom:1px solid var(--line)}
+.nmr span{font-family:var(--cond);font-weight:700;font-size:15px}
+.nmr em{font-style:normal;font-weight:500;color:var(--muted);font-size:13px}
+.nmr input:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+[data-edit]{white-space:pre-line}
+body.editing [data-edit]{outline:1.5px dashed var(--focus);outline-offset:3px;border-radius:3px;cursor:text;min-width:2ch}
+body.editing .hx-band [data-edit]{outline-color:#8CC4FF}
+body.editing [data-edit]:focus{outline-style:solid;outline-width:2px;background:color-mix(in srgb,var(--focus) 10%,transparent)}
+.edbar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;max-width:calc(100% - 24px);background:var(--panel);color:var(--ink);border:1.5px solid var(--focus);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:14px}
+.edbar[hidden]{display:none}
+.edbar span{flex:1 1 220px}
+#editTxt[aria-pressed="true"]{background:var(--band-ink);color:var(--band);border-color:var(--band-ink)}
+@media print{ .edbar,#editTxt,.rnm .lnk{display:none!important} body.editing [data-edit]{outline:none!important} }
+
+#edHl{position:fixed;z-index:58;pointer-events:none;border-radius:4px}
+#edHl.ok{outline:2px dashed var(--focus);background:color-mix(in srgb,var(--focus) 12%,transparent)}
+#edHl.lock{outline:1.5px dashed #8A969C;background:rgba(138,150,156,.12)}
+#edHl::after{content:attr(data-t);position:absolute;left:0;top:calc(100% + 4px);white-space:nowrap;font:600 11.5px/1 var(--sans);padding:4px 6px;border-radius:5px;background:var(--ink);color:var(--panel)}
+#edHl.lock::after{background:#56646B;color:#fff}
+body.editing{cursor:text}
+#edPop{position:fixed;z-index:70;background:var(--panel);color:var(--ink);border:1.5px solid var(--focus);border-radius:10px;padding:10px 12px;box-shadow:0 8px 28px rgba(0,0,0,.3);font-size:14px}
+#edPop label{display:block;font-weight:600;margin-bottom:5px}
+#edPop .ept{display:block;font-size:15px;margin-bottom:6px}
+#edPop .epl{max-height:50vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+#edPop .epi label{font-weight:500;font-size:12.5px;color:var(--muted);margin-bottom:3px}
+#edPop .epi .hint{margin:4px 0 0;font-size:12.5px}
+
+#edPop textarea{width:100%;font:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--panel-2);color:var(--ink);resize:vertical}
+#edPop .hint{margin:6px 0 8px}
+@media print{ #edHl,#edPop{display:none!important} }
+
 /* ---------- full print / PDF (A3 landscape keeps the desktop layout) ---------- */
 @page{size:A3 landscape;margin:8mm}
 html.pr #map{width:1500px!important;height:840px!important;flex:none}
@@ -744,25 +787,187 @@ html.pr #map{width:1500px!important;height:840px!important;flex:none}
   .dg2{grid-template-columns:1.2fr 1fr!important}
   .wgrid{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)!important}
 }
+
+/* ================= v4: full-width dashboard, blind shafts apart, LED highlights ================= */
+:root{--a-blind:#0E8FB0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--a-blind:#4CC3E0}}
+:root[data-theme="dark"]{--a-blind:#4CC3E0}
+.dash,.hx-wrap,.hx-main{max-width:none}
+.hx-hs:nth-child(odd){padding-left:0;border-left:none}
+.hx-strip{grid-template-columns:repeat(6,minmax(0,1fr))}
+.mtnote{grid-template-columns:repeat(3,minmax(0,1fr))}
+.totals .tot.wide{grid-column:1/-1}
+.bst{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.bst i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.bst.d{--c:var(--a-done)} .bst.o{--c:var(--focus)} .bst.n{--c:var(--gl-none);color:var(--muted);font-weight:500}
+.bst.x{color:var(--muted);font-weight:500}
+.bst em{font-style:normal;font-weight:500;color:var(--muted)}
+.bnm{font:inherit;font-family:var(--cond);font-weight:700;font-size:16px;background:none;border:none;color:var(--focus);cursor:pointer;padding:0;text-align:left}
+.bnm small{display:block;font-family:var(--sans);font-weight:500;font-size:12px;color:var(--muted)}
+.mtt td.bc{text-align:left}
+.mtt th.bc{text-align:left}
+.bempty{padding:14px 16px;color:var(--muted);font-size:14px}
+.ln .gg{gap:4px}
+/* full-screen layout */
+.app.fs{position:fixed;inset:0;z-index:40;height:100vh;height:100dvh;border-top:0}
+body.fsopen{overflow:hidden}
+.app:fullscreen{height:100vh;width:100vw;background:var(--ground)}
+/* LED toggle */
+.ledi{display:inline-block;width:10px;height:10px;border-radius:50%;background:#3a4650;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+html.led .ledi{background:#7CFF9E;box-shadow:0 0 4px #3DD68C,0 0 10px #3DD68C}
+#ledBtn[aria-pressed="true"]{border-color:#3DD68C}
+@media (max-width:1180px){ .hx-strip{grid-template-columns:repeat(3,minmax(0,1fr))} .mtnote{grid-template-columns:1fr} }
+@media (max-width:720px){ .hx-strip{grid-template-columns:1fr 1fr} .hx-m:last-child{grid-column:auto} .hx-m:nth-child(odd){border-left:none} .hx-m:nth-child(even){border-left:1px solid var(--line)} }
+
+/* ---------- LED highlights (html.led) ---------- */
+@keyframes ledp{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes ledr{0%,100%{stroke-opacity:1}50%{stroke-opacity:.35}}
+html.led{--led-g:#3DE87F;--led-b:#3D9BFF;--led-a:#FFB020;
+  --led-d:#15A05A;--led-dg:rgba(21,160,90,.55);--led-o:#D98A00;--led-og:rgba(217,138,0,.5);--led-n:#8A979D;--led-w:#7E97AE;--led-s:#C8453B;--led-sg:rgba(200,69,59,.45)}
+@media (prefers-color-scheme: dark){html.led:not([data-theme="light"]){--led-d:#37D07F;--led-dg:rgba(55,208,127,.6);--led-o:#F2A93B;--led-og:rgba(242,169,59,.55);--led-n:#5E6C73;--led-w:#6F8599;--led-s:#F0776B;--led-sg:rgba(240,119,107,.5)}}
+html.led[data-theme="dark"]{--led-d:#37D07F;--led-dg:rgba(55,208,127,.6);--led-o:#F2A93B;--led-og:rgba(242,169,59,.55);--led-n:#5E6C73;--led-w:#6F8599;--led-s:#F0776B;--led-sg:rgba(240,119,107,.5)}
+/* alignment plan in the header */
+html.led .hx-plan{--led-d:#37D07F;--led-dg:rgba(55,208,127,.6);--led-o:#F2A93B;--led-og:rgba(242,169,59,.55);--led-n:#5E6C73;--led-w:#7F97AD;--led-s:#F0776B;--led-sg:rgba(240,119,107,.5)}
+html.led .hx-arc{stroke:var(--led-g);filter:drop-shadow(0 0 2px var(--led-g))}
+html.led .hx-arc.ls-d{stroke:var(--led-d);filter:drop-shadow(0 0 2.5px var(--led-dg))}
+html.led .hx-arc.ls-a{stroke:var(--led-o);filter:drop-shadow(0 0 2.5px var(--led-og));animation:ledbr 2.8s ease-in-out infinite}
+html.led .hx-arc.ls-o{stroke:var(--led-o);stroke-opacity:.75;filter:none}
+html.led .hx-arc.ls-s{stroke:var(--led-s);filter:drop-shadow(0 0 2px var(--led-sg))}
+html.led .hx-lt.ls-w{stroke:var(--led-w);stroke-opacity:.85}
+html.led .hx-lt.ls-n{stroke:var(--led-n);stroke-dasharray:2 2}
+html.led .hx-fr{stroke:var(--led-d);stroke-width:1.1;stroke-dasharray:1 2.6;stroke-linecap:round;opacity:.7}
+.hx-ledks{display:inline-flex;flex-wrap:wrap;gap:2px 4px}
+.hx-pkey .ledk{color:var(--band-muted);font-size:12.5px;font-weight:500}
+.hx-pkey .ledk:hover,.hx-pkey .ledk[aria-pressed="true"]{background:rgba(255,255,255,.08)}
+.hx-pkey .ledk em{color:var(--band-muted);opacity:.8}
+html.led .hx-onr{stroke:var(--led-o);stroke-dasharray:none;stroke-width:1.2;stroke-opacity:.55;filter:none;animation:ledbr 2.8s ease-in-out infinite}
+html.led .hx-nd.shd .hx-ndo{fill:#9FB8CF;filter:none}
+html.led .hx-nd.mhd .hx-ndo{fill:var(--led-d);stroke:#DFFFE9;filter:drop-shadow(0 0 2px var(--led-dg))}
+html.led .hx-nl tspan.p{fill:#6CFF9F}
+/* layout map markers */
+/* layout LED: a status ring round every shaft. Soft glow, no flashing; only work happening today breathes slowly */
+html.led .shaft.on,html.led .shaft.cmp{stroke:var(--ink);stroke-width:1.5;filter:none;animation:none}
+.ledr{display:none;fill:none;pointer-events:none}
+html.led .ledr{display:inline}
+.ledr circle{fill:none;stroke-width:var(--lw,2.6)}
+.ledr .la{stroke-linecap:round}
+.ledr .lf{display:none}
+html.led .ledr.ls-d .lt{stroke:var(--led-d);stroke-opacity:.35}
+html.led .ledr.ls-d .la{stroke:var(--led-d);filter:drop-shadow(0 0 2px var(--led-dg))}
+html.led .ledr.fresh .lf{display:inline;stroke:var(--led-d);stroke-width:1.2;stroke-opacity:.6;stroke-dasharray:1 3;stroke-linecap:round}
+html.led .ledr.ls-a .lt{stroke:var(--led-o);stroke-opacity:.28}
+html.led .ledr.ls-a .la{stroke:var(--led-o);filter:drop-shadow(0 0 2.5px var(--led-og));animation:ledbr 2.8s ease-in-out infinite}
+html.led .ledr.ls-o .lt{stroke:var(--led-o);stroke-opacity:.2}
+html.led .ledr.ls-o .la{stroke:var(--led-o);stroke-opacity:.75}
+html.led .ledr.ls-s .lt{stroke:var(--led-s);stroke-opacity:.25}
+html.led .ledr.ls-s .la{stroke:var(--led-s);filter:drop-shadow(0 0 2px var(--led-sg))}
+html.led .ledr.ls-w .lt{stroke:var(--led-w);stroke-opacity:.9;stroke-width:calc(var(--lw,2.6)*.75)}
+html.led .ledr.ls-n .lt{stroke:var(--led-n);stroke-width:1.4;stroke-dasharray:2.5 2.5}
+/* status filter from the legends */
+html.led[data-ledf] #map [data-lg],html.led[data-ledf] .hx-nd{transition:opacity .2s}
+html.led[data-ledf="d"] #map [data-lg]:not([data-lg="d"]),html.led[data-ledf="a"] #map [data-lg]:not([data-lg="a"]),html.led[data-ledf="o"] #map [data-lg]:not([data-lg="o"]),
+html.led[data-ledf="s"] #map [data-lg]:not([data-lg="s"]),html.led[data-ledf="w"] #map [data-lg]:not([data-lg="w"]),html.led[data-ledf="n"] #map [data-lg]:not([data-lg="n"]),
+html.led[data-ledf="d"] .hx-nd:not([data-lg="d"]),html.led[data-ledf="a"] .hx-nd:not([data-lg="a"]),html.led[data-ledf="o"] .hx-nd:not([data-lg="o"]),
+html.led[data-ledf="s"] .hx-nd:not([data-lg="s"]),html.led[data-ledf="w"] .hx-nd:not([data-lg="w"]),html.led[data-ledf="n"] .hx-nd:not([data-lg="n"]){opacity:.14}
+@keyframes ledbr{0%,100%{stroke-opacity:1}50%{stroke-opacity:.5}}
+html.led .gl.lon .gl-bg{stroke:var(--led-o);stroke-width:1.6;filter:drop-shadow(0 0 1.5px var(--led-og))}
+html.led .gl.ldn .gl-bg{stroke:var(--led-d);stroke-width:1.6;filter:drop-shadow(0 0 1.5px var(--led-dg))}
+.ledkey{display:none}
+html.led .ledkey{display:block}
+.ledkey .key em{font-style:normal;color:var(--muted);font-weight:500;margin-left:3px}
+.ledkey i.ld{width:13px!important;height:13px!important;border-radius:50%;background:none!important;border:2.4px solid;box-sizing:border-box}
+.ledkey i.ld.d{border-color:var(--led-d);box-shadow:0 0 4px var(--led-dg)}
+.ledkey i.ld.o{border-color:var(--led-o);box-shadow:0 0 4px var(--led-og)}
+.ledkey i.ld.w{border:2px solid var(--led-w)}
+.ledkey .ledn{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.ledkey i.ld.n{border:1.4px dashed var(--led-n)}
+.ledkey .h3b span{font-weight:500;color:var(--muted);font-size:12px}
+.ledk{font:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;background:none;color:var(--ink);border-radius:14px;padding:2px 8px 2px 4px;cursor:pointer}
+.ledk:hover{background:var(--panel-2)}
+.ledk[aria-pressed="true"]{border-color:var(--focus);background:var(--panel-2)}
+.ledk em{font-style:normal;color:var(--muted);font-weight:500}
+i.ld{display:inline-block;width:13px;height:13px;border-radius:50%;border:2.4px solid;box-sizing:border-box;flex:none}
+i.ld.d{border-color:var(--led-d);box-shadow:0 0 4px var(--led-dg)}
+i.ld.a{border-color:var(--led-o);box-shadow:0 0 5px var(--led-og)}
+i.ld.o{border-color:var(--led-o);opacity:.7}
+i.ld.s{border-color:var(--led-s);box-shadow:0 0 4px var(--led-sg)}
+i.ld.w{border:2px solid var(--led-w)}
+i.ld.n{border:1.4px dashed var(--led-n)}
+/* status dots, chips, pills */
+html.led .bst.d i,html.led .rstg:not(.idle) i,html.led .chip i,html.led .pdot.full,html.led .ssym.full{box-shadow:0 0 0 1px rgba(255,255,255,.55) inset,0 0 5px 1px var(--c,var(--led-g))}
+html.led .bst.d i{--c:var(--led-g);background:var(--led-g)}
+html.led .bst.o i{background:var(--led-b);box-shadow:0 0 5px 1px var(--led-b);animation:ledp 1.6s ease-in-out infinite}
+html.led .bst.n i{background:#56646B;opacity:.5}
+html.led .chip i,html.led .rstg:not(.idle) i{animation:ledp 1.6s ease-in-out infinite}
+html.led .mtt .ms button.d{border-color:var(--led-g);box-shadow:0 0 0 1px var(--led-g),0 0 8px rgba(61,232,127,.55)}
+html.led .mtt .ms button.o{border-color:var(--led-b);box-shadow:0 0 0 1px var(--led-b),0 0 8px rgba(61,155,255,.5)}
+html.led .mtt .ms button.d::before,html.led .mtt .ms button.o::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+html.led .mtt .ms button.d::before{background:var(--led-g);box-shadow:0 0 5px var(--led-g)}
+html.led .mtt .ms button.o::before{background:var(--led-b);box-shadow:0 0 5px var(--led-b);animation:ledp 1.6s ease-in-out infinite}
+html.led .xd{color:var(--led-g);text-shadow:0 0 6px rgba(61,232,127,.6)}
+html.led .xo{text-shadow:0 0 6px rgba(61,155,255,.6)}
+html.led .bars .pvf{fill:#1FBF62;filter:drop-shadow(0 0 3px rgba(61,232,127,.8))}
+html.led .hx-big{text-shadow:0 0 18px rgba(108,255,159,.25)}
+@media (prefers-reduced-motion: reduce){ html.led *{animation:none!important} }
+@media print{
+  .hx-strip{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+  .mtnote{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #cBlind{break-inside:auto;page-break-inside:auto}
+}
+
+/* ---------- layout: enlarge + close-up ---------- */
+.tools .tsep{height:1px;background:var(--line);margin:2px 4px}
+.tools button.tlab{font-size:13px;font-weight:700;font-family:var(--cond)}
+.tools button[aria-pressed="true"],.tools button.tlab.on{border-color:var(--focus);color:var(--focus);box-shadow:inset 0 0 0 1px var(--focus)}
+.mlens{position:absolute;left:14px;top:14px;z-index:4;width:min(430px,calc(100% - 80px));max-height:calc(100% - 28px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px 12px 10px}
+.mlens[hidden]{display:none}
+.mlens .ml-lh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.mlens .ml-lh b{font-family:var(--cond);font-size:20px;line-height:1.1}
+.mlens .ml-lh small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.mlens .ml-lx{font:inherit;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:7px;width:28px;height:28px;cursor:pointer;flex:none}
+.mlens .ml-lst{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;margin-top:4px}
+.mlens .ml-lb{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.mlens .ml-lsv{background:var(--panel-2);border-radius:10px;padding:6px}
+#map .mlens svg{position:static;inset:auto;width:auto;height:auto;display:block}
+.mlens .ml-lpc{display:flex;gap:10px;margin:0 0 6px}
+.mlens .ml-lpc div{flex:1}
+.mlens .ml-lpc b{font-family:var(--cond);font-size:20px;display:block;line-height:1}
+.mlens .ml-lpc span{font-size:11.5px;color:var(--muted)}
+.mlens .ml-la{list-style:none;margin:0;padding:0;font-size:12.5px}
+.mlens .ml-la li{display:grid;grid-template-columns:10px 1fr auto;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid var(--line)}
+.mlens .ml-la li:last-child{border-bottom:0}
+.mlens .ml-la li i{width:9px;height:9px;border-radius:2px}
+.mlens .ml-la li i.o{background:repeating-linear-gradient(45deg,var(--c) 0 2px,transparent 2px 4px)!important;border:1px solid var(--c)}
+.mlens .ml-la li i.n{background:var(--gl-none)!important}
+.mlens .ml-la li em{font-style:normal;font-weight:600;font-size:11.5px;color:var(--muted)}
+.mlens .ml-la li em.d{color:var(--a-done)} .mlens .ml-la li em.o{color:var(--warn)}
+.mlens .ml-la .ml-gh{display:block;border:0;padding:6px 0 2px;font-weight:700;font-size:11.5px;color:var(--muted)}
+.mlens .ml-lbt{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.mlens .ml-lbt button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+.mlens .ml-lbt button:hover{border-color:var(--focus)}
+.mlens .ml-lhint{color:var(--muted);font-size:13px;margin:0}
+@media (max-width:860px){ .mlens{width:calc(100% - 72px)} .mlens .ml-lb{grid-template-columns:1fr} .mlens .ml-lsv{justify-self:center} }
+@media print{ .mlens{display:none!important} }
 </style>
 </head>
 <body>
 <section class="dash hx" id="dash" aria-label="Progress dashboard">
   <header class="hx-band"><div class="hx-wrap">
     <div class="hx-bar">
-      <div class="hx-ttl"><div class="hx-proj">Sheikh Isa Bin Salman Highway, Kingdom of Bahrain</div><h1>SIBS Trunk Sewer progress</h1>
+      <div class="hx-ttl"><div class="hx-proj" data-edit="proj">Sheikh Isa Bin Salman Highway, Kingdom of Bahrain</div><h1 data-edit="title">SIBS Trunk Sewer progress</h1>
         <div class="hx-sub" id="dsub"></div></div>
       <div class="hx-asof hx-date"><label for="asofIn">Progress as of</label><div class="hx-dr"><input type="date" id="asofIn" aria-label="Progress as of date"><button class="hx-btn" id="asofToday" type="button">Today</button></div></div>
-      <div class="hx-ctl"><button class="hx-btn pri" id="dprint" type="button">Print / Save PDF</button><button class="hx-btn" id="dxl">Load newer Excel</button><a class="hx-btn pri" href="#layout">Go to layout</a><button class="hx-btn icon" id="theme2" aria-label="Switch light or dark">◐</button></div>
+      <div class="hx-ctl"><button class="hx-btn" id="editTxt" type="button" hidden aria-pressed="false">Edit text</button><button class="hx-btn pri" id="dprint" type="button">Print / Save PDF</button><button class="hx-btn" id="dxl">Load newer Excel</button><a class="hx-btn pri" href="#layout">Go to layout</a><button class="hx-btn" id="ledBtn" type="button" aria-pressed="true" title="Glowing LED highlights on progress markers. Switch off for the original look."><i class="ledi" aria-hidden="true"></i>LED</button><button class="hx-btn icon" id="theme2" aria-label="Switch light or dark">◐</button></div>
     </div>
     <div class="hx-hero">
       <div class="hx-head" id="hxHead"></div>
-      <div class="hx-plan"><div class="hx-planh"><h2>Alignment</h2><div class="hx-pkey" id="hxPkey"></div></div><div class="hx-planbox" id="hxPlan"></div></div>
+      <div class="hx-plan"><div class="hx-planh"><h2 data-edit="plan">Alignment</h2><div class="hx-pkey" id="hxPkey"></div></div><div class="hx-planbox" id="hxPlan"></div></div>
     </div>
   </div></header>
   <div class="hx-main">
   <section class="hx-strip" id="kpis" aria-label="Key figures"></section>
   <article class="card" id="cMhType" aria-label="Manhole construction by type and line"></article>
+  <article class="card" id="cBlind" aria-label="Blind shaft construction by line"></article>
   <article class="card" id="cSplit" aria-label="Shaft and manhole progress by line"></article>
   <div class="dg3">
     <article class="card" id="cLines"></article>
@@ -770,7 +975,7 @@ html.pr #map{width:1500px!important;height:840px!important;flex:none}
     <article class="card" id="cTypes"></article>
   </div>
   <article class="card">
-    <h3>Progress by manhole <span class="h3s">manhole construction split by activity, in order along each line. Dashed line = line average. Square below = shaft construction. Tap a bar to open it on the layout.</span></h3>
+    <h3><span data-edit="bars">Progress by manhole and blind shaft</span> <span class="h3s" data-edit="bars-note">construction split by activity, in order along each line. Blind shafts are marked <b>Blind</b> under their name. Dashed line = manhole average for the line. Square below = shaft construction. Tap a bar to open it on the layout.</span></h3>
     <div class="bkeys" id="bkeys"></div>
     <div class="barsc" id="cBarsC"></div>
   </article>
@@ -798,12 +1003,18 @@ html.pr #map{width:1500px!important;height:840px!important;flex:none}
       <button id="zin" aria-label="Zoom in">+</button>
       <button id="zout" aria-label="Zoom out">−</button>
       <button id="zfit" aria-label="Fit whole layout" style="font-size:14px">⤢</button>
+      <button id="zfull" aria-label="Full screen layout" title="Full screen layout" style="font-size:15px">⛶</button>
+      <span class="tsep" aria-hidden="true"></span>
+      <button id="zmag" class="tlab" aria-label="Enlarge section views" title="Enlarge section views (1×, 1.6×, 2.4×)">1×</button>
+      <button id="zlens" aria-label="Close-up panel" aria-pressed="false" title="Close-up: point at a manhole to see every activity">🔍</button>
     </div>
+    <aside class="mlens" id="mlens" hidden aria-live="polite"></aside>
     <div class="legend">
-      <h3>Pipeline diameter</h3>
+      <h3 data-edit="legend">Pipeline diameter</h3>
       <div class="keys" id="keys"></div>
       <h3 class="h3b">Manhole activity <span class="st3"><i class="solid"></i>complete <i class="hatch"></i>ongoing <i class="none"></i>not started</span></h3>
       <div class="keys" id="akeys"></div>
+      <div class="ledkey" id="ledkeys"></div>
       <details class="lyr" open><summary>Layers</summary><div class="layers">
         <label><input type="checkbox" data-l="plot" checked> <i class="sw-plot"></i>Plot access areas</label>
         <label><input type="checkbox" data-l="roads" checked> Highway</label>
@@ -822,9 +1033,9 @@ html.pr #map{width:1500px!important;height:840px!important;flex:none}
   <aside>
     <div class="head">
       <button class="chipbtn themebtn" id="theme" aria-label="Switch light or dark">◐</button>
-      <h1>SIBS Trunk Sewer<br>SIBSTS&#8209;01 &amp; SIBSTS&#8209;02</h1>
-      <p class="sub">Manhole and shaft progress along Sh. Isa Bin Salman Highway. Main contractor Haji Hassan Group W.L.L. Pipelines are shown with their diameter; microtunnel drive lengths and progress are tracked separately.</p>
-      <div class="dwgno">Layout: SIBSTS01_02-HHG-SD-SK-004-R0</div>
+      <h1 data-edit="side-title">SIBS Trunk Sewer<br>SIBSTS&#8209;01 &amp; SIBSTS&#8209;02</h1>
+      <p class="sub" data-edit="side-sub">Manhole and shaft progress along Sh. Isa Bin Salman Highway. Main contractor Haji Hassan Group W.L.L. Pipelines are shown with their diameter; microtunnel drive lengths and progress are tracked separately.</p>
+      <div class="dwgno" data-edit="dwg">Layout: SIBSTS01_02-HHG-SD-SK-004-R0</div>
       <div class="dwgno" id="pubBadge"></div>
       <div class="totals" id="totals"></div>
       <div class="progline" id="progline"></div>
@@ -857,7 +1068,9 @@ svg.insertAdjacentHTML('afterbegin', `<defs>${['shaft','exc','pipe','seg','bd','
 const map = document.getElementById('map'), tip = document.getElementById('tip');
 const NS = 'http://www.w3.org/2000/svg';
 const el = (t, a={}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
-const short = n => n.replace(/\s*\(.*$/, '').replace(/\s+ADD\.?$/,' ADD');
+const short0 = n => n.replace(/\s*\(.*$/, '').replace(/\s+ADD\.?$/,' ADD');
+let TXT = {names:{}, text:{}, words:{}};
+const short = n => { const b = short0(n); return (TXT.names && TXT.names[b.replace(/\s+/g,'-')]) || b; };
 const side = n => (n.match(/\((L|R)\)/)||[])[1] || '';
 const fmt = v => v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
 const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -902,7 +1115,7 @@ const shafts = Object.entries(D.shafts).map(([name,s]) => ({name,...s}));
 const byName = Object.fromEntries(shafts.map(s=>[s.name,s]));
 const mlab = Object.fromEntries(D.mlabels.map(m=>[m.name,m]));
 const isMain = new Set(); D.drives.forEach(d=>{ if(d.kind==='main'){isMain.add(d.a);isMain.add(d.b);} });
-const glLead = el('g',{class:'gl-leads'},ov), glLayer = el('g',{class:'gl-layer'},ov);
+const glLead = el('g',{class:'gl-leads'},ov), glLayer = el('g',{class:'gl-layer'},ov), ledLayer = el('g',{class:'led-layer','aria-hidden':'true'},ov);
 shafts.forEach(s => {
   s.gl = el('g',{class:'gl',tabindex:'0',role:'button','aria-label':'Section view of '+short(s.name)},glLayer);
   s.gll = el('line',{class:'gl-lead'},glLead);
@@ -911,6 +1124,7 @@ shafts.forEach(s => {
   s.gl.addEventListener('pointerenter',e=>showShaftTip(e,s)); s.gl.addEventListener('pointermove',moveTip); s.gl.addEventListener('pointerleave',hideTip);
 });
 shafts.forEach(s => {
+  mkLed(s);
   s.c = el('circle',{class:'shaft'+(s.sp?' sp':''),r:4},ov);
   s.t = el('text',{class:'sname','text-anchor':'middle'},ov);
   s.t.textContent = short(s.name);
@@ -921,13 +1135,15 @@ shafts.forEach(s => {
   const go = () => selectShaft(s,false);
   s.c.addEventListener('click',go); s.t.addEventListener('click',go);
   s.c.addEventListener('pointerenter',e=>showShaftTip(e,s)); s.c.addEventListener('pointermove',moveTip); s.c.addEventListener('pointerleave',hideTip);
+  if(window.hookLens) hookLens(s);
 });
 shafts.sort((a,b)=>a.prio-b.prio);
 
 
 /* ---------- section views on the layout ---------- */
 const GW = 52, GH = 92;
-function glScale(){ return Math.max(0.62, Math.min(1.7, 0.62 + (S-0.15)*1.5)); }
+let GLX = 1;   // section-view enlarge factor (Enlarge button on the layout)
+function glScale(){ return Math.max(0.62, Math.min(1.7, 0.62 + (S-0.15)*1.5)) * GLX; }
 function placeGlyphs(r){
   const on = !map.classList.contains('hide-glyphs');
   glLayer.style.display = glLead.style.display = on ? '' : 'none';
@@ -1040,10 +1256,12 @@ function draw(){
   shafts.forEach(s => {
     const hid = isHidden(s) || !s.p;
     s.c.style.display = s.t.style.display = hid ? 'none' : '';
+    if(s.led) s.led.style.display = hid ? 'none' : '';
     if(hid) return;
-    const x = S*s.p[0]+TX, y = S*s.p[1]+TY;
+    const x = S*s.p[0]+TX, y = S*s.p[1]+TY, rr = Math.max(5.5, (s.dia||6)/2*S);
     s.c.setAttribute('cx',x); s.c.setAttribute('cy',y);
-    s.c.setAttribute('r', Math.max(5.5, (s.dia||6)/2*S));
+    s.c.setAttribute('r', rr);
+    if(s.led) placeLed(s, x, y, rr+4.5);
     if(!showNames){ s.t.style.visibility='hidden'; return; }
     const useLeader = S > 0.35;
     const ax = useLeader ? S*s.anchor[0]+TX : x, ay = useLeader ? S*s.anchor[1]+TY : y;
@@ -1065,7 +1283,7 @@ function draw(){
   document.getElementById('scaleTxt').textContent = m>=1000 ? (m/1000)+' km' : m+' m';
 }
 function zoomAt(f, cx, cy){
-  const ns = Math.max(0.05, Math.min(40, S*f)); f = ns/S;
+  const ns = Math.max(0.05, Math.min(160, S*f)); f = ns/S;
   TX = cx - f*(cx-TX); TY = cy - f*(cy-TY); S = ns; render();
 }
 map.addEventListener('wheel', e => { e.preventDefault(); const r = map.getBoundingClientRect(); zoomAt(Math.exp(-e.deltaY*0.0015), e.clientX-r.left, e.clientY-r.top); }, {passive:false});
@@ -1220,13 +1438,13 @@ function renderAbout(){
 function setTab(t){
   currentTab=t;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
-  document.getElementById('searchWrap').style.display = (t==='about'||t==='detail') ? 'none' : '';
+  document.getElementById('searchWrap').style.display = (t==='about'||t==='detail'||t==='names') ? 'none' : '';
   if(t!=='detail') detailOf=null;
-  ({drives:renderDrives,shafts:renderShafts,about:renderAbout,detail:renderDetail})[t]();
+  ({drives:renderDrives,shafts:renderShafts,about:renderAbout,detail:renderDetail,names:renderNames})[t]();
 }
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
-q.addEventListener('input',()=>setTab(currentTab==='about'||currentTab==='detail'?'shafts':currentTab));
-q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ const f=norm(q.value); const s=shafts.find(s=>norm(short(s.name))===f)||shafts.find(s=>{const n=norm(s.name); return n.startsWith(f) && !/[\d.]/.test(n.charAt(f.length));})||shafts.find(s=>norm(s.name).includes(f)); if(s) selectShaft(s); } });
+q.addEventListener('input',()=>setTab(currentTab==='about'||currentTab==='detail'||currentTab==='names'?'shafts':currentTab));
+q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ const f=norm(q.value); const s=shafts.find(s=>norm(short(s.name))===f)||shafts.find(s=>norm(short0(s.name))===f)||shafts.find(s=>{const n=norm(s.name); return n.startsWith(f) && !/[\d.]/.test(n.charAt(f.length));})||shafts.find(s=>norm(s.name).includes(f)); if(s) selectShaft(s); } });
 
 document.querySelectorAll('.layers input').forEach(cb=>{
   cb.onchange=()=>{ map.classList.toggle('hide-'+cb.dataset.l, !cb.checked); render(); };
@@ -1444,6 +1662,7 @@ const dataURLToBlob = async u => (await fetch(u)).blob();
 function stamp(){ const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 async function exportBackup(stEl){
   const out = {app:'sibsts01_02-sk004', version:2, exported:new Date().toISOString(), baseline: BASE===BASE_EMBED ? null : cloneJ(BASE), weights: wIsDefault() ? null : cloneJ(WTS), manholes:{}, files:{}};
+  if(txtCount()) out.text = cloneJ(TXT);
   const ids = new Set();
   for(const k in PROG){ out.manholes[k] = cloneJ(PROG[k]); const dw = PROG[k].drawings||{}; for(const id in dw){ if(dw[id] && dw[id].name){ ids.add(id); if(dw[id].thumb) ids.add(dw[id].thumb); } } }
   let i = 0, missing = 0;
@@ -1464,6 +1683,7 @@ async function importBackup(file, stEl){
   if(!data || data.app!=='sibsts01_02-sk004' || !data.manholes){ stEl.textContent = 'That file is not a backup from this page.'; return; }
   if(!canEditProgress()){ stEl.textContent = 'You can\'t change progress on this page, so the backup was not loaded.'; return; }
   let marked = 0, added = 0, skipped = 0, setups = 0;
+  if(data.text && !txtCount()) saveTxt(cloneJ(data.text));
   const keys = Object.keys(data.manholes);
   for(let n = 0; n < keys.length; n++){
     const key = keys[n], inc = data.manholes[key] || {};
@@ -1533,7 +1753,7 @@ function wireBackup(){
 /* ================= manhole construction progress ================= */
 const PROG = {};                 // manhole key -> stored doc (page edits)
 let store = null, people = null, myId = null, storeState = 'loading', writeBlocked = false, detailOf = null;
-const keyOf = n => short(n).replace(/\s+/g,'-');
+const keyOf = n => short0(n).replace(/\s+/g,'-');
 const bKey = n => String(n).replace(/\s*\(.*$/,'').replace(/\.$/,'').toUpperCase().replace(/[\s\-_]/g,'');
 const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 const cfgOf = n => PROG[keyOf(n)] || {};
@@ -1554,13 +1774,13 @@ const EXIST_SHAFT = new Set(['MHA2ADD']);
 // MHB8.1: waiting for the Engineer's instruction. Hidden everywhere until "EI received" is ticked; then counted on SIBS-1.
 EXTRA_MH['MHB8.1'] = {name:'MHB8.1', line:'SIBS-1', s:{}, act:'No Activity Ongoing', rem:"Added on Engineer's instruction. Type to be confirmed on its page.", bd:false, typ:0, inter:0, non:0, lifts:0};
 const EI_PENDING = new Set(['MHB8.1']);
-const eiKey = n => bKey(short(n));
+const eiKey = n => bKey(short0(n));
 const eiWaiting = s => EI_PENDING.has(eiKey(s.name)) && !cfgOf(s.name).ei;
 // MHA2 ADD: not counted as a manhole; only its pipe connection & concrete and backfilling are tracked as activities
 const ACT_ONLY = new Set(['MHA2ADD']);
-const isActOnly = s => ACT_ONLY.has(bKey(short(s.name)));
-const isExisting = n => EXIST_SHAFT.has(bKey(short(n)));
-const baseOf = n => BASE.mh[bKey(short(n))] || EXTRA_MH[bKey(short(n))] || null;
+const isActOnly = s => ACT_ONLY.has(bKey(short0(s.name)));
+const isExisting = n => EXIST_SHAFT.has(bKey(short0(n)));
+const baseOf = n => BASE.mh[bKey(short0(n))] || EXTRA_MH[bKey(short0(n))] || null;
 
 const KIND = {
   shaft:{label:'Shaft construction'}, pipe:{label:'Pipe connection & concrete'}, seg:{label:'Segments / CIS lifts'},
@@ -1639,12 +1859,12 @@ const MARKUP = {
   'MHA10.1': {date:'2026-09-24', at:'2026-09-24T08:00:00.000Z', note:'MHA10 A-A section, green = complete',
     s:{l3:1, bw1:1, bw2:1, bw3:1}}
 };
-const baffleOf = n => { const b = BAFFLE[bKey(short(n))]; return b && specOf(n).type==='Cast-In-Situ' ? b : null; };
+const baffleOf = n => { const b = BAFFLE[bKey(short0(n))]; return b && specOf(n).type==='Cast-In-Situ' ? b : null; };
 function structOf(n){                      // bottom to top
   const sp = specOf(n), L = [], t = sp.type;
   if(t==='Blind') return L;
   if(usesLifts(t)){
-    const bx = t==='Cast-In-Situ' ? BAFFLE[bKey(short(n))] : null;
+    const bx = t==='Cast-In-Situ' ? BAFFLE[bKey(short0(n))] : null;
     L.push({id:'scr',label:'Screed concrete + W/P',base:true},{id:'cbase',label:'Base (CIS)',base:true});
     for(let i=1;i<=sp.lifts;i++){
       L.push({id:'l'+i,label:(bx?`CIS wall pour ${i}`:'CIS wall lift '+i)+' + W/P',pipe:i===1});
@@ -1775,7 +1995,7 @@ function stOf(n,id){
     const s = o.st || (o.done ? 'done' : null);
     return {s, pct: s==='done' ? 1 : (+o.pct || 0), date:o.date||null, by:o.by||null, src:'page'};
   }
-  const mk = MARKUP[bKey(short(n))];
+  const mk = MARKUP[bKey(short0(n))];
   if(mk && mk.s[id]!==undefined && inDate(mk) && TS(mk.at) > TS(BASE.importedAt)){
     const m = mk.s[id]; return m>=1 ? {s:'done',pct:1,date:mk.date,src:'markup'} : {s:'ongoing',pct:Math.max(0,+m||0),date:mk.date,src:'markup'};
   }
@@ -1843,6 +2063,11 @@ async function initStore(){
     BASE = (d && d.mh && TS(d.importedAt) > TS(BASE_EMBED.importedAt)) ? d : BASE_EMBED;
     onProgress();
   }, () => {});
+  store.doc('settings/text').onSnapshot(sn => {
+    const d = sn.exists ? sn.data() : null;
+    TXT = {names:{...((d && d.names)||{})}, text:{...((d && d.text)||{})}, words:{...((d && d.words)||{})}};
+    applyTxt();
+  }, () => {});
   store.doc('settings/weights').onSnapshot(sn => {
     const d = sn.exists ? sn.data() : null;
     const nw = normWts(d && d.w); if(JSON.stringify(nw)!==JSON.stringify(WTS)) wSync = true;
@@ -1880,13 +2105,65 @@ function paintMarker(s){
   const g = stageOf(s.name); s.stage = g;
   s.gl.innerHTML = glyphSVG(s);
   s.c.classList.remove('prog','full','on','cmp');
-  if(g.k){ s.c.style.fill = `var(--a-${g.k})`; s.c.style.fillOpacity = g.on || g.k==='done' ? 1 : .42; if(g.on) s.c.classList.add('on'); if(g.k==='done') s.c.classList.add('cmp'); }
-  else { s.c.style.fill = ''; s.c.style.fillOpacity = ''; }
+  if(g.k){ s.c.style.fill = `var(--a-${g.k})`; s.c.style.color = `var(--a-${g.k})`; s.c.style.fillOpacity = g.on || g.k==='done' ? 1 : .42; if(g.on) s.c.classList.add('on'); if(g.k==='done') s.c.classList.add('cmp'); }
+  else { s.c.style.fill = ''; s.c.style.color = ''; s.c.style.fillOpacity = ''; }
+  s.gl.classList.toggle('lon', !!g.on); s.gl.classList.toggle('ldn', g.k==='done');
+  const li = ledInfo(s, g); s.ls = li.st; s.lv = li.v; s.li = li;
+  if(s.led) s.led.setAttribute('class', `ledr ls-${li.st}${li.fresh?' fresh':''}`);
+  [s.c, s.t, s.gl, s.gll, s.led].forEach(e => e && e.setAttribute('data-lg', li.st));
+  if(window.lensRefresh) lensRefresh(s);
 }
+/* ---------- smart LED status, shared by the header plan and the layout ----------
+   d  completed          a  work happening today     o  in progress, no work today
+   s  stalled: started but no recorded update for 3+ weeks
+   w  shaft built, manhole works not started            n  not started
+   v  = how far the ring is lit (manhole %, or shaft % while the shaft is still being built) */
+const LED_STALL_DAYS = 21, LED_FRESH_DAYS = 7;
+const LED_LABEL = {d:'Completed', a:'Working today', o:'In progress, no work today', s:'Stalled, no update for 3+ weeks', w:'Shaft done, manhole works not started', n:'Not started'};
+const dayGap = (a, b) => (TS(b) - TS(a)) / 864e5;
+function ledInfo(s, g){
+  g = g || stageOf(s.name); const n = s.name, p = g.p || pctOf(n);
+  let last = 0, lastDone = 0;
+  actsOf(n).forEach(a => { const x = stOf(n, a.id); const t = TS(x.date); if(x.s && t > last) last = t; if(x.s==='done' && t > lastDone) lastDone = t; });
+  structOf(n).forEach(e => { const x = stOf(n, e.id); const t = TS(x.date); if(x.s && t > last) last = t; if(x.s==='done' && t > lastDone) lastDone = t; });
+  const asof = TS(ASOF), gap = last ? (asof - last)/864e5 : null;
+  let st, v;
+  if(g.k==='done' || p.mh>0.9999){ st = 'd'; v = 1; }
+  else if(g.on){ st = 'a'; v = p.mh>0 ? p.mh : p.shaft; }
+  else if(p.mh>0 || (!p.ex && p.shaft>0 && p.shaft<0.9999)){ st = (gap!==null && gap>=LED_STALL_DAYS) ? 's' : 'o'; v = p.mh>0 ? p.mh : p.shaft; }
+  else if(p.ex || p.shaft>0.9999){ st = 'w'; v = 0; }
+  else { st = 'n'; v = 0; }
+  const fresh = st==='d' && lastDone && (asof - lastDone)/864e5 <= LED_FRESH_DAYS;
+  return {st, v: Math.max(0, Math.min(1, v||0)), fresh: !!fresh, gap, p, g};
+}
+function mkLed(s){
+  s.led = el('g',{class:'ledr'},ledLayer);
+  s.ledF = el('circle',{class:'lf'},s.led); s.ledT = el('circle',{class:'lt'},s.led); s.ledA = el('circle',{class:'la'},s.led);
+}
+function placeLed(s, x, y, r){
+  const w = Math.max(2.2, Math.min(5.5, r*0.26)), c = 2*Math.PI*r, v = s.lv||0;
+  s.led.style.setProperty('--lw', w.toFixed(2));
+  [s.ledT, s.ledA].forEach(e => { e.setAttribute('cx',x); e.setAttribute('cy',y); e.setAttribute('r',r); });
+  s.ledF.setAttribute('cx',x); s.ledF.setAttribute('cy',y); s.ledF.setAttribute('r', r + w + 2.5);
+  s.ledA.setAttribute('stroke-dasharray', `${(c*v).toFixed(2)} ${c.toFixed(2)}`);
+  s.ledA.setAttribute('transform', `rotate(-90 ${x.toFixed(1)} ${y.toFixed(1)})`);
+  s.ledA.style.display = v>0 ? '' : 'none';
+}
+// click a status in either legend to show only those shafts; click again to show all
+let LEDF = '';
+function setLedFilter(k){ LEDF = LEDF===k ? '' : k; if(LEDF) document.documentElement.setAttribute('data-ledf', LEDF); else document.documentElement.removeAttribute('data-ledf');
+  document.querySelectorAll('.ledk[data-k]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.k===LEDF))); }
+function ledKeys(lc, dark){
+  const order = ['d','a','o','s','w','n'].filter(k => lc[k] || ['d','a','o','n'].includes(k));
+  return order.map(k => `<button type="button" class="ledk" data-k="${k}" aria-pressed="${LEDF===k}" title="Show only: ${LED_LABEL[k]}"><i class="ld ${k}"></i>${LED_LABEL[k]} <em>${lc[k]||0}</em></button>`).join('');
+}
+function wireLedKeys(root){ root.querySelectorAll('.ledk[data-k]').forEach(b => b.onclick = () => setLedFilter(b.dataset.k)); }
 function onProgress(){
   const cnt = {}; let onN = 0;
   shafts.forEach(s => { paintMarker(s); const g = s.stage; if(!isHidden(s) && g.on){ cnt[g.k]=(cnt[g.k]||0)+1; onN++; } });
   const idle = {}; shafts.forEach(s => { const g = s.stage; if(!g.on) idle[g.k||'none'] = (idle[g.k||'none']||0)+1; });
+  const lc = {d:0,a:0,o:0,s:0,w:0,n:0}; let fr = 0; shafts.forEach(s => { if(isHidden(s) || !s.p) return; lc[s.ls]++; if(s.li && s.li.fresh) fr++; });
+  const lk = document.getElementById('ledkeys'); if(lk){ lk.innerHTML = `<h3 class="h3b">LED status <span>ring lights up with progress; tap a status to show only those</span></h3><div class="keys ledks">${ledKeys(lc)}</div><p class="ledn">Only work happening today breathes slowly.${fr?` Outer ring: ${fr} completed in the last ${LED_FRESH_DAYS} days.`:''}${lc.s?'':` Stalled shows when a started manhole has no recorded update for ${LED_STALL_DAYS}+ days.`}</p>`; wireLedKeys(lk); }
   document.getElementById('akeys').innerHTML = AKEYS.map(k => `<span class="key ak"><i style="background:var(--a-${k})"></i>${KIND[k].label}${cnt[k]?`<span style="color:var(--muted);font-weight:500">${cnt[k]} ongoing</span>`:''}</span>`).join('');
   const avg = f => { const v = shafts.filter(s=>baseOf(s.name)||PROG[keyOf(s.name)]).map(s=>pctOf(s.name)[f]); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : 0; };
   document.getElementById('progline').innerHTML = (storeState==='none'
@@ -1894,17 +2171,18 @@ function onProgress(){
     : (LOCAL ? `<span style="flex-basis:100%">Page edits are saved in this browser only. <button class="lnk" id="goBackup">Back up</button></span>` : ''))
     + `<span style="flex-basis:100%">Progress as of <b>${fmtDate(ASOF)}</b>${canEditProgress()?` <button class="lnk" id="goXl">Load newer Excel</button>`:''}</span>`
     + `<span><b>${onN}</b> manholes with work ongoing</span>`;
-  const tracked = counted().map(s=>pctOf(s.name));
-  const av = sumStats(counted());
-  const doneN = counted().filter(s=>s.stage.k==='done').length;
+  const cM = counted().filter(s=>!isBlindS(s)), cB = countedAll().filter(isBlindS);
+  const av = sumStats(counted()), am = sumStats(cM), ab = sumStats(cB);
+  const doneN = cM.filter(s=>s.stage.k==='done').length;
   tot.innerHTML = `<div class="tot"><div class="n">${pctTxt(av.shaft)}</div><div class="l">Shaft construction, ${av.shDone} of ${av.shN} shafts done</div>${`<i class="pbar2"><b style="width:${av.shaft*100}%;background:var(--a-shaft)"></b></i>`}</div>
-    <div class="tot"><div class="n">${pctTxt(av.mh)}</div><div class="l">Manhole construction, ${doneN} of ${tracked.length} complete</div>${stackBar(av,'pbar2')}</div>`;
+    <div class="tot"><div class="n">${pctTxt(am.mh)}</div><div class="l">Manhole construction, ${doneN} of ${cM.length} complete</div>${stackBar(am,'pbar2')}</div>
+    <div class="tot wide"><div class="n">${pctTxt(ab.mh)}</div><div class="l">Blind shaft construction, ${ab.mhDone} of ${cB.length} blind shafts complete (pipe connection &amp; backfilling)</div><i class="pbar2"><b style="width:${ab.mh*100}%;background:var(--a-blind)"></b></i></div>`;
   const gb = document.getElementById('goBackup'); if(gb) gb.onclick = () => { setTab('about'); const b = document.querySelector('.bk'); if(b) b.scrollIntoView({block:'start'}); };
   const gx = document.getElementById('goXl'); if(gx) gx.onclick = () => document.getElementById('xfile').click();
   if(currentTab==='shafts') renderShafts();
   if(currentTab==='detail' && detailOf) paintDetail();
   D.drives.forEach(d => { const hid = [d.a,d.b].some(nm => byName[nm] && isHidden(byName[nm])); if(d.el){ d.el.style.display = d.hit.style.display = hid ? 'none' : ''; } (d.labels||[]).forEach(e => e.style.display = hid ? 'none' : ''); });
-  renderDash(); render();
+  renderDash(); render(); paintEditBtn();
   const bk = document.getElementById('bkeys'); if(bk) bk.innerHTML = KORDER.filter(k=>k!=='shaft').map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label}</span>`).join('');
 }
 
@@ -2199,6 +2477,7 @@ function renderDetail(){
   list.innerHTML = `<div class="detail">
     <button class="back" id="dback">← All shafts</button>
     <div class="dh"><h2>${short(s.name)}${side(s.name)?` <span style="font-size:18px;color:var(--muted)">(${side(s.name)})</span>`:''}</h2><span class="pct" id="dpct"></span></div>
+    <div class="rnm" id="drn">${short(s.name)!==short0(s.name)?`<span class="hint" style="margin:0">Drawing name ${esc(short0(s.name))}</span>`:''}${canEditProgress()?`<button class="lnk" id="drnB">Rename</button>`:''}</div>
     <div class="dmeta">${s.line==='Junction'?'Junction of SIBSTS-01 and 02':s.line}. Shaft ${s.block.length? s.block.join(', ').replace(/M DIA/,' m dia') : 'size not shown'}. ${conn.map(d=>`DN${d.dn} to ${short(d.a===s.name?d.b:d.a)}`).join(', ')}.</div>
     <div class="dmeta" style="color:var(--ink)" id="dspec">${specLine(s.name)}</div>
     <div id="dei"></div><div class="tbox"><h3>Manhole type and segments</h3><div id="dtype"></div></div>
@@ -2232,6 +2511,7 @@ function renderDetail(){
   document.getElementById('dadd').onclick = () => document.getElementById('dfile').click();
   document.getElementById('dfile').onchange = e => { const fl = [...e.target.files]; e.target.value=''; if(fl.length) uploadForShaft(s, fl); };
   document.getElementById('dback').onclick = () => { clearSel(); render(); setTab('shafts'); };
+  const rb = document.getElementById('drnB'); if(rb) rb.onclick = () => renameInline(s);
   const g = id => document.getElementById(id);
   g('fsave').onclick = () => {
     if(!canEditProgress()) return;
@@ -2359,10 +2639,10 @@ async function importExcel(file, stEl){
   let data;
   try{ data = await parseDashboard(file); }
   catch(e){ say(xlsxLib===null && !(window.XLSX) ? 'The Excel reader could not load. Check your connection and try again.' : 'That workbook doesn\'t look like the SIBS manhole progress dashboard (no SIBS sheet with Trial Pit … DI Cover columns).'); return; }
-  const found = shafts.filter(s => data.mh[bKey(short(s.name))]).length;
+  const found = shafts.filter(s => data.mh[bKey(short0(s.name))]).length;
   try{ await queued('baseline', () => store.doc('settings/baseline').set(data)); }
   catch(_){ say('The Excel was read but could not be saved. Try again.'); return; }
-  const miss = Object.keys(data.mh).filter(k => !shafts.some(s => bKey(short(s.name))===k));
+  const miss = Object.keys(data.mh).filter(k => !shafts.some(s => bKey(short0(s.name))===k));
   say(`Loaded ${file.name}: ${Object.keys(data.mh).length} manholes. ${found} match shafts on the layout.` + (miss.length ? ` Not on the layout: ${miss.join(', ')}.` : '') + ' Changes made on this page before now are replaced by the Excel.');
 }
 document.getElementById('xfile').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if(f) importExcel(f, document.getElementById('xlSt')); });
@@ -2381,8 +2661,10 @@ function eiBox(only){
 function wireEi(root){ (root||document).querySelectorAll('input[data-ei]').forEach(c => c.onchange = () => { if(!canEditProgress()){ c.checked = !c.checked; return; } writeDoc(c.dataset.ei, {ei: c.checked}); }); }
 // MHA20 (cast-in-situ) is constructed under SIBSTS-02; this holds even if a loaded Excel still lists it on SIBS-1
 const LINE_FIX = {'MHA20':'SIBSTS-02'};
-function lineOf(s){ const fx = LINE_FIX[bKey(short(s.name))]; if(fx) return fx; const b = baseOf(s.name); if(b && b.line) return /2/.test(b.line) ? 'SIBSTS-02' : 'SIBSTS-01'; return s.line==='SIBSTS-02' ? 'SIBSTS-02' : 'SIBSTS-01'; }
+function lineOf(s){ const fx = LINE_FIX[bKey(short0(s.name))]; if(fx) return fx; const b = baseOf(s.name); if(b && b.line) return /2/.test(b.line) ? 'SIBSTS-02' : 'SIBSTS-01'; return s.line==='SIBSTS-02' ? 'SIBSTS-02' : 'SIBSTS-01'; }
 const alongX = s => s.p ? s.p[0] : 1e9;
+// blind shafts have no chamber: tracked apart from manholes (their shaft construction still counts, except MHA2 ADD, built by others)
+const isBlindS = s => specOf(s.name).type==='Blind';
 const P0 = v => Math.round(v*100);
 const TCOL = {'Precast':'var(--t-pc)','Cast-In-Situ':'var(--t-cis)','Precast + CIS':'var(--t-hyb)','Blind':'var(--t-bl)'};
 function ring(parts, size, thick, inner){
@@ -2419,50 +2701,57 @@ function renderDash(){ if(dashRaf) return; dashRaf = requestAnimationFrame(() =>
 function paintDash(){
   const T = counted().sort((a,b) => lineOf(a).localeCompare(lineOf(b)) || alongX(a)-alongX(b));
   const TA = countedAll().sort((a,b) => lineOf(a).localeCompare(lineOf(b)) || alongX(a)-alongX(b));   // + activity-only locations (MHA2 ADD)
-  const A = sumStats(T), n = T.length, AA = sumStats(TA), xo = TA.length - n;
-  document.getElementById('dsub').innerHTML = `Manhole and shaft construction progress as of <b>${fmtDate(ASOF)}</b>. ${n} manholes counted. Main contractor <b>Haji Hassan Group W.L.L.</b>`;
+  const A = sumStats(T), AA = sumStats(TA), xo = TA.length - T.length;
+  // manholes and blind shafts are tracked apart; shaft construction covers every shaft we build (all except MHA2 ADD)
+  const M = T.filter(s=>!isBlindS(s)), BA = TA.filter(isBlindS), AM = sumStats(M), AB = sumStats(BA), n = M.length;
+  const exN = TA.filter(s=>pctOf(s.name).ex).length;
+  document.getElementById('dsub').innerHTML = `Shaft, manhole and blind shaft construction progress as of <b>${fmtDate(ASOF)}</b>. ${M.length} manholes and ${BA.length} blind shafts counted. Main contractor <b>Haji Hassan Group W.L.L.</b>`;
   const pb = (v, col, o=0) => `<i class="pbar2"><b style="width:${v*100}%;background:${col}"></b>${o?`<b class="og" style="width:${o*100}%;--c:${col}"></b>`:''}</i>`;
   const ai = document.getElementById('asofIn'); if(ai && ai.value!==ASOF) ai.value = ASOF;
   const at = document.getElementById('asofToday'); if(at) at.hidden = ASOF===today();
   // hero
-  const MKS = KORDER.filter(k=>k!=='shaft'), top = MKS.filter(k=>A.byK[k]>0.05).sort((a,b)=>A.byK[b]-A.byK[a]);
-  document.getElementById('hxHead').innerHTML = `<div><div class="hx-big">${P0(A.mh)}<small>%</small></div>
-      <div class="hx-bigl"><b>Manhole construction</b> across ${n} shafts, weighted by activity ${wIsDefault()?'as in the Excel dashboard':'using <b>custom weights</b>'}. <button class="lnk hx-wl" id="goWts">Adjust weights</button></div>
-      <div class="hx-ovr"><b>${P0(A.all)}<small>%</small></b><span>Overall progress (shaft ${fmtW(WTS.split.shaft)} : manhole ${fmtW(WTS.split.mh)})</span></div></div>
-    <div><div class="hx-seg">${MKS.filter(k=>A.byK[k]>0).map(k=>`<b style="width:${A.byK[k]}%;background:var(--a-${k})" title="${KIND[k].label}: ${A.byK[k].toFixed(1)} of 100 points"></b>`).join('')}</div>
-      <div class="hx-segk">${top.map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label} ${A.byK[k].toFixed(1)}</span>`).join('')}</div></div>
+  const MKS = KORDER.filter(k=>k!=='shaft'), top = MKS.filter(k=>AM.byK[k]>0.05).sort((a,b)=>AM.byK[b]-AM.byK[a]);
+  document.getElementById('hxHead').innerHTML = `<div><div class="hx-big">${P0(AM.mh)}<small>%</small></div>
+      <div class="hx-bigl"><b>Manhole construction</b> across ${n} manholes (blind shafts counted separately), weighted by activity ${wIsDefault()?'as in the Excel dashboard':'using <b>custom weights</b>'}. <button class="lnk hx-wl" id="goWts">Adjust weights</button></div>
+      <div class="hx-ovr"><b>${P0(A.all)}<small>%</small></b><span>Overall progress, all shafts (shaft ${fmtW(WTS.split.shaft)} : manhole ${fmtW(WTS.split.mh)})</span></div></div>
+    <div><div class="hx-seg">${MKS.filter(k=>AM.byK[k]>0).map(k=>`<b style="width:${AM.byK[k]}%;background:var(--a-${k})" title="${KIND[k].label}: ${AM.byK[k].toFixed(1)} of 100 points"></b>`).join('')}</div>
+      <div class="hx-segk">${top.map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label} ${AM.byK[k].toFixed(1)}</span>`).join('')}</div></div>
     <div class="hx-hstat">
-      <div class="hx-hs"><b>${P0(A.shaft)}<small>%</small></b><span>Shaft construction, ${A.shDone} of ${A.shN} shafts complete${A.shN<n?` (${n-A.shN} existing, by others)`:''}</span></div>
-      <div class="hx-hs"><b>${A.active}</b><span>Active work fronts today</span></div>
-      <div class="hx-hs"><b>${A.mhDone}<small> / ${n}</small></b><span>Manholes complete</span></div>
-      <div class="hx-hs"><b>${A.mhOn}</b><span>Manholes with works in progress</span></div>
+      <div class="hx-hs"><b>${P0(A.shaft)}<small>%</small></b><span>Shaft construction, ${A.shDone} of ${A.shN} shafts complete${exN?' (MHA2 ADD excluded, built by others)':''}</span></div>
+      <div class="hx-hs"><b>${P0(AB.mh)}<small>%</small></b><span>Blind shaft construction, ${AB.mhDone} of ${BA.length} complete</span></div>
+      <div class="hx-hs"><b>${AM.mhDone}<small> / ${n}</small></b><span>Manholes complete</span></div>
+      <div class="hx-hs"><b>${AM.mhOn}</b><span>Manholes with works in progress</span></div>
+      <div class="hx-hs"><b>${AB.mhOn}</b><span>Blind shafts with works in progress</span></div>
+      <div class="hx-hs"><b>${AA.active}</b><span>Active work fronts today</span></div>
     </div>`;
   // key-figure strip
-  const cnt = id => { let t=0,d=0,o=0; TA.forEach(s => { if(!actsOf(s.name).some(a=>a.id===id)) return; const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return {t,d,o}; };
+  const cnt = id => { let t=0,d=0,o=0; M.forEach(s => { if(!actsOf(s.name).some(a=>a.id===id)) return; const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return {t,d,o}; };
   const pipe = cnt('pipe'), grp = cnt('grp'), rr = x => x.t ? x.d/x.t : 0, oo = x => x.t ? x.o/x.t : 0;
   const m = (l, big, sub, bar) => `<div class="hx-m"><div class="kl">${l}</div><div class="kn">${big}</div><div class="ks">${sub}</div>${bar}</div>`;
   document.getElementById('kpis').innerHTML =
-    m('Pipe connections', `${pipe.d}<small> / ${pipe.t}</small>`, `${P0(rr(pipe))}% connected and concreted${pipe.o?`, ${pipe.o} ongoing`:''}`, pb(rr(pipe),'var(--a-pipe)',oo(pipe))) +
+    m('Manhole pipe connections', `${pipe.d}<small> / ${pipe.t}</small>`, `${P0(rr(pipe))}% connected and concreted${pipe.o?`, ${pipe.o} ongoing`:''}`, pb(rr(pipe),'var(--a-pipe)',oo(pipe))) +
     m('Precast elements', `${A.el.pc.d}<small> / ${A.el.pc.t}</small>`, `${P0(rr(A.el.pc))}% installed${A.el.pc.o?`, ${A.el.pc.o} ongoing`:''}`, pb(rr(A.el.pc),'var(--a-seg)',oo(A.el.pc))) +
     m('CIS screed, base & lifts', `${A.el.cis.d}<small> / ${A.el.cis.t}</small>`, `${P0(rr(A.el.cis))}% cast${A.el.cis.o?`, ${A.el.cis.o} ongoing`:''}`, pb(rr(A.el.cis),'var(--a-seg)',oo(A.el.cis))) +
     m('RTR / GRP lamination', `${grp.d}<small> / ${grp.t}</small>`, `${P0(rr(grp))}% laminated${grp.o?`, ${grp.o} ongoing`:''}`, pb(rr(grp),'var(--a-grp)',oo(grp))) +
-    m('Backfilling', `${P0(AA.bf)}<small>%</small>`, `${AA.bfDone} of ${TA.length} complete${xo?' (incl. MHA2 ADD)':''}`, pb(AA.bf,'var(--a-bf)'));
+    m('Manhole backfilling', `${P0(AM.bf)}<small>%</small>`, `${AM.bfDone} of ${M.length} manholes complete`, pb(AM.bf,'var(--a-bf)')) +
+    m('Blind shafts', `${AB.mhDone}<small> / ${BA.length}</small>`, `${P0(AB.mh)}% of pipe connection &amp; backfilling${AB.mhOn?`, ${AB.mhOn} ongoing`:''}`, pb(AB.mh,'var(--a-blind)'));
   paintPlan(T, A);
-  paintMhType(T, TA);
+  paintMhType(M, TA);
+  paintBlind(BA);
   paintSplit(T, TA);
 
   // by line
   const LN = ['SIBSTS-01','SIBSTS-02'];
   document.getElementById('cLines').innerHTML = `<h3>Progress by line</h3><div class="lines">${LN.map(L => {
-    const t = T.filter(s=>lineOf(s)===L), a = sumStats(t);
-    return `<div class="ln"><div class="lnh">${L}<span>${t.length} manholes</span></div><div class="gg">${gauge(a.shaft,'var(--a-shaft)',112,'Shaft')}${gauge(a.mh,'var(--a-done)',112,'Manhole')}</div>
-      <div class="lnf"><span>Precast <b>${a.el.pc.d}/${a.el.pc.t}</b></span><span>CIS <b>${a.el.cis.d}/${a.el.cis.t}</b></span><span>Backfill <b>${P0(a.bf)}%</b></span></div></div>`;
+    const t = T.filter(s=>lineOf(s)===L), a = sumStats(t), tm = t.filter(s=>!isBlindS(s)), am = sumStats(tm), tb = BA.filter(s=>lineOf(s)===L), ab = sumStats(tb);
+    return `<div class="ln"><div class="lnh">${L}<span>${tm.length} manholes, ${tb.length} blind</span></div><div class="gg">${gauge(a.shaft,'var(--a-shaft)',98,'Shaft')}${gauge(am.mh,'var(--a-done)',98,'Manhole')}${gauge(ab.mh,'var(--a-blind)',98,'Blind')}</div>
+      <div class="lnf"><span>Precast <b>${am.el.pc.d}/${am.el.pc.t}</b></span><span>CIS <b>${am.el.cis.d}/${am.el.cis.t}</b></span><span>Backfill <b>${P0(am.bf)}%</b></span></div></div>`;
   }).join('')}</div>`;
 
   // status donuts
   const st3 = (d, o, total) => [{v:d,color:'var(--a-done)',label:`Complete: ${d}`},{v:o,color:'var(--focus)',label:`In progress: ${o}`},{v:total-d-o,color:'var(--gl-none)',label:`Not started: ${total-d-o}`}];
-  const dn = (title, parts, tot=n) => `<div class="dnut">${ring(parts,128,18,`<text x="64" y="68" text-anchor="middle" class="rg-n">${tot}</text><text x="64" y="84" text-anchor="middle" class="rg-l">total</text>`)}<div class="dnl"><b>${title}</b>${parts.map(p=>`<span><i style="background:${p.color}"></i>${p.label}</span>`).join('')}</div></div>`;
-  document.getElementById('cStatus').innerHTML = `<h3>Status</h3><div class="dnuts">${dn('Shafts', st3(A.shDone, A.shOn, A.shN), A.shN)}${dn('Manholes', st3(A.mhDone, A.mhOn, n))}</div>`;
+  const dn = (title, parts, tot=n) => `<div class="dnut">${ring(parts,112,16,`<text x="56" y="60" text-anchor="middle" class="rg-n">${tot}</text><text x="56" y="76" text-anchor="middle" class="rg-l">total</text>`)}<div class="dnl"><b>${title}</b>${parts.map(p=>`<span><i style="background:${p.color}"></i>${p.label}</span>`).join('')}</div></div>`;
+  document.getElementById('cStatus').innerHTML = `<h3>Status</h3><div class="dnuts">${dn('Shafts (shaft construction)', st3(A.shDone, A.shOn, A.shN), A.shN)}${dn('Manholes', st3(AM.mhDone, AM.mhOn, n))}${dn('Blind shafts', st3(AB.mhDone, AB.mhOn, BA.length), BA.length)}</div>`;
 
   // type mix
   const tc = {}; TYPES.forEach(t => tc[t] = 0); let bds = 0; T.forEach(s => { const sp = specOf(s.name); tc[sp.type]++; if(sp.bd) bds++; });
@@ -2476,9 +2765,10 @@ function paintDash(){
   // activity completion
   const rowsM = [['pipe','Pipe connection & concrete','pipe'],['#seg','Segments & CIS lifts','seg'],['bd','Back drop','bd'],['bench','Benching','bench'],['grp','RTR / GRP lamination','grp'],['bf','Backfilling','bf'],['spc','Secant pile cutting','spc'],['cov','Cover slab','cov'],['di','DI cover & frame','di']];
   const rowsS = SHAFT_ACTS.map(([id,label]) => [id,label,ACT_KIND(id)]);
-  const actRow = ([id,label,k]) => {
+  const rowsB = [['pipe','Pipe connection & concrete','pipe'],['bf','Backfilling','bf'],['spc','Secant pile cutting','spc']];
+  const actRow = (set) => ([id,label,k]) => {
     let t = 0, d = 0, o = 0, part = 0;
-    TA.forEach(s => {
+    set.forEach(s => {
       if(id==='#seg'){ structOf(s.name).forEach(e => { const x = stOf(s.name,e.id); t++; if(x.s==='done') d++; else if(x.s==='ongoing') o++; }); return; }
       if(!actsOf(s.name).some(a=>a.id===id)) return;
       const x = stOf(s.name,id); t++; if(x.s==='done') d++; else if(x.s==='ongoing'){ o++; part += x.pct||0; }
@@ -2488,17 +2778,19 @@ function paintDash(){
     return `<div class="ar"><span class="an">${label}</span><span class="ab"><b style="width:${dw}%;background:var(--a-${k})"></b><b class="og" style="width:${ow}%;--c:var(--a-${k})"></b></span><span class="av"><b>${d}</b>/${t}${o?` <em>+${o} ongoing</em>`:''}</span></div>`;
   };
   document.getElementById('cActs').innerHTML = `<h3>Activity completion <span class="h3s"><i class="lg solid"></i>complete <i class="lg hatch"></i>ongoing <i class="lg none"></i>remaining</span></h3>
-    <div class="ag">Manhole construction</div>${rowsM.map(actRow).join('')}<div class="ag">Shaft construction</div>${rowsS.map(actRow).join('')}`;
+    <div class="ag">Shaft construction, all shafts except MHA2 ADD</div>${rowsS.map(actRow(T)).join('')}<div class="ag">Manhole construction</div>${rowsM.map(actRow(M)).join('')}<div class="ag">Blind shaft construction</div>${rowsB.map(actRow(BA)).join('')}`;
 
   // ongoing now + ready
-  const on = TA.filter(s=>stageOf(s.name).on), ready = T.filter(s => A.P.get(s).shaft>0.9999 && A.P.get(s).mh===0 && !stageOf(s.name).on);
+  const on = TA.filter(s=>stageOf(s.name).on), ready = M.filter(s => A.P.get(s).shaft>0.9999 && A.P.get(s).mh===0 && !stageOf(s.name).on), readyB = BA.filter(s => { const p = pctOf(s.name); return !p.ex && p.shaft>0.9999 && p.mh===0 && !stageOf(s.name).on; });
   document.getElementById('cNow').innerHTML = `<h3>Ongoing now <span class="h3s">${on.length} manholes</span></h3>
     <div class="now">${on.length ? on.map(s => { const g = stageOf(s.name); const items = actsOf(s.name).filter(a=>stOf(s.name,a.id).s==='ongoing');
-      return `<button class="nr" data-s="${esc(s.name)}"><span class="nn">${short(s.name)}<em>${lineOf(s).replace('SIBSTS-','TS-')}</em></span><span class="nc">${items.map(a=>{const x=stOf(s.name,a.id); return `<span class="chip" style="--c:var(--a-${a.k})"><i></i>${PCT_ACTS.has(a.id)&&x.pct?`${a.id==='bf'?'Backfilling':a.label} ${P0(x.pct)}%`:a.label.replace(/ \+ W\/P$/,'')}</span>`;}).join('')}</span><span class="np">${P0(pctOf(s.name).mh)}%</span></button>`; }).join('') : '<p class="hint">No activity is marked ongoing.</p>'}</div>
+      return `<button class="nr" data-s="${esc(s.name)}"><span class="nn">${short(s.name)}<em>${lineOf(s).replace('SIBSTS-','TS-')}${isBlindS(s)?', blind':''}</em></span><span class="nc">${items.map(a=>{const x=stOf(s.name,a.id); return `<span class="chip" style="--c:var(--a-${a.k})"><i></i>${PCT_ACTS.has(a.id)&&x.pct?`${a.id==='bf'?'Backfilling':a.label} ${P0(x.pct)}%`:a.label.replace(/ \+ W\/P$/,'')}</span>`;}).join('')}</span><span class="np">${P0(pctOf(s.name).mh)}%</span></button>`; }).join('') : '<p class="hint">No activity is marked ongoing.</p>'}</div>
     <h3 style="margin-top:16px">Shaft complete, manhole works not started <span class="h3s">${ready.length}</span></h3>
-    <div class="rdy">${ready.map(s=>`<button class="rchip" data-s="${esc(s.name)}">${short(s.name)}</button>`).join('') || '<p class="hint">None.</p>'}</div>`;
+    <div class="rdy">${ready.map(s=>`<button class="rchip" data-s="${esc(s.name)}">${short(s.name)}</button>`).join('') || '<p class="hint">None.</p>'}</div>
+    <h3 style="margin-top:16px">Blind shaft complete, pipe connection not started <span class="h3s">${readyB.length}</span></h3>
+    <div class="rdy">${readyB.map(s=>`<button class="rchip" data-s="${esc(s.name)}">${short(s.name)}</button>`).join('') || '<p class="hint">None.</p>'}</div>`;
 
-  paintBars(T, A);
+  paintBars(TA.filter(s => isBlindS(s) || M.includes(s)));
   paintReg(TA, AA);
   paintWts(T, A);
   const gw = document.getElementById('goWts'); if(gw) gw.onclick = () => openWts();
@@ -2513,7 +2805,7 @@ function paintMhType(T, TA){
   TA = TA || T;
   const box = document.getElementById('cMhType'); if(!box) return;
   const LN = [['SIBSTS-01','SIBS-1','Trunk sewer line SIBSTS-01'],['SIBSTS-02','SIBS-2','Trunk sewer line SIBSTS-02'],['all','SIBS-1 + SIBS-2','Project total, both lines']];
-  const ROWS = [['Precast'],['Cast-In-Situ'],['Precast + CIS'],['#ch','Total CIS + Precast'],['Blind'],['#all','Total shafts']];
+  const ROWS = [['Precast'],['Cast-In-Situ'],['Precast + CIS'],['#all','Total manholes']];
   const C = {d:'var(--a-done)', o:'var(--focus)', n:'var(--gl-none)'};
   const stOfMh = s => { const p = pctOf(s.name); if(p.mh>0.9999) return 'd';
     return (p.mh>0 || actsOf(s.name).some(a=>a.g==='mh' && stOf(s.name,a.id).s==='ongoing')) ? 'o' : 'n'; };
@@ -2522,7 +2814,7 @@ function paintMhType(T, TA){
   const panel = ([L, lab, sub]) => {
     const t = T.filter(s => L==='all' || lineOf(s)===L), c = cnt(t);
     const donut = ring([{v:c.d,color:C.d,label:`Completed: ${c.d}`},{v:c.o,color:C.o,label:`Ongoing: ${c.o}`},{v:c.n,color:C.n,label:`Not started: ${c.n}`}], 136, 17,
-      `<text x="68" y="72" text-anchor="middle" class="rg-n">${c.t}</text><text x="68" y="91" text-anchor="middle" class="rg-l">total shafts</text>`);
+      `<text x="68" y="72" text-anchor="middle" class="rg-n">${c.t}</text><text x="68" y="91" text-anchor="middle" class="rg-l">manholes</text>`);
     const tile = (k, v, l) => `<div style="--c:${C[k]}"><b>${v}</b><span>${l}</span><em>${pc(v,c.t)}% of ${c.t}</em></div>`;
     const summary = `<div class="mts">${donut}<div class="mtsum"><div class="mtc">${tile('d',c.d,'Completed')}${tile('o',c.o,'Ongoing')}${tile('n',c.n,'Not started')}</div></div>
       <div class="mtpr"><span>Manhole construction</span><i><s style="width:${c.pc*100}%"></s></i><b>${P0(c.pc)}%</b></div></div>`;
@@ -2536,18 +2828,19 @@ function paintMhType(T, TA){
     };
     const table = `<div class="mtw"><table class="mtt"><thead><tr><th>Manhole type</th><th>Nos</th><th><i style="background:${C.d}"></i>Completed</th><th><i style="background:${C.o}"></i>Ongoing</th><th><i style="background:${C.n}"></i>Not started</th><th>Progress</th></tr></thead>
       <tbody>${ROWS.map(tr).join('')}</tbody></table></div>`;
-    const xs = TA.filter(s => isActOnly(s) && (L==='all' || lineOf(s)===L));
+    const xs = [];
     const xst = st => st.s==='done' ? '<span class="xd">Completed</span>' : st.s==='ongoing' ? `<span class="xo">Ongoing${st.pct?` ${P0(st.pct)}%`:''}</span>` : '<span class="xn">Not started</span>';
     const extra = xs.length ? `<div class="mtx2"><div class="h">Activity only, not counted as a manhole</div>${xs.map(s => `<button class="xr" data-s="${esc(s.name)}"><b>${esc(short(s.name))}</b><span class="xm">Existing blind shaft by others</span><span class="xa">Pipe connection &amp; concrete ${xst(stOf(s.name,'pipe'))}</span><span class="xa">Backfilling ${xst(stOf(s.name,'bf'))}</span></button>`).join('')}</div>` : '';
     return `<section class="mtp${L==='all'?' all':''}" aria-label="${esc(lab)}"><div class="mth"><b>${esc(lab)}</b><span>${sub}</span></div>${L==='all' ? `<div class="mtin">${summary}<div>${table}${extra}</div></div>` : summary+table+extra}</section>`;
   };
-  box.innerHTML = `<h3>Manhole construction by type <span class="h3s">Manholes of each type on each line, and where their manhole construction stands</span></h3>
+  box.innerHTML = `<h3>Manhole construction by type <span class="h3s">Manholes of each type on each line, and where their manhole construction stands. Blind shafts are in their own card below.</span></h3>
     <div class="mtnote">
-      <div style="--c:var(--a-shaft)"><b>Shaft construction</b>The temporary earth-retaining shaft that makes a dry pit for the MTBM launch or reception: trial pit, guide wall, secant piles, capping beam, excavation, blinding and base plug. It finishes when the base plug is cast.</div>
-      <div style="--c:var(--a-done)"><b>Manhole construction</b>The permanent manhole built inside that shaft after pipe jacking: pipe connection &amp; concrete, precast rings or CIS lifts, back drop, benching, RTR/GRP lining, backfilling, secant pile cutting, cover slab and DI cover. A blind shaft has no chamber, so it only gets pipe connection &amp; concrete and backfilling.</div>
+      <div style="--c:var(--a-shaft)"><b>Shaft construction</b>The temporary earth-retaining shaft that makes a dry pit for the MTBM launch or reception: trial pit, guide wall, secant piles, capping beam, excavation, blinding and base plug. It applies to every shaft, manholes and blind shafts alike, except MHA2 ADD (existing, built by others), and finishes when the base plug is cast.</div>
+      <div style="--c:var(--a-done)"><b>Manhole construction</b>The permanent manhole built inside the shaft after pipe jacking: pipe connection &amp; concrete, precast rings or CIS lifts, back drop, benching, RTR/GRP lining, backfilling, secant pile cutting, cover slab and DI cover.</div>
+      <div style="--c:var(--a-blind)"><b>Blind shaft construction</b>A blind shaft has no chamber. After its shaft is built it only gets pipe connection &amp; concrete and backfilling. MHA2 ADD is an existing blind shaft: only these two works are ours.</div>
     </div>
     <div class="mtx">${LN.map(panel).join('')}</div>
-    <p class="mtkey">Completed: every manhole activity is done. Ongoing: at least one manhole activity started. Not started: no manhole activity begun yet. Progress is the weighted manhole construction %. Tap a manhole name to open it. MHA2 ADD is an existing blind shaft built by others: it is not counted as a manhole, and only its pipe connection &amp; concrete and backfilling are tracked in the activity lists. MHA10.1 is a baffle drop shaft (cast-in-situ).</p>`;
+    <p class="mtkey">Completed: every manhole activity is done. Ongoing: at least one manhole activity started. Not started: no manhole activity begun yet. Progress is the weighted manhole construction %. Tap a manhole name to open it. Blind shafts, including MHA2 ADD, are counted in the blind shaft card. MHA10.1 is a baffle drop shaft (cast-in-situ).</p>`;
   wireEi(box);
 }
 function paintSplit(T, TA){
@@ -2556,6 +2849,7 @@ function paintSplit(T, TA){
   const LN = ['SIBSTS-01','SIBSTS-02'];
   const rowsM = [['pipe','Pipe connection & concrete','pipe'],['#seg','Segments & CIS lifts','seg'],['bd','Back drop','bd'],['bench','Benching','bench'],['grp','RTR / GRP lamination','grp'],['bf','Backfilling','bf'],['spc','Secant pile cutting','spc'],['cov','Cover slab','cov'],['di','DI cover & frame','di']];
   const rowsS = SHAFT_ACTS.map(([id,label]) => [id,label,ACT_KIND(id)]);
+  const rowsB = [['pipe','Pipe connection & concrete','pipe'],['bf','Backfilling','bf'],['spc','Secant pile cutting','spc']];
   const actRow = t => ([id,label,k]) => {
     let n = 0, d = 0, o = 0;
     t.forEach(s => {
@@ -2568,48 +2862,100 @@ function paintSplit(T, TA){
   };
   const cnt3 = (d, o, n, col, noun) => `<div class="spc3"><div><b style="color:${col}">${d}</b><span>complete</span></div><div><b>${o}</b><span>ongoing</span></div><div><b>${Math.max(0,n-d-o)}</b><span>not started</span></div></div>
     <span class="ab spsb" title="${d} of ${n} ${noun} complete, ${o} in progress"><b style="width:${n?d/n*100:0}%;background:${col}"></b><b class="og" style="width:${n?o/n*100:0}%;--c:${col}"></b></span>`;
-  box.innerHTML = `<h3>Shaft and manhole progress by line <span class="h3s">SIBSTS-01 and SIBSTS-02 shown separately. <i class="lg solid"></i>complete <i class="lg hatch"></i>ongoing <i class="lg none"></i>remaining</span></h3>
+  const blk = (title, v, col, d, o, cn, rows, set, noun, grp) => `<div class="spb"><div class="spg"><h4>${title}</h4>${gauge(v, col, 112)}${cnt3(d, o, cn, col, noun)}</div>
+    <div class="spr"><div class="ag">${grp}</div>${cn ? rows.map(actRow(set)).join('') : ''}${cn ? '' : '<p class="hint">None on this line.</p>'}</div></div>`;
+  box.innerHTML = `<h3>Shaft, manhole and blind shaft progress by line <span class="h3s">SIBSTS-01 and SIBSTS-02 shown separately. <i class="lg solid"></i>complete <i class="lg hatch"></i>ongoing <i class="lg none"></i>remaining</span></h3>
     <div class="spl">${LN.map(L => {
-      const t = T.filter(s => lineOf(s)===L), ta = TA.filter(s => lineOf(s)===L), a = sumStats(t), n = t.length;
-      const blk = (title, v, col, d, o, rows, noun, grp, cn=n) => `<div class="spb"><div class="spg"><h4>${title}</h4>${gauge(v, col, 112)}${cnt3(d, o, cn, col, noun)}</div>
-        <div class="spr"><div class="ag">${grp}</div>${rows.map(actRow(grp==='Manhole activities'?ta:t)).join('') || '<p class="hint">No activities.</p>'}</div></div>`;
-      return `<div class="spp"><div class="spph"><span class="t">${L}</span><span class="m">${n} shafts / manholes · overall <b>${P0(a.all)}%</b></span></div>
-        ${blk('Shaft construction', a.shaft, 'var(--a-shaft)', a.shDone, a.shOn, rowsS, 'shafts', 'Shaft activities', a.shN)}
-        ${blk('Manhole construction', a.mh, 'var(--a-done)', a.mhDone, a.mhOn, rowsM, 'manholes', 'Manhole activities')}</div>`;
+      const t = T.filter(s => lineOf(s)===L), m = t.filter(s=>!isBlindS(s)), b = TA.filter(s => lineOf(s)===L && isBlindS(s));
+      const aT = sumStats(t), aM = sumStats(m), aB = sumStats(b);
+      return `<div class="spp"><div class="spph"><span class="t">${L}</span><span class="m">${aT.shN} shafts built by us: ${m.length} manholes, ${b.filter(s=>!pctOf(s.name).ex).length} blind shafts${b.some(s=>pctOf(s.name).ex)?' (+ MHA2 ADD, existing)':''}. Overall <b>${P0(aT.all)}%</b></span></div>
+        ${blk('Shaft construction', aT.shaft, 'var(--a-shaft)', aT.shDone, aT.shOn, aT.shN, rowsS, t, 'shafts', 'Shaft activities, manholes and blind shafts')}
+        ${blk('Manhole construction', aM.mh, 'var(--a-done)', aM.mhDone, aM.mhOn, m.length, rowsM, m, 'manholes', 'Manhole activities')}
+        ${blk('Blind shaft construction', aB.mh, 'var(--a-blind)', aB.mhDone, aB.mhOn, b.length, rowsB, b, 'blind shafts', 'Blind shaft activities')}</div>`;
     }).join('')}</div>`;
 }
+function paintBlind(BA){
+  const box = document.getElementById('cBlind'); if(!box) return;
+  const C = {d:'var(--a-done)', o:'var(--focus)', n:'var(--gl-none)'};
+  const stB = s => { const p = pctOf(s.name); if(p.mh>0.9999) return 'd';
+    return (p.mh>0 || actsOf(s.name).some(a=>a.g==='mh' && stOf(s.name,a.id).s==='ongoing')) ? 'o' : 'n'; };
+  const IDS = [['pipe','Pipe connection & concrete'],['bf','Backfilling'],['spc','Secant pile cutting']].filter(([id]) => BA.some(s => actsOf(s.name).some(a=>a.id===id)));
+  const pill = (k, txt) => `<span class="bst ${k}"><i></i>${txt}</span>`;
+  const cell = (s, id) => { if(!actsOf(s.name).some(a=>a.id===id)) return '<span class="z">n/a</span>'; const x = stOf(s.name,id);
+    return x.s==='done' ? pill('d','Done') : x.s==='ongoing' ? pill('o', x.pct ? `${P0(x.pct)}%` : 'Ongoing') : pill('n','Not started'); };
+  const shCell = s => { const p = pctOf(s.name); if(p.ex) return '<span class="bst x">Existing, by others</span>';
+    if(p.shaft>0.9999) return pill('d','Done');
+    if(p.shaft>0){ const cur = SHAFT_ACTS.find(([id]) => actOn(s.name,id) && stOf(s.name,id).s!=='done'); return pill('o', `${P0(p.shaft)}%${cur?` <em>${esc(cur[1].toLowerCase())}</em>`:''}`); }
+    return pill('n','Not started'); };
+  const LN = [['SIBSTS-01','SIBS-1','Blind shafts on SIBSTS-01'],['SIBSTS-02','SIBS-2','Blind shafts on SIBSTS-02'],['all','SIBS-1 + SIBS-2','Project total, both lines']];
+  const pc = (v, t) => t ? Math.round(v/t*100) : 0;
+  const panel = ([L, lab, sub]) => {
+    const t = BA.filter(s => L==='all' || lineOf(s)===L).sort((a,b)=>alongX(a)-alongX(b));
+    const head = `<div class="mth"><b>${esc(lab)}</b><span>${sub}</span></div>`;
+    if(!t.length) return `<section class="mtp${L==='all'?' all':''}">${head}<p class="bempty">No blind shafts on this line.</p></section>`;
+    const st = t.map(stB), d = st.filter(x=>x==='d').length, o = st.filter(x=>x==='o').length, nn = t.length-d-o, a = sumStats(t);
+    const donut = ring([{v:d,color:C.d,label:`Completed: ${d}`},{v:o,color:C.o,label:`Ongoing: ${o}`},{v:nn,color:C.n,label:`Not started: ${nn}`}], 136, 17,
+      `<text x="68" y="72" text-anchor="middle" class="rg-n">${t.length}</text><text x="68" y="91" text-anchor="middle" class="rg-l">blind shafts</text>`);
+    const tile = (k, v, l) => `<div style="--c:${C[k]}"><b>${v}</b><span>${l}</span><em>${pc(v,t.length)}% of ${t.length}</em></div>`;
+    const bar = (lbl, v, col) => `<div class="mtpr"><span>${lbl}</span><i><s style="width:${v*100}%;background:${col}"></s></i><b>${P0(v)}%</b></div>`;
+    const summary = `<div class="mts">${donut}<div class="mtsum"><div class="mtc">${tile('d',d,'Completed')}${tile('o',o,'Ongoing')}${tile('n',nn,'Not started')}</div></div>
+      ${bar('Blind shaft construction', a.mh, 'var(--a-blind)')}${bar(`Shaft construction (${a.shN} shaft${a.shN===1?'':'s'})`, a.shaft, 'var(--a-shaft)')}</div>`;
+    let table;
+    if(L==='all'){
+      const row = (lbl, list, fn) => { let n = 0, dd = 0, oo = 0; list.forEach(s => { const v = fn(s); if(v===null) return; n++; if(v==='d') dd++; else if(v==='o') oo++; });
+        const z = v => v ? v : '<span class="z">0</span>';
+        return `<tr class="grp"><td>${lbl}</td><td>${n}</td><td>${z(dd)}</td><td>${z(oo)}</td><td>${z(n-dd-oo)}</td></tr>`; };
+      const shF = s => { const p = pctOf(s.name); return p.ex ? null : p.shaft>0.9999 ? 'd' : p.shaft>0 ? 'o' : 'n'; };
+      const acF = id => s => { if(!actsOf(s.name).some(x=>x.id===id)) return null; const x = stOf(s.name,id); return x.s==='done' ? 'd' : x.s==='ongoing' ? 'o' : 'n'; };
+      table = `<div class="mtw"><table class="mtt"><thead><tr><th>Activity</th><th>Nos</th><th><i style="background:${C.d}"></i>Completed</th><th><i style="background:${C.o}"></i>Ongoing</th><th><i style="background:${C.n}"></i>Not started</th></tr></thead>
+        <tbody>${row('Shaft construction (MHA2 ADD excluded)', t, shF)}${IDS.map(([id,l]) => row(esc(l), t, acF(id))).join('')}
+        <tr class="tot"><td>Blind shafts, all works</td><td>${t.length}</td><td>${d||'<span class="z">0</span>'}</td><td>${o||'<span class="z">0</span>'}</td><td>${nn||'<span class="z">0</span>'}</td></tr></tbody></table></div>`;
+    } else {
+      table = `<div class="mtw"><table class="mtt"><thead><tr><th>Blind shaft</th><th class="bc">Shaft construction</th>${IDS.map(([,l])=>`<th class="bc">${esc(l)}</th>`).join('')}<th>Progress</th></tr></thead>
+        <tbody>${t.map(s => { const p = pctOf(s.name);
+          return `<tr class="grp"><td><button class="bnm" data-s="${esc(s.name)}">${esc(short(s.name))}${p.ex?'<small>existing, by others</small>':s.dia?`<small>${s.dia} m dia</small>`:''}</button></td><td class="bc">${shCell(s)}</td>${IDS.map(([id])=>`<td class="bc">${cell(s,id)}</td>`).join('')}<td><span class="pg"><i><s style="width:${p.mh*100}%;background:var(--a-blind)"></s></i><em>${P0(p.mh)}%</em></span></td></tr>`; }).join('')}</tbody></table></div>`;
+    }
+    return `<section class="mtp${L==='all'?' all':''}" aria-label="${esc(lab)}">${head}${L==='all' ? `<div class="mtin">${summary}<div>${table}</div></div>` : summary+table}</section>`;
+  };
+  box.innerHTML = `<h3>Blind shaft construction <span class="h3s">Blind shafts counted apart from manholes: their shaft construction, then pipe connection &amp; concrete and backfilling</span></h3>
+    <div class="mtx">${LN.map(panel).join('')}</div>
+    <p class="mtkey">Completed: pipe connection &amp; concrete and backfilling both done. Ongoing: at least one of them started. Not started: neither begun. Progress is the weighted blind shaft construction %. Shaft construction is shown for each blind shaft; MHA2 ADD is an existing blind shaft built by others, so its shaft construction is not in our scope. Tap a name to open it.</p>`;
+}
 function goShaft(s){ if(!s) return; document.getElementById('layout').scrollIntoView({behavior:'smooth'}); setTimeout(() => s.p ? selectShaft(s) : openDetail(s), 350); }
-function paintBars(T, A){
+function paintBars(T){
   const box = document.getElementById('cBarsC'); if(!box) return;
+  const P = new Map(T.map(s => [s, pctOf(s.name)])), BL = new Set(T.filter(isBlindS));
   const n = T.length || 1, L = 44, Rm = 10, top = 58, ph = 220, sq = 12;
   const avail = box.clientWidth || 1000, step = Math.max(30, (avail-L-Rm)/n), W = Math.round(L + Rm + step*n);
-  const bw = Math.max(12, Math.min(28, step*0.62)), base = top+ph, H = base + 26 + 66;
+  const bw = Math.max(12, Math.min(28, step*0.62)), base = top+ph, tagY = base + 26 + 74, H = tagY + 14;
   let g = '', avgs = '';
   [0,.25,.5,.75,1].forEach(v => { const y = base - v*ph; g += `<line x1="${L}" x2="${W-Rm}" y1="${y}" y2="${y}" class="grid${v===0?' g0':''}"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="ax">${v*100}%</text>`; });
   const groups = []; let prev = null, i0 = 0;
   T.forEach((s,i) => { const ln = lineOf(s); if(ln!==prev){ if(prev!==null) groups.push([prev,i0,i]); prev = ln; i0 = i; } }); if(prev!==null) groups.push([prev,i0,T.length]);
   groups.forEach(([ln,a,b],gi) => {
-    const x0 = L + a*step, x1 = L + b*step, sub = T.slice(a,b), st = sumStats(sub);
+    const x0 = L + a*step, x1 = L + b*step, sub = T.slice(a,b), mh = sub.filter(s=>!BL.has(s)), nb = sub.length - mh.length, st = sumStats(mh);
     if(gi) g += `<line x1="${x0}" x2="${x0}" y1="8" y2="${H-6}" class="gdiv"/>`;
-    g += `<text x="${x0+8}" y="20" class="gl2">${ln}</text><text x="${x0+8}" y="36" class="gl3">${sub.length} manholes, average ${P0(st.mh)}%</text>`;
-    const ya = base - st.mh*ph;
-    avgs += `<line x1="${x0+4}" x2="${x1-4}" y1="${ya}" y2="${ya}" class="avg"/>`;
+    g += `<text x="${x0+8}" y="20" class="gl2">${ln}</text><text x="${x0+8}" y="36" class="gl3">${mh.length} manholes${nb?` + ${nb} blind shaft${nb===1?'':'s'}`:''}, manhole average ${P0(st.mh)}%</text>`;
+    if(mh.length){ const ya = base - st.mh*ph; avgs += `<line x1="${x0+4}" x2="${x1-4}" y1="${ya}" y2="${ya}" class="avg"/>`; }
   });
   T.forEach((s,i) => {
-    const p = A.P.get(s), cx = L + i*step + step/2, x = cx - bw/2; let y = base;
-    g += `<rect x="${x}" y="${top}" width="${bw}" height="${ph}" rx="3" class="trk"/>`;
+    const p = P.get(s), bl = BL.has(s), cx = L + i*step + step/2, x = cx - bw/2; let y = base;
+    g += `<rect x="${x}" y="${top}" width="${bw}" height="${ph}" rx="3" class="trk${bl?' trkb':''}"/>`;
     KORDER.filter(k=>k!=='shaft' && p.byK[k]).forEach(k => { const h = p.byK[k]/p.mw*ph; y -= h; g += `<rect x="${x}" y="${y.toFixed(2)}" width="${bw}" height="${h.toFixed(2)}" fill="var(--a-${k})"/>`; });
     const full = p.mh>0.9999, zero = P0(p.mh)===0;
     g += `<text x="${cx}" y="${(Math.min(y,base)-6).toFixed(1)}" text-anchor="middle" class="bv${zero?' pvz':''}${full?' pvf':''}">${P0(p.mh)}%</text>`;
-    const sf = p.shaft>0.9999 ? 'var(--a-shaft)' : p.shaft>0 ? 'url(#dhx-shaft)' : 'var(--gl-none)';
-    g += `<rect x="${cx-sq/2}" y="${base+7}" width="${sq}" height="${sq}" rx="2.5" fill="${sf}"${p.shaft>0&&p.shaft<1?' stroke="var(--a-shaft)" stroke-width="1"':''}/>`;
+    if(p.ex) g += `<rect x="${cx-sq/2}" y="${base+7}" width="${sq}" height="${sq}" rx="2.5" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 1.6"/>`;
+    else { const sf = p.shaft>0.9999 ? 'var(--a-shaft)' : p.shaft>0 ? 'url(#dhx-shaft)' : 'var(--gl-none)';
+      g += `<rect x="${cx-sq/2}" y="${base+7}" width="${sq}" height="${sq}" rx="2.5" fill="${sf}"${p.shaft>0&&p.shaft<1?' stroke="var(--a-shaft)" stroke-width="1"':''}/>`; }
     g += `<text transform="translate(${cx+4} ${base+30}) rotate(-58)" text-anchor="end" class="xl">${short(s.name)}</text>`;
-    g += `<rect x="${L+i*step}" y="${top-14}" width="${step}" height="${H-top+10}" class="hitb" data-s="${esc(s.name)}"><title>${short(s.name)}: manhole ${P0(p.mh)}%, shaft ${P0(p.shaft)}%. ${stageOf(s.name).label}</title></rect>`;
+    if(bl) g += `<rect x="${cx-18}" y="${tagY-11}" width="36" height="15" rx="7.5" class="btag"/><text x="${cx}" y="${tagY}" text-anchor="middle" class="btagt">Blind</text>`;
+    g += `<rect x="${L+i*step}" y="${top-14}" width="${step}" height="${H-top+10}" class="hitb" data-s="${esc(s.name)}"><title>${short(s.name)}${bl?' (blind shaft)':''}: ${bl?'blind shaft works':'manhole'} ${P0(p.mh)}%, shaft ${p.ex?'existing, by others':P0(p.shaft)+'%'}. ${stageOf(s.name).label}</title></rect>`;
   });
   g += avgs + `<text x="${L-8}" y="${base+17}" text-anchor="end" class="ax">Shaft</text>`;
+  if(BL.size) g += `<text x="${L-8}" y="${tagY}" text-anchor="end" class="ax">Type</text>`;
   const defs = `<defs><pattern id="dhx-shaft" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="4" stroke="var(--a-shaft)" stroke-width="1.8"/></pattern></defs>`;
-  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="bars" role="img" aria-label="Manhole construction progress for each manhole, split by activity">${defs}${g}</svg>`;
-  const bk = document.getElementById('bkeys'); if(bk) bk.innerHTML = KORDER.filter(k=>k!=='shaft').map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label}</span>`).join('') + `<span><i style="background:var(--a-shaft)"></i>Shaft complete</span><span><i style="background:repeating-linear-gradient(45deg,var(--a-shaft) 0 2px,transparent 2px 4px);border:1px solid var(--a-shaft)"></i>Shaft ongoing</span>`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="bars" role="img" aria-label="Construction progress for each manhole and blind shaft, split by activity">${defs}${g}</svg>`;
+  const bk = document.getElementById('bkeys'); if(bk) bk.innerHTML = KORDER.filter(k=>k!=='shaft').map(k=>`<span><i style="background:var(--a-${k})"></i>${KIND[k].label}</span>`).join('') + `<span><i style="background:var(--a-shaft)"></i>Shaft complete</span><span><i style="background:repeating-linear-gradient(45deg,var(--a-shaft) 0 2px,transparent 2px 4px);border:1px solid var(--a-shaft)"></i>Shaft ongoing</span>` + (BL.size ? `<span><em class="btagk">Blind</em>Blind shaft (pipe connection &amp; backfilling only)</span>` : '');
   box.querySelectorAll('[data-s]').forEach(b => b.onclick = () => goShaft(byName[b.dataset.s.replace(/&amp;/g,'&')]));
 }
 
@@ -2618,42 +2964,90 @@ function paintPlan(T, A){
   const box = document.getElementById('hxPlan'); if(!box) return;
   const W = box.clientWidth || 900, H = box.clientHeight || 400;
   const inT = new Set(T), vis = shafts.filter(s => s.p && !isHidden(s));
-  const xs = [], ys = []; vis.forEach(s => { xs.push(s.p[0]); ys.push(s.p[1]); });
   const hid = new Set(shafts.filter(isHidden).map(s=>s.name));
   const drv = D.drives.filter(d => !hid.has(d.a) && !hid.has(d.b));
+  const xs = [], ys = []; vis.forEach(s => { xs.push(s.p[0]); ys.push(s.p[1]); });
   drv.forEach(d => { xs.push(d.pa[0], d.pb[0]); ys.push(d.pa[1], d.pb[1]); });
   if(!xs.length){ box.innerHTML = ''; return; }
-  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), pad = 40;
+  // true alignment, drawn to one scale (same shape as the site layout)
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), pad = 34;
   const k = Math.min((W-pad*2)/(x1-x0||1), (H-pad*2)/(y1-y0||1));
   const ox = pad + ((W-pad*2) - (x1-x0)*k)/2, oy = pad + ((H-pad*2) - (y1-y0)*k)/2;
   const X = x => ox + (x-x0)*k, Y = y => oy + (y-y0)*k, WD = {1200:2.6,1400:3.4,1600:4.4,1800:5.4};
+  const R = Math.max(6.5, Math.min(10, k*55)), sw = Math.max(2.4, R*0.42);
+  const LEDM = document.documentElement.classList.contains('led');
+  const nodes = vis.map(s => { const x = X(s.p[0]), y = Y(s.p[1]); return {s, x, y, tx:x, ty:y, p:pctOf(s.name), c:inT.has(s), li:ledInfo(s)}; });
+  const NP = new Map(nodes.map(n => [n.s.name, n]));
+  let minD = 2*(R + sw/2 + 4.5) + 6;
+  // Spacing that keeps the alignment exactly as it is: manholes on the main line slide ALONG the pipeline
+  // (never off it) until each has a clear gap; branch shafts keep their direction from their parent.
+  const PT = {}; D.drives.forEach(d => { PT[d.a] = [X(d.pa[0]), Y(d.pa[1])]; PT[d.b] = [X(d.pb[0]), Y(d.pb[1])]; });
+  const adj = {}; D.drives.filter(d => d.kind==='main').forEach(d => { (adj[d.a] = adj[d.a] || []).push(d.b); (adj[d.b] = adj[d.b] || []).push(d.a); });
+  const ends = Object.keys(adj).filter(n => adj[n].length===1).sort((a,b) => PT[a][0]-PT[b][0]);
+  const chain = []; if(ends.length){ const seen = new Set(); let cur = ends[0]; while(cur && !seen.has(cur)){ seen.add(cur); chain.push(cur); cur = adj[cur].find(n => !seen.has(n)); } }
+  const cum = [0]; for(let i = 1; i < chain.length; i++) cum.push(cum[i-1] + Math.hypot(PT[chain[i]][0]-PT[chain[i-1]][0], PT[chain[i]][1]-PT[chain[i-1]][1]));
+  const Ltot = cum[cum.length-1] || 0;
+  const onPath = t => { t = Math.max(0, Math.min(Ltot, t)); let i = 1; while(i < cum.length-1 && cum[i] < t) i++;
+    const a = PT[chain[i-1]], b = PT[chain[i]], f = (t-cum[i-1])/((cum[i]-cum[i-1])||1); return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f]; };
+  const cn = chain.map((nm,i) => ({n: NP.get(nm), t: cum[i], t0: cum[i]})).filter(o => o.n);
+  if(cn.length > 1){
+    const dm = Math.min(minD, Ltot/(cn.length-1));
+    for(let it = 0; it < 500; it++){
+      let moved = 0; const pos = cn.map(o => onPath(o.t));
+      for(let i = 1; i < cn.length; i++){
+        const d2 = Math.hypot(pos[i][0]-pos[i-1][0], pos[i][1]-pos[i-1][1]);   // real on-screen gap (bends make it shorter than the path)
+        if(d2 < dm){ const push = Math.min(dm, (dm-d2)*0.6 + 0.3)/2; cn[i-1].t -= push; cn[i].t += push; moved += push; }
+      }
+      cn.forEach(o => { if(it < 200) o.t += (o.t0-o.t)*0.004; o.t = Math.max(0, Math.min(Ltot, o.t)); });
+      if(moved < 0.02 && it > 10) break;
+    }
+    cn.forEach(o => { const [x, y] = onPath(o.t); o.n.x = x; o.n.y = y; });
+  }
+  // branch shafts: same direction from the parent, pushed out far enough to be clear of it
+  const inChain = new Set(cn.map(o => o.n)), BR = new Map();
+  D.drives.filter(d => d.kind!=='main').forEach(d => { const c = NP.get(d.b), pr = NP.get(d.a); if(c && pr && !inChain.has(c)) BR.set(c, pr); });
+  BR.forEach((pr, c) => { let dx = c.tx-pr.tx, dy = c.ty-pr.ty, d = Math.hypot(dx,dy) || 1; const L = Math.max(d, minD*1.1); c.x = pr.x + dx/d*L; c.y = pr.y + dy/d*L; });
+  // anything still touching: nudge only the branch / loose shafts, never the main line
+  const loose = nodes.filter(n => !inChain.has(n));
+  for(let it = 0; it < 120; it++){
+    loose.forEach(a => nodes.forEach(b => { if(a===b) return; const dx = a.x-b.x, dy = a.y-b.y, d = Math.hypot(dx,dy) || .01;
+      if(d < minD){ const push = (minD-d)*(inChain.has(b)?1:.5); a.x += dx/d*push; a.y += dy/d*push; } }));
+  }
+  loose.forEach(n => { n.x = Math.max(R+12, Math.min(W-R-12, n.x)); n.y = Math.max(R+12, Math.min(H-R-12, n.y)); });
+  const at = (name, pt) => { const n = NP.get(name); return n ? [n.x, n.y] : [X(pt[0]), Y(pt[1])]; };
   let g = '';
-  drv.forEach(d => { g += `<line x1="${X(d.pa[0]).toFixed(1)}" y1="${Y(d.pa[1]).toFixed(1)}" x2="${X(d.pb[0]).toFixed(1)}" y2="${Y(d.pb[1]).toFixed(1)}" stroke="var(--dn${d.dn})" stroke-width="${WD[d.dn]||3}" stroke-linecap="round" opacity=".92"/>`; });
+  // main pipeline: exactly the true route; branches: parent to (spaced) branch shaft
+  drv.forEach(d => { const [ax, ay] = d.kind==='main' ? [X(d.pa[0]), Y(d.pa[1])] : at(d.a, d.pa), [bx, by] = d.kind==='main' ? [X(d.pb[0]), Y(d.pb[1])] : at(d.b, d.pb);
+    g += `<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--dn${d.dn})" stroke-width="${WD[d.dn]||3}" stroke-linecap="round" opacity=".92"/>`; });
   const caps = [];
   ['SIBSTS-01','SIBSTS-02'].forEach(L => { const west = L==='SIBSTS-01', tx = west ? 18 : W-18, ty = west ? H-18 : 26;
     g += `<text class="hx-plab" x="${tx}" y="${ty}" text-anchor="${west?'start':'end'}">${L}${west?' (west)':' (east)'}</text>`;
     caps.push(west ? {x0:10,x1:130,y0:H-34,y1:H-10} : {x0:W-130,x1:W-10,y0:10,y1:34}); });
-  const R = Math.max(7.5, Math.min(11, k*60)), sw = Math.max(2.6, R*0.42);
-  const nodes = vis.map(s => ({s, x:X(s.p[0]), y:Y(s.p[1]), p:pctOf(s.name), c:inT.has(s)}));
-  const main = n => /^MH[AB]\d+A?$/.test(short(n.s.name));
+  { const st = [50,100,200,250,500,1000,2000].find(v => v*k >= 70) || 2000, bl = st*k, sx = W - bl - 60, sy = H-16;
+    g += `<g class="hx-scale"><line x1="${sx}" y1="${sy}" x2="${sx+bl}" y2="${sy}"/><line x1="${sx}" y1="${sy-4}" x2="${sx}" y2="${sy+4}"/><line x1="${sx+bl}" y1="${sy-4}" x2="${sx+bl}" y2="${sy+4}"/><text x="${sx+bl/2}" y="${sy-6}" text-anchor="middle">${st>=1000?st/1000+' km':st+' m'}</text></g>`;
+    caps.push({x0:sx-4, x1:sx+bl+4, y0:sy-18, y1:sy+6}); }
+  const northDeg = 0;
+  const main = n => /^MH[AB]\d+A?$/.test(short0(n.s.name));
   nodes.sort((a,b) => (main(b)?1:0)-(main(a)?1:0));
   let nd = '';
-  nodes.forEach(({s,x,y,p,c}) => {
-    const cc = 2*Math.PI*R, on = stageOf(s.name).on, nm = short(s.name);
+  nodes.forEach(({s,x,y,p,c,li}) => {
+    const cc = 2*Math.PI*R, on = stageOf(s.name).on, nm = short(s.name), av = LEDM ? li.v : (c ? p.mh : 0);
     const sh = p.shaft>0.9999 ? 'var(--a-shaft)' : p.shaft>0 ? 'url(#hxphx)' : 'var(--band)';
-    nd += `<g class="hx-nd" tabindex="0" role="button" data-s="${esc(s.name)}" aria-label="${esc(nm)}, manhole ${P0(p.mh)}%, shaft ${P0(p.shaft)}%"><title>${esc(nm)}: manhole ${c?P0(p.mh)+'%':'—'}, shaft ${P0(p.shaft)}%. ${esc(stageOf(s.name).label)}</title>
-      ${on ? `<circle cx="${x}" cy="${y}" r="${R+sw/2+3.2}" fill="none" stroke="var(--hx-warn)" stroke-width="1.6" stroke-dasharray="3 2.2"/>` : ''}
+    nd += `<g class="hx-nd${p.shaft>0.9999?' shd':''}${c && p.mh>0.9999?' mhd':''}" data-lg="${li.st}" tabindex="0" role="button" data-s="${esc(s.name)}" aria-label="${esc(nm)}, manhole ${P0(p.mh)}%, shaft ${P0(p.shaft)}%"><title>${esc(nm)}: manhole ${c?P0(p.mh)+'%':'—'}, shaft ${P0(p.shaft)}%. ${esc(stageOf(s.name).label)}${LEDM?`. LED: ${LED_LABEL[li.st]}`:''}</title>
+      ${LEDM && li.fresh ? `<circle class="hx-fr" cx="${x}" cy="${y}" r="${R+sw/2+3.4}" fill="none"/>` : ''}
+      ${LEDM && (li.st==='w'||li.st==='n') ? `<circle class="hx-lt ls-${li.st}" cx="${x}" cy="${y}" r="${R}" fill="none" stroke-width="${sw}"/>` : ''}
+      ${on && (!LEDM || li.st==='a') ? `<circle class="hx-onr" cx="${x}" cy="${y}" r="${R+sw/2+3.2}" fill="none" stroke="var(--hx-warn)" stroke-width="1.6" stroke-dasharray="3 2.2"/>` : ''}
       <circle cx="${x}" cy="${y}" r="${R}" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="${sw}"/>
-      ${c && p.mh>0 ? `<circle class="hx-arc" cx="${x}" cy="${y}" r="${R}" fill="none" stroke="var(--ok-b)" stroke-width="${sw}" stroke-linecap="${p.mh<0.999?'round':'butt'}" stroke-dasharray="${cc.toFixed(2)}" stroke-dashoffset="${cc.toFixed(2)}" data-off="${(cc*(1-p.mh)).toFixed(2)}" transform="rotate(-90 ${x} ${y})"/>` : ''}
+      ${av>0 ? `<circle class="hx-arc${LEDM?` ls-${li.st}`:''}" cx="${x}" cy="${y}" r="${R}" fill="none" stroke="var(--ok-b)" stroke-width="${sw}" stroke-linecap="${av<0.999?'round':'butt'}" stroke-dasharray="${cc.toFixed(2)}" stroke-dashoffset="${cc.toFixed(2)}" data-off="${(cc*(1-av)).toFixed(2)}" transform="rotate(-90 ${x} ${y})"/>` : ''}
       <circle class="hx-ndo" cx="${x}" cy="${y}" r="${Math.max(2.6,R-sw/2-1.4)}" fill="${sh}" stroke="rgba(255,255,255,.35)" stroke-width=".8"/></g>`;
   });
   const placed = caps.slice(), occ = nodes.map(n => ({x0:n.x-R-4,x1:n.x+R+4,y0:n.y-R-4,y1:n.y+R+4}));
   const hit = (b, arr) => arr.some(q => !(b.x1<q.x0 || b.x0>q.x1 || b.y1<q.y0 || b.y0>q.y1));
   let lab = '';
   nodes.forEach(({s,x,y,p,c}) => {
-    const small = W < 620, txt = short(s.name), pv = c && !(small && p.mh===0) ? P0(p.mh)+'%' : '', w = (txt.length*7.8) + (pv ? pv.length*7.4+6 : 0), h = 13, d0 = R+sw/2+6;
+    const small = W < 620, txt = short(s.name), pv = c && !(small && p.mh===0) ? P0(p.mh)+'%' : '', w = (txt.length*8.9) + (pv ? pv.length*8.4+7 : 0), h = 14, d0 = R+sw/2+6;
     const cands = [];
-    [1,1.9,2.9,4].forEach(f => { const d = d0*f + (f>1?6:0); cands.push([0,-d-2,'c'],[0,d+h,'c'],[d,4,'l'],[-d,4,'r'],[d*.8,-d*.8,'l'],[-d*.8,-d*.8,'r'],[d*.8,d*.8+h*.6,'l'],[-d*.8,d*.8+h*.6,'r']); });
+    [1,1.9,2.9,4,5.2,6.6].forEach(f => { const d = d0*f + (f>1?6:0); cands.push([0,-d-2,'c'],[0,d+h,'c'],[d,4,'l'],[-d,4,'r'],[d*.8,-d*.8,'l'],[-d*.8,-d*.8,'r'],[d*.8,d*.8+h*.6,'l'],[-d*.8,d*.8+h*.6,'r']); });
     let best = null;
     for(const [dx,dy,an] of cands){
       const tx = x+dx, ty = y+dy, bx0 = an==='c' ? tx-w/2 : an==='l' ? tx : tx-w, b = {x0:bx0-2, x1:bx0+w+2, y0:ty-h+1, y1:ty+3};
@@ -2667,9 +3061,12 @@ function paintPlan(T, A){
     lab += `<text class="hx-nl${c?'':' dim'}" x="${best.tx.toFixed(1)}" y="${best.ty.toFixed(1)}" text-anchor="${best.an==='c'?'middle':best.an==='l'?'start':'end'}">${esc(txt)}${pv?` <tspan class="${p.mh>0?'p':'z'}">${pv}</tspan>`:''}</text>`;
   });
   const defs = `<defs><pattern id="hxphx" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="var(--band)"/><line x1="0" y1="0" x2="0" y2="4" stroke="var(--a-shaft)" stroke-width="2"/></pattern></defs>`;
-  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plan of both lines with each manhole's progress">${defs}<g>${g}</g><g>${lab}</g><g>${nd}</g></svg><div class="hx-north" aria-hidden="true"><svg viewBox="0 0 20 22" width="16" height="18"><path d="M10 1 L16 20 L10 15 L4 20 Z" fill="currentColor"/></svg><br>N</div>`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plan of both lines with each manhole's progress">${defs}<g>${g}</g><g>${lab}</g><g>${nd}</g></svg><div class="hx-north" aria-hidden="true"><svg viewBox="0 0 20 22" width="16" height="18" style="transform:rotate(${northDeg.toFixed(1)}deg)"><path d="M10 1 L16 20 L10 15 L4 20 Z" fill="currentColor"/></svg><br>N</div>`;
   const dns = [...new Set(drv.map(d=>d.dn))].sort();
-  document.getElementById('hxPkey').innerHTML = dns.map(dn=>`<span><i class="l" style="background:var(--dn${dn})"></i>DN${dn}</span>`).join('') +
+  const hlc = {d:0,a:0,o:0,s:0,w:0,n:0}; nodes.forEach(({li}) => hlc[li.st]++);
+  const hk = document.getElementById('hxPkey');
+  if(LEDM){ hk.innerHTML = dns.map(dn=>`<span><i class="l" style="background:var(--dn${dn})"></i>DN${dn}</span>`).join('') + `<span class="hx-ledks">${ledKeys(hlc)}</span>`; wireLedKeys(hk); }
+  else document.getElementById('hxPkey').innerHTML = dns.map(dn=>`<span><i class="l" style="background:var(--dn${dn})"></i>DN${dn}</span>`).join('') +
     `<span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2.6"/><circle cx="8" cy="8" r="5.5" fill="none" stroke="var(--ok-b)" stroke-width="2.6" stroke-dasharray="20 40" transform="rotate(-90 8 8)"/></svg>ring = manhole %</span>` +
     `<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="var(--a-shaft)"/></svg>shaft complete</span>` +
     `<span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--hx-warn)" stroke-width="1.5" stroke-dasharray="3 2"/></svg>work ongoing</span>`;
@@ -2684,9 +3081,9 @@ let regT = [], regA = null;
 function paintReg(T, A){
   regT = T; regA = A;
   const box = document.getElementById('cReg'); if(!box) return;
-  const fl = [['all','All'],['SIBSTS-01','SIBSTS-01'],['SIBSTS-02','SIBSTS-02'],['on','Ongoing'],['done','Complete']];
+  const fl = [['all','All'],['SIBSTS-01','SIBSTS-01'],['SIBSTS-02','SIBSTS-02'],['mh','Manholes'],['blind','Blind shafts'],['on','Ongoing'],['done','Complete']];
   const cols = [['n','Manhole'],['line','Line'],['type','Type'],['dia','Shaft'],['shaft','Shaft construction'],['mh','Manhole construction'],['all','Overall'],['stage','Current activity']];
-  box.innerHTML = `<div class="rgh"><h3>Manhole register <span class="h3s">select a manhole to open it on the layout</span></h3>
+  box.innerHTML = `<div class="rgh"><h3>Manhole and blind shaft register <span class="h3s">select a row to open it on the layout</span></h3>
     <div class="rtools"><div class="fl" role="group" aria-label="Filter">${fl.map(([k,l])=>`<button class="fb" data-f="${k}" aria-pressed="${REG.f===k}">${l}</button>`).join('')}</div><input class="srch" id="rq" type="search" placeholder="Find, e.g. MHA13" aria-label="Find a manhole" value="${esc(REG.q)}"><button class="btn xs" id="xlOut">Download progress sheet (Excel)</button></div></div>
     <div class="tbw"><table class="rgt"><thead><tr>${cols.map(([k,l])=>`<th><button data-sort="${k}" ${REG.sort===k?`aria-sort="${REG.dir>0?'ascending':'descending'}"`:''}>${l}</button></th>`).join('')}</tr></thead><tbody id="rb"></tbody></table></div><p class="dfoot" id="rnote"></p>`;
   box.querySelectorAll('.fb').forEach(b => b.onclick = () => { REG.f = b.dataset.f; paintReg(regT, regA); });
@@ -2700,8 +3097,10 @@ function paintRegRows(){
   let rows = T.slice();
   if(REG.f==='on') rows = rows.filter(s=>stageOf(s.name).on);
   else if(REG.f==='done') rows = rows.filter(s=>A.P.get(s).mh>0.9999);
+  else if(REG.f==='mh') rows = rows.filter(s=>!isBlindS(s));
+  else if(REG.f==='blind') rows = rows.filter(isBlindS);
   else if(REG.f!=='all') rows = rows.filter(s=>lineOf(s)===REG.f);
-  if(q) rows = rows.filter(s => norm(short(s.name)).includes(q));
+  if(q) rows = rows.filter(s => (norm(short(s.name)).includes(q)||norm(short0(s.name)).includes(q)));
   const key = {n:s=>short(s.name), line:s=>lineOf(s), type:s=>specOf(s.name).type, dia:s=>s.dia||0, shaft:s=>A.P.get(s).shaft, mh:s=>A.P.get(s).mh, all:s=>A.P.get(s).all, stage:s=>stageOf(s.name).label}[REG.sort];
   if(key) rows.sort((a,b) => { const x = key(a), y = key(b); return (typeof x==='number' ? x-y : String(x).localeCompare(String(y),undefined,{numeric:true})) * REG.dir; });
   const stg = s => { const g = stageOf(s.name), col = g.k==='done' ? 'var(--a-done)' : g.k ? `var(--a-${g.k})` : 'var(--gl-none)';
@@ -2838,12 +3237,14 @@ function mkEls(s){
   s.gll = el('line',{class:'gl-lead'},glLead);
   s.gl.addEventListener('click',()=>selectShaft(s,false));
   s.gl.addEventListener('pointerenter',e=>showShaftTip(e,s)); s.gl.addEventListener('pointermove',moveTip); s.gl.addEventListener('pointerleave',hideTip);
+  mkLed(s);
   s.c = el('circle',{class:'shaft',r:4},ov);
   s.t = el('text',{class:'sname','text-anchor':'middle'},ov); s.t.textContent = short(s.name);
   s.prio = 1; s.anchor = s.p; s.up = true;
   const go = () => selectShaft(s,false);
   s.c.addEventListener('click',go); s.t.addEventListener('click',go);
   s.c.addEventListener('pointerenter',e=>showShaftTip(e,s)); s.c.addEventListener('pointermove',moveTip); s.c.addEventListener('pointerleave',hideTip);
+  if(window.hookLens) hookLens(s);
 }
 function syncCustom(docs){
   const seen = new Set();
@@ -2874,7 +3275,7 @@ async function addManhole(){
   const g = id => document.getElementById(id);
   const raw = (g('a_name').value||'').trim().toUpperCase().replace(/\s+/g,' ');
   if(!raw){ tmsg('Enter a manhole name.'); return; }
-  if(shafts.some(s => bKey(short(s.name))===bKey(raw) && !s.gone)){ tmsg(`${raw} is already on the list${isHidden(byName[raw]||{name:raw})?' (removed; restore it below)':''}.`); return; }
+  if(shafts.some(s => bKey(short0(s.name))===bKey(raw) && !s.gone)){ tmsg(`${raw} is already on the list${isHidden(byName[raw]||{name:raw})?' (removed; restore it below)':''}.`); return; }
   const key = bKey(raw) || ('MH'+Date.now());
   const doc = {name: raw, line: g('a_line').value, dia: num(g('a_dia').value), p: null, at: new Date().toISOString(), by: myId||null};
   const type = g('a_type').value;
@@ -3155,7 +3556,7 @@ function matchShaft(fname){
   const m = base.replace(/[\s_\-]+/g,'').match(/MH([AB])(\d+(?:\.\d+)?)(A)?(ADD)?/);
   if(!m) return null;
   const want = ('MH'+m[1]+m[2]+(m[3]||'')+(m[4]||'')).replace(/\s/g,'');
-  const byKey = s => short(s.name).replace(/\s/g,'').toUpperCase();
+  const byKey = s => short0(s.name).replace(/\s/g,'').toUpperCase();
   return (shafts.find(s=>byKey(s)===want) || shafts.find(s=>byKey(s)===want.replace(/ADD$/,'')) || shafts.find(s=>byKey(s)==='MH'+m[1]+m[2]+(m[3]||'')) || null);
 }
 function bulkPanel(){
@@ -3192,6 +3593,283 @@ document.getElementById('bfile').addEventListener('change', e => {
 });
 
 if(window.innerWidth<=860) document.querySelector('.lyr').open=false;
+/* ================= editable text and manhole names ================= */
+var TXT_DEF = {};
+document.querySelectorAll('[data-edit]').forEach(e => { TXT_DEF[e.dataset.edit] = e.innerHTML; });
+var EDITING = false;
+const txtCount = () => Object.keys(TXT.names||{}).length + Object.keys(TXT.text||{}).length + Object.keys(TXT.words||{}).length;
+function saveTxt(next){
+  if(!canEditProgress()){ showMsg('You can view this page but not change its text.'); return Promise.resolve(); }
+  TXT = {names:{...(next.names||{})}, text:{...(next.text||{})}, words:{...(next.words===undefined ? TXT.words : next.words)||{}}};
+  applyTxt();
+  const ref = store.doc('settings/text');
+  return queued('settings-text', () => ref.set({names:TXT.names, text:TXT.text, words:TXT.words, at:new Date().toISOString(), by:myId||null}));
+}
+function applyTxt(){
+  document.querySelectorAll('[data-edit]').forEach(e => {
+    if(e === document.activeElement && EDITING) return;
+    const k = e.dataset.edit, v = TXT.text[k];
+    if(typeof v === 'string' && v.trim()){ e.textContent = v; e.classList.add('edtd'); }
+    else { e.innerHTML = TXT_DEF[k]; e.classList.remove('edtd'); }
+  });
+  const t = TXT.text.title; if(typeof t === 'string' && t.trim()) document.title = t;
+  shafts.forEach(s => { if(s.t) s.t.textContent = short(s.name); if(s.gl) s.gl.setAttribute('aria-label', 'Section view of ' + short(s.name)); });
+  onProgress();
+  if(currentTab === 'detail' && detailOf) renderDetail();
+  if(currentTab === 'names' && !list.contains(document.activeElement)) renderNames();
+  applyWords();
+}
+function paintEditBtn(){
+  if(typeof TXT_DEF === 'undefined') return;
+  const b = document.getElementById('editTxt'); if(!b) return;
+  b.hidden = !canEditProgress();
+  if(b.hidden && EDITING) setEditing(false);
+}
+function setEditing(on){
+  EDITING = on;
+  document.body.classList.toggle('editing', on);
+  const b = document.getElementById('editTxt');
+  b.setAttribute('aria-pressed', on); b.textContent = on ? 'Done editing' : 'Edit text';
+  document.querySelectorAll('[data-edit]').forEach(e => {
+    if(on){ e.setAttribute('contenteditable', 'true'); e.setAttribute('spellcheck', 'false'); e.setAttribute('role', 'textbox'); e.setAttribute('aria-label', 'Edit text: ' + e.innerText.trim().slice(0, 40)); }
+    else { e.removeAttribute('contenteditable'); e.removeAttribute('role'); e.removeAttribute('aria-label'); }
+  });
+  let bar = document.getElementById('edBar');
+  if(on && !bar){
+    bar = document.createElement('div'); bar.id = 'edBar'; bar.className = 'edbar'; bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'Text editing');
+    bar.innerHTML = `<span>Point at any text: <b>blue</b> can be changed, <b>grey</b> is a pure calculated figure. Click blue text to change it. Numbers inside the text stay live. Hold <b>Ctrl</b> (⌘ on Mac) and click to use the page normally, for example to open another tab or manhole.</span><button class="btn" id="edNames">Rename manholes</button><button class="btn" id="edReset">Restore original text</button><button class="btn pri" id="edDone">Done</button>`;
+    document.body.appendChild(bar);
+    bar.querySelector('#edDone').onclick = () => setEditing(false);
+    bar.querySelector('#edNames').onclick = () => { setTab('names'); document.getElementById('layout').scrollIntoView({block:'start'}); };
+    bar.querySelector('#edReset').onclick = () => {
+      if(!Object.keys(TXT.text).length && !Object.keys(TXT.words||{}).length){ alert('All text is already the original.'); return; }
+      if(confirm('Put all text back to the original wording? Manhole names are kept.')) saveTxt({names:TXT.names, text:{}, words:{}});
+    };
+  }
+  if(bar) bar.hidden = !on;
+  if(!on){ closePop(); hlBox(null); }
+}
+document.getElementById('editTxt').onclick = () => setEditing(!EDITING);
+document.querySelectorAll('[data-edit]').forEach(e => {
+  e.addEventListener('click', ev => { if(EDITING) ev.preventDefault(); });
+  e.addEventListener('keydown', ev => {
+    if(!EDITING) return;
+    if(ev.key === 'Escape'){ ev.preventDefault(); e.dataset.cancel = '1'; e.blur(); }
+    else if(ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); e.blur(); }
+  });
+  e.addEventListener('paste', ev => {
+    if(!EDITING) return; ev.preventDefault();
+    const t = (ev.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, t);
+  });
+  e.addEventListener('blur', () => {
+    if(!EDITING) return;
+    const k = e.dataset.edit;
+    if(e.dataset.cancel){ delete e.dataset.cancel; applyTxt(); return; }
+    const v = e.innerText.replace(/\u00a0/g, ' ').replace(/[ \t]+\n/g, '\n').trim();
+    const tmp = document.createElement('div'); tmp.innerHTML = TXT_DEF[k].replace(/<br\s*\/?>/gi, '\n');
+    const def = tmp.textContent.trim();
+    const cur = TXT.text[k] || '';
+    if(!v || v === def){ if(cur){ const t = {...TXT.text}; delete t[k]; saveTxt({names:TXT.names, text:t}); } else applyTxt(); return; }
+    if(v !== cur) saveTxt({names:TXT.names, text:{...TXT.text, [k]: v}});
+  });
+});
+
+/* ---------- edit any wording on the page; live figures stay calculated ---------- */
+const WORD_ORIG = new WeakMap(), OPT_ORIG = new WeakMap(), PH_ORIG = new WeakMap();
+const normT = t => String(t).replace(/\s+/g, ' ').trim();
+const NUM_RE = /\d[\d,.]*\d|\d/g;
+const SKIP_SEL = 'script,style,textarea,input,select,option,iframe,#edBar,#edPop,#edHl,[data-edit],[contenteditable]';
+const hasWords = t => /\p{L}/u.test(t);
+const keyOfT = o => o.replace(NUM_RE, '#');
+const numsOf = o => o.match(NUM_RE) || [];
+const toTmpl = o => { let i = 0; return o.replace(NUM_RE, () => `{${++i}}`); };
+const fillT = (tmpl, o) => { const n = numsOf(o); return tmpl.replace(/\{(\d+)\}/g, (m, i) => n[i-1] !== undefined ? n[i-1] : m); };
+function shown(o){ const W = TXT.words || {}, k = keyOfT(o); return W[k] !== undefined ? fillT(W[k], o) : o; }
+function shownPlain(o){ const W = TXT.words || {}; return W['='+o] !== undefined ? W['='+o] : shown(o); }
+function origOf(n){ return WORD_ORIG.has(n) ? WORD_ORIG.get(n) : normT(n.nodeValue); }
+function textNodes(root){
+  const out = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n => {
+    if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+    const p = n.parentElement; if(!p || p.closest(SKIP_SEL)) return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT; }});
+  while(w.nextNode()) out.push(w.currentNode);
+  return out;
+}
+let wordObs = null, wordRaf = 0;
+function applyWords(){
+  if(wordObs) wordObs.disconnect();
+  const any = Object.keys(TXT.words || {}).length;
+  textNodes(document.body).forEach(n => {
+    const had = WORD_ORIG.has(n);
+    if(!any && !had) return;
+    const o = origOf(n); if(!hasWords(o)) return;
+    const want = shown(o);
+    if(normT(n.nodeValue) !== want){ const m = n.nodeValue.match(/^(\s*)[\s\S]*?(\s*)$/); n.nodeValue = m[1] + want + m[2]; }
+    if(want !== o) WORD_ORIG.set(n, o); else WORD_ORIG.delete(n);
+  });
+  document.querySelectorAll('option').forEach(op => {
+    const had = OPT_ORIG.has(op); if(!any && !had) return;
+    const o = had ? OPT_ORIG.get(op) : normT(op.textContent); if(!hasWords(o)) return;
+    const want = shownPlain(o);
+    if(normT(op.textContent) !== want){ if(!op.hasAttribute('value')) op.setAttribute('value', op.value); op.textContent = want; }
+    if(want !== o) OPT_ORIG.set(op, o); else OPT_ORIG.delete(op);
+  });
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(i => {
+    if(i.closest('#edPop,#edBar')) return;
+    const had = PH_ORIG.has(i); if(!any && !had) return;
+    const o = had ? PH_ORIG.get(i) : normT(i.placeholder); if(!hasWords(o)) return;
+    const want = shownPlain(o);
+    if(i.placeholder !== want) i.placeholder = want;
+    if(want !== o) PH_ORIG.set(i, o); else PH_ORIG.delete(i);
+  });
+  if(!wordObs) wordObs = new MutationObserver(recs => {
+    recs.forEach(r => { if(r.type === 'characterData') WORD_ORIG.delete(r.target); });
+    if(!wordRaf) wordRaf = requestAnimationFrame(() => { wordRaf = 0; applyWords(); });
+  });
+  wordObs.observe(document.body, {childList:true, subtree:true, characterData:true});
+}
+function nodeAt(x, y, target){
+  let n = null;
+  if(document.caretPositionFromPoint){ const c = document.caretPositionFromPoint(x, y); n = c && c.offsetNode; }
+  else if(document.caretRangeFromPoint){ const r = document.caretRangeFromPoint(x, y); n = r && r.startContainer; }
+  if(n && n.nodeType === 3){
+    const r = document.createRange(); r.selectNodeContents(n);
+    const hit = [...r.getClientRects()].some(b => x >= b.left-2 && x <= b.right+2 && y >= b.top-2 && y <= b.bottom+2);
+    if(hit && n.nodeValue.trim()) return n;
+  }
+  if(target && target.nodeType === 1){
+    const kids = [...target.childNodes].filter(c => c.nodeType === 3 && c.nodeValue.trim());
+    if(kids.length === 1) return kids[0];
+  }
+  return null;
+}
+function editableNode(n){ return n && n.parentElement && !n.parentElement.closest(SKIP_SEL) ? n : null; }
+function rectOf(t){ if(t.nodeType === 3){ const r = document.createRange(); r.selectNodeContents(t); return r.getBoundingClientRect(); } return t.getBoundingClientRect(); }
+function hlBox(t, ok, label){
+  let h = document.getElementById('edHl');
+  if(!t){ if(h) h.hidden = true; return; }
+  if(!h){ h = document.createElement('div'); h.id = 'edHl'; document.body.appendChild(h); }
+  const b = rectOf(t);
+  h.hidden = false; h.className = ok ? 'ok' : 'lock';
+  Object.assign(h.style, {left:(b.left-3)+'px', top:(b.top-2)+'px', width:(b.width+6)+'px', height:(b.height+4)+'px'});
+  h.dataset.t = label || (ok ? 'Click to change' : 'Live figure, calculated');
+}
+function closePop(){ const p = document.getElementById('edPop'); if(p) p.remove(); }
+/* items: [{o: original text, label}] */
+function openPop(items, anchor, title){
+  closePop();
+  const W = TXT.words || {};
+  const p = document.createElement('div'); p.id = 'edPop'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', title || 'Change text');
+  const kOf = it => it.plain ? '='+it.o : keyOfT(it.o), defOf = it => it.plain ? it.o : toTmpl(it.o);
+  const anyNum = items.some(it => !it.plain && numsOf(it.o).length);
+  p.innerHTML = `<b class="ept">${esc(title || 'Change text')}</b>
+    <div class="epl">${items.map((it, i) => { const k = kOf(it), cur = W[k] !== undefined ? W[k] : defOf(it), ch = W[k] !== undefined;
+      return `<div class="epi">${it.label ? `<label for="edIn${i}">${esc(it.label)}</label>` : ''}<textarea id="edIn${i}" rows="${Math.min(6, Math.max(1, Math.ceil(cur.length/40)))}"></textarea>${ch ? `<p class="hint">Original: “${esc(defOf(it))}” <button class="lnk" data-orig="${i}">Use original</button></p>` : ''}</div>`; }).join('')}</div>
+    ${anyNum ? `<p class="hint"><b>{1}</b>, <b>{2}</b>… are live figures from the calculation. Keep them where the number should show; move them or type words around them.</p>` : ''}
+    <p class="hint">Every place with the same wording changes too. Press Enter to save.</p>
+    <div class="btns"><button class="btn pri" id="edSave">Save</button><button class="btn" id="edCancel">Cancel</button></div>`;
+  document.body.appendChild(p);
+  const ins = items.map((it, i) => { const t = p.querySelector('#edIn' + i), k = kOf(it); t.value = W[k] !== undefined ? W[k] : defOf(it); return t; });
+  const pw = Math.min(380, innerWidth - 20); p.style.width = pw + 'px';
+  const b = anchor ? rectOf(anchor) : {left:innerWidth/2 - pw/2, top:innerHeight/3, bottom:innerHeight/3};
+  p.style.left = Math.max(10, Math.min(b.left, innerWidth - pw - 10)) + 'px';
+  const ph = Math.min(p.offsetHeight, innerHeight - 20);
+  p.style.top = (b.bottom + 8 + ph < innerHeight ? b.bottom + 8 : Math.max(10, b.top - ph - 8)) + 'px';
+  ins[0].focus(); ins[0].select();
+  const save = () => {
+    const w = {...(TXT.words || {})};
+    for(let i = 0; i < items.length; i++){
+      const o = items[i].o, k = kOf(items[i]), def = defOf(items[i]);
+      const v = normT(ins[i].value);
+      if(!v){ ins[i].focus(); return; }
+      const need = items[i].plain ? 0 : numsOf(o).length, used = new Set((v.match(/\{(\d+)\}/g) || []));
+      const missing = [...Array(need)].map((_, j) => `{${j+1}}`).filter(t => !used.has(t));
+      if(missing.length && !confirm(`${missing.join(', ')} ${missing.length>1?'were numbers':'was a number'} in “${def}”. If ${missing.length>1?'they are':'it is'} a calculated figure, ${missing.length>1?'they':'it'} will no longer show there. Continue?`)) { ins[i].focus(); return; }
+      if(v === def) delete w[k]; else w[k] = v;
+    }
+    closePop(); saveTxt({names:TXT.names, text:TXT.text, words:w});
+  };
+  p.querySelector('#edSave').onclick = save;
+  p.querySelector('#edCancel').onclick = closePop;
+  p.querySelectorAll('[data-orig]').forEach(bt => bt.onclick = () => { const it = items[+bt.dataset.orig]; ins[+bt.dataset.orig].value = defOf(it); });
+  ins.forEach(t => t.onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); save(); } else if(e.key === 'Escape') closePop(); });
+}
+const passThrough = t => t.closest('#edBar,#edPop,#editTxt,[data-edit],#drn,.nmr');
+const editTarget = (e) => {
+  const t = e.target;
+  if(t.closest && t.closest('select')){
+    const sel = t.closest('select');
+    const items = [...sel.options].map(op => ({o: OPT_ORIG.has(op) ? OPT_ORIG.get(op) : normT(op.textContent), plain:true})).filter(it => hasWords(it.o));
+    const seen = new Set(); const uniq = items.filter(it => { const k = it.o; if(seen.has(k)) return false; seen.add(k); return true; });
+    uniq.forEach(it => it.label = it.o);
+    return uniq.length ? {el: sel, items: uniq, title: 'Change the choices in this list'} : {el: sel, lock: true};
+  }
+  if(t.matches && t.matches('input[placeholder],textarea[placeholder]') && !t.value){
+    const o = PH_ORIG.has(t) ? PH_ORIG.get(t) : normT(t.placeholder);
+    return hasWords(o) ? {el: t, items: [{o, plain:true}], title: 'Change the hint text in this box'} : null;
+  }
+  const n = editableNode(nodeAt(e.clientX, e.clientY, t));
+  if(!n) return null;
+  const o = origOf(n);
+  return hasWords(o) ? {el: n, items: [{o}], nums: numsOf(o).length} : {el: n, lock: true};
+};
+document.addEventListener('mousemove', e => {
+  if(!EDITING || document.getElementById('edPop')) return;
+  if(e.ctrlKey || e.metaKey || passThrough(e.target)){ hlBox(null); return; }
+  const r = editTarget(e);
+  if(!r){ hlBox(null); return; }
+  hlBox(r.el, !r.lock, r.lock ? 'Live figure, calculated' : r.nums ? 'Click to change (numbers stay live)' : 'Click to change');
+}, {passive:true});
+document.addEventListener('scroll', () => { if(EDITING) hlBox(null); }, true);
+const blockEv = e => {
+  if(!EDITING || e.ctrlKey || e.metaKey || passThrough(e.target)) return false;
+  e.preventDefault(); e.stopPropagation(); return true;
+};
+document.addEventListener('mousedown', e => { if(EDITING && e.target.closest && e.target.closest('select') && !e.ctrlKey && !e.metaKey && !passThrough(e.target)) e.preventDefault(); }, true);
+document.addEventListener('click', e => {
+  if(!blockEv(e)) return;
+  if(document.getElementById('edPop')){ closePop(); return; }
+  const r = editTarget(e);
+  if(r && !r.lock){ hlBox(null); openPop(r.items, r.el, r.title); }
+}, true);
+function setName(s, v){
+  const k = keyOf(s.name), orig = short0(s.name), n = {...TXT.names};
+  v = (v || '').replace(/\s+/g, ' ').trim();
+  if(!v || v === orig) delete n[k]; else n[k] = v;
+  if(JSON.stringify(n) === JSON.stringify(TXT.names)) return;
+  saveTxt({names:n, text:TXT.text});
+}
+function renameInline(s){
+  const box = document.getElementById('drn'); if(!box) return;
+  box.innerHTML = `<label class="rnf"><span>Name shown on the page</span><input id="drnI" value="${esc(short(s.name))}" maxlength="40"></label><div class="btns"><button class="btn pri" id="drnS">Save name</button><button class="btn" id="drnC">Cancel</button>${short(s.name)!==short0(s.name)?`<button class="lnk" id="drnR">Use drawing name (${esc(short0(s.name))})</button>`:''}</div>`;
+  const i = document.getElementById('drnI'); i.focus(); i.select();
+  const go = () => setName(s, i.value);
+  document.getElementById('drnS').onclick = go;
+  document.getElementById('drnC').onclick = () => renderDetail();
+  const r = document.getElementById('drnR'); if(r) r.onclick = () => setName(s, '');
+  i.onkeydown = e => { if(e.key === 'Enter') go(); else if(e.key === 'Escape') renderDetail(); };
+}
+function renderNames(){
+  currentTab = 'names';
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === 'shafts'));
+  const ed = canEditProgress();
+  const rows = shafts.filter(s => !s.gone).slice().sort((a,b) => short0(a.name).localeCompare(short0(b.name), undefined, {numeric:true}));
+  list.innerHTML = `<div class="detail">
+    <button class="back" id="nback">← All shafts</button>
+    <div class="dh"><h2>Manhole names</h2></div>
+    <p class="hint">Type a new name to change how a manhole is shown on the dashboard, layout, lists and Excel export. Leave it blank to use the name from the drawing. Progress, drawings and the Excel link stay with the manhole.</p>
+    <div class="nmlist">${rows.map(s => { const k = keyOf(s.name), o = short0(s.name), cur = (TXT.names||{})[k] || ''; return `<label class="nmr"><span>${esc(o)}${side(s.name)?` <em>(${side(s.name)})</em>`:''}</span><input data-k="${esc(s.name)}" value="${esc(cur)}" placeholder="${esc(o)}" maxlength="40" ${ed?'':'disabled'}></label>`; }).join('')}</div>
+    ${Object.keys(TXT.names||{}).length && ed ? `<div class="btns" style="margin-top:12px"><button class="btn" id="nreset">Use drawing names for all</button></div>` : ''}
+  </div>`;
+  document.getElementById('nback').onclick = () => setTab('shafts');
+  list.querySelectorAll('.nmr input').forEach(i => {
+    const s = byName[i.dataset.k] || shafts.find(x => x.name === i.dataset.k);
+    i.onchange = () => setName(s, i.value);
+    i.onkeydown = e => { if(e.key === 'Enter') i.blur(); };
+  });
+  const nr = document.getElementById('nreset'); if(nr) nr.onclick = () => { if(confirm('Remove every custom manhole name?')) saveTxt({names:{}, text:TXT.text}); };
+}
 setTab('shafts');
 onProgress();
 initStore();
@@ -3265,6 +3943,88 @@ requestAnimationFrame(()=>fitBox(CONTENT));
   window.addEventListener('afterprint', done);
   const b = document.getElementById('dprint');
   if(b) b.onclick = () => { prep(); requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => window.print(), 150))); };
+})();
+</script>
+<script>
+/* ---------- LED highlights: switch on or off (original look) ---------- */
+(function(){
+  const LED_DEFAULT = true, KEY = 'sibs-led-' + (LED_DEFAULT ? 'a' : 'b');
+  let on = LED_DEFAULT;
+  try{ const v = localStorage.getItem(KEY); if(v==='1' || v==='0') on = v==='1'; }catch(_){}
+  const b = document.getElementById('ledBtn');
+  const apply = () => { document.documentElement.classList.toggle('led', on); if(b){ b.setAttribute('aria-pressed', String(on)); b.lastChild.textContent = on ? 'LED on' : 'LED off'; } };
+  apply();
+  if(b) b.onclick = () => { on = !on; apply(); if(!on && typeof setLedFilter==='function' && LEDF) setLedFilter(LEDF); try{ localStorage.setItem(KEY, on ? '1' : '0'); }catch(_){} if(typeof renderDash==='function') renderDash(); };
+})();
+/* ---------- layout: full screen ---------- */
+(function(){
+  const app = document.getElementById('layout'), btn = document.getElementById('zfull'); if(!app || !btn) return;
+  const isFs = () => document.fullscreenElement === app || app.classList.contains('fs');
+  const refit = () => requestAnimationFrame(() => { fitBox(CONTENT); btn.textContent = isFs() ? '✕' : '⛶'; btn.setAttribute('aria-label', isFs() ? 'Exit full screen' : 'Full screen layout'); btn.title = btn.getAttribute('aria-label'); });
+  btn.onclick = () => {
+    if(isFs()){ if(document.fullscreenElement) document.exitFullscreen(); else { app.classList.remove('fs'); document.body.classList.remove('fsopen'); refit(); } return; }
+    if(app.requestFullscreen){ app.requestFullscreen().catch(() => { app.classList.add('fs'); document.body.classList.add('fsopen'); refit(); }); }
+    else { app.classList.add('fs'); document.body.classList.add('fsopen'); refit(); }
+  };
+  document.addEventListener('fullscreenchange', refit);
+  document.addEventListener('keydown', e => { if(e.key==='Escape' && app.classList.contains('fs')){ app.classList.remove('fs'); document.body.classList.remove('fsopen'); refit(); } });
+})();
+</script>
+
+<script>
+/* ---------- layout: enlarge section views + close-up panel ---------- */
+(function(){
+  const mag = document.getElementById('zmag'), lensBtn = document.getElementById('zlens'), box = document.getElementById('mlens');
+  if(!mag || !lensBtn || !box) return;
+  const STEPS = [1, 1.6, 2.4]; let mi = 0;
+  try{ const v = +localStorage.getItem('sibs-glx'); if(STEPS.includes(v)) mi = STEPS.indexOf(v); }catch(_){}
+  const setMag = () => { GLX = STEPS[mi]; mag.textContent = GLX + '×'; mag.classList.toggle('on', GLX>1); mag.setAttribute('aria-label', `Enlarge section views, now ${GLX}×`);
+    if(GLX>1) map.classList.remove('hide-glyphs'); render(); };
+  mag.onclick = () => { mi = (mi+1) % STEPS.length; try{ localStorage.setItem('sibs-glx', STEPS[mi]); }catch(_){} setMag(); };
+  setMag();
+
+  let lensOn = false, lensS = null, pinned = false;
+  const KC = k => `var(--a-${k==='done'?'done':k})`;
+  const stTxt = x => x.s==='done' ? ['d','Done'] : x.s==='ongoing' ? ['o', x.pct ? `${P0(x.pct)}%` : 'Ongoing'] : ['n','Not started'];
+  function html(s){
+    const n = s.name, li = ledInfo(s), p = li.p, g = li.g, sp = specOf(n), acts = actsOf(n), str = structOf(n);
+    const row = (label, k, x) => { const [c, t] = stTxt(x); return `<li><i class="${c}" style="--c:${KC(k)};background:${KC(k)}"></i><span>${esc(label)}</span><em class="${c}">${t}</em></li>`; };
+    const sh = acts.filter(a=>a.g==='shaft'), mh = acts.filter(a=>a.g!=='shaft');
+    let segs = '';
+    if(str.length){ const d = str.filter(e=>stOf(n,e.id).s==='done').length, o = str.filter(e=>stOf(n,e.id).s==='ongoing').length;
+      segs = row(`Segments & CIS lifts (${d}/${str.length})`, 'seg', {s: d===str.length ? 'done' : (d||o) ? 'ongoing' : null, pct: str.length ? d/str.length : 0}); }
+    const k = 2.3, W = (GW+4)*k, H = (GH+4)*k;
+    return `<div class="ml-lh"><div><b>${esc(short(n))}</b><small>${esc(TYPE_SHORT[sp.type]||sp.type)}${s.dia?`, ${s.dia} m shaft`:''}, ${lineOf(s)}</small>
+        <span class="ml-lst"><i class="ld ${li.st}"></i>${LED_LABEL[li.st]}${li.gap!==null && li.st!=='d' ? ` <span style="color:var(--muted);font-weight:500">· last update ${Math.round(li.gap)} d ago</span>` : ''}</span></div>
+        <button class="ml-lx" data-a="close" aria-label="Close close-up">✕</button></div>
+      <div class="ml-lb"><div class="ml-lsv"><svg viewBox="-2 -2 ${GW+4} ${GH+4}" width="${W.toFixed(0)}" height="${H.toFixed(0)}" role="img" aria-label="Section view of ${esc(short(n))}"><g class="gl">${glyphSVG(s)}</g></svg></div>
+        <div><div class="ml-lpc"><div><b>${p.ex?'—':P0(p.shaft)+'%'}</b><span>shaft${p.ex?' (existing)':''}</span></div><div><b>${P0(p.mh)}%</b><span>${sp.type==='Blind'?'blind shaft works':'manhole'}</span></div></div>
+          <ul class="ml-la">${sh.length?`<li class="ml-gh">Shaft construction</li>${sh.map(a=>row(a.label.replace(/ \+ W\/P$/,''), 'shaft', stOf(n,a.id))).join('')}`:''}
+          ${mh.length||segs?`<li class="ml-gh">${sp.type==='Blind'?'Blind shaft works':'Manhole works'}</li>${mh.map(a=>row(a.label.replace(/ \+ W\/P$/,''), a.k, stOf(n,a.id))).join('')}${mh.some(a=>str.some(e=>e.id===a.id)) ? '' : segs}`:''}</ul></div></div>
+      <div class="ml-lbt"><button data-a="zoom">Zoom in here</button><button data-a="open">Open details</button><button data-a="pin">${pinned?'Unpin':'Pin'}</button></div>`;
+  }
+  function show(s){ if(!s) return; lensS = s; box.innerHTML = html(s); box.hidden = false; }
+  window.lensRefresh = s => { if(lensOn && lensS===s) show(s); };
+  box.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if(!a || !lensS) return; const s = lensS;
+    if(a.dataset.a==='close'){ pinned = false; box.hidden = true; if(!lensOn) lensS = null; }
+    else if(a.dataset.a==='zoom'){ if(s.p) fitBox({x0:s.p[0]-22,x1:s.p[0]+22,y0:s.p[1]-22,y1:s.p[1]+22}, 40, 60); }
+    else if(a.dataset.a==='open') selectShaft(s, false);
+    else if(a.dataset.a==='pin'){ pinned = !pinned; show(s); } });
+  box.addEventListener('pointerdown', e => e.stopPropagation());
+  box.addEventListener('wheel', e => e.stopPropagation(), {passive:true});
+  const setLens = v => { lensOn = v; lensBtn.setAttribute('aria-pressed', String(v));
+    if(!v){ pinned = false; box.hidden = true; lensS = null; }
+    else { box.hidden = false; if(selShaft) show(selShaft); else if(!lensS) box.innerHTML = `<div class="ml-lh"><div><b>Close-up</b><small>Point at a manhole or its section view to see every activity. Tap to pin it.</small></div><button class="ml-lx" data-a="closeall" aria-label="Close">✕</button></div>`; } };
+  box.addEventListener('click', e => { if(e.target.closest('[data-a="closeall"]')) setLens(false); });
+  lensBtn.onclick = () => setLens(!lensOn);
+  window.hookLens = s => {
+    const hov = () => { if(lensOn && !pinned) show(s); };
+    const tap = () => { if(lensOn){ pinned = true; show(s); } };
+    [s.c, s.gl, s.t].forEach(e => { if(!e) return; e.addEventListener('pointerenter', hov); e.addEventListener('click', tap); });
+    // double-click a manhole: zoom right in to it
+    if(s.c) s.c.addEventListener('dblclick', e => { e.stopPropagation(); if(s.p) fitBox({x0:s.p[0]-22,x1:s.p[0]+22,y0:s.p[1]-22,y1:s.p[1]+22}, 40, 60); });
+  };
+  shafts.forEach(hookLens);
 })();
 </script>
 </body>
