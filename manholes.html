@@ -1212,7 +1212,9 @@ function glyphSVG(s){
   const bp = agg(['bl','plug']); if(bp) g += R(8,70,36,6,F('shaft',bp));
   if(!blind){
     const str = structOf(n), bases = str.filter(e=>e.base), rings = str.filter(e=>!e.base && !e.baffle), baffles = str.filter(e=>e.baffle);
-    g += R(13,64,26,6,F('seg',agg(bases.map(e=>e.id)) || {s:null}));
+    // base: structural elements (screed, CIS base or precast base slab) are not switchable activities, so read their status directly
+    const bst = bases.map(e=>st(e.id)), bAgg = !bst.length ? {s:null} : bst.every(v=>v.s==='done') ? {s:'done'} : bst.some(v=>v.s) ? {s:'ongoing'} : {s:null};
+    g += R(13,64,26,6,F('seg',bAgg));
     const top = 22, bot = 64, wts = rings.map(e=>e.pipe?1.6:1), tw = wts.reduce((a,b)=>a+b,0) || 1;
     let yy = bot;
     if(!rings.length) g += R(13,top,4,bot-top,'none','stroke="var(--muted)" stroke-width=".5" stroke-dasharray="1.5 1"') + R(35,top,4,bot-top,'none','stroke="var(--muted)" stroke-width=".5" stroke-dasharray="1.5 1"');
