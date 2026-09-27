@@ -577,6 +577,18 @@
     .pulse{opacity:0}
   }
 </style>
+<style>
+.mhtab{display:inline-flex;align-items:center;padding:11px 16px 12px;color:var(--ink2,#B3C4CD);white-space:nowrap;font-size:14px;font-weight:600;text-decoration:none;border-bottom:2px solid transparent;border-radius:6px 6px 0 0}
+.mhtab:hover{color:#fff;background:rgba(255,255,255,.05);border-bottom-color:#3BF08C}
+[data-theme="light"] .mhtab:hover{color:var(--ink,#123)}
+#mhView{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;background:#0B1A24}
+#mhView.on{display:flex}
+#mhBar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid rgba(128,128,128,.35);font:14px system-ui,sans-serif;background:#0E2230;color:#EAF2F5}
+#mhBar b{flex:1}
+#mhBar button,#mhBar a{font:inherit;padding:5px 12px;border-radius:6px;border:1px solid rgba(160,180,190,.5);background:transparent;color:inherit;cursor:pointer;text-decoration:none}
+#mhFrame{flex:1;width:100%;border:0;background:#fff}
+@media print{.mhtab,#mhView{display:none!important}}
+</style>
 </head><body><header><div class="wrap" style="padding-bottom:0">
   <div class="mast">
     <div>
@@ -604,6 +616,7 @@
     <button class="tab" role="tab" aria-selected="false" data-p="sheet">Progress entry</button>
     <button class="tab" role="tab" aria-selected="false" data-p="gantt">Timeline</button>
     <button class="tab" role="tab" aria-selected="true" data-p="data">Save &amp; export</button>
+    <a class="mhtab" id="mhTab" href="manholes.html" title="Manhole &amp; shaft progress">Manholes ↗</a>
   </nav>
 </div></header>
 
@@ -2107,6 +2120,23 @@ function apply(o){D=Array.isArray(o.d)?o.d:[];AS=o.as||today();bkDate=o.bk||'';l
   storeBox();ownerUI();
   if(VIEWER){$('bkHead').style.display='none';$('bkBanner').classList.remove('on')}else bkCheck();
   render();
+})();
+</script>
+<div id="mhView" role="dialog" aria-label="Manhole progress">
+  <div id="mhBar"><b>Manhole &amp; shaft progress</b><a href="manholes.html" target="_blank" rel="noopener">Open in new tab</a><button type="button" id="mhClose">✕ Back to micro-tunnel</button></div>
+  <iframe id="mhFrame" title="Manhole progress"></iframe>
+</div>
+<script>
+/* Manholes tab: opens manholes.html full screen on this same link (…/SIBS-Progress/#manholes) */
+(function(){
+  const v=document.getElementById('mhView'), f=document.getElementById('mhFrame'), t=document.getElementById('mhTab');
+  function open(push){ if(!f.src) f.src='manholes.html'; v.classList.add('on'); document.body.style.overflow='hidden'; if(push && location.hash!=='#manholes') history.pushState(null,'','#manholes'); }
+  function close(push){ v.classList.remove('on'); document.body.style.overflow=''; if(push && location.hash==='#manholes') history.pushState(null,'',location.pathname+location.search); }
+  t.addEventListener('click',e=>{ if(e.ctrlKey||e.metaKey||e.shiftKey) return; e.preventDefault(); open(true); });
+  document.getElementById('mhClose').onclick=()=>close(true);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && v.classList.contains('on')) close(true); });
+  window.addEventListener('popstate',()=>{ /#manholes/.test(location.hash) ? open(false) : close(false); });
+  if(/#manholes/.test(location.hash)) open(false);
 })();
 </script>
 </body></html>
