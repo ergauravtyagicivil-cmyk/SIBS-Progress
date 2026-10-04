@@ -610,6 +610,50 @@
     #printRoot .ppage:last-child{break-after:auto;page-break-after:auto}
     #fwCanvas{display:none!important}
   }
+  /* ---------- mobilisation: crane lowering the MTBM into the launch shaft ---------- */
+  :root{--mob:#22D3EE}
+  :root[data-theme="light"]{--mob:#0891B2}
+  :root[data-theme="classic"]{--mob:#0E7490}
+  .c-mob{color:var(--mob);border-color:color-mix(in srgb,var(--mob) 45%,transparent);background:color-mix(in srgb,var(--mob) 10%,transparent)}
+  .c-mob::before{box-shadow:0 0 7px var(--mob);animation:blink 1.6s ease-in-out infinite}
+  .sheet tr.st-mob td{background-color:color-mix(in srgb,var(--mob) 7%,transparent)!important}
+  .sheet tr.st-mob td.sn{box-shadow:inset 3px 0 0 var(--mob)!important}
+  .mini.mob{color:var(--mob);border-color:color-mix(in srgb,var(--mob) 50%,transparent)}
+  .gmob{position:absolute;top:13px;height:7px;border-radius:4px;background:repeating-linear-gradient(45deg,var(--mob) 0 5px,color-mix(in srgb,var(--mob) 45%,transparent) 5px 9px);box-shadow:0 0 7px color-mix(in srgb,var(--mob) 55%,transparent)}
+  .led.m{background:var(--mob)!important;box-shadow:0 0 8px var(--mob)}
+  /* ---------- last 24 hours strip ---------- */
+  .h24{display:grid;grid-template-columns:minmax(220px,260px) 1fr;gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px;background:var(--surface)}
+  .h24main{padding:10px 14px;background:linear-gradient(160deg,color-mix(in srgb,var(--led-y) 16%,transparent),transparent 75%);border-right:1px solid var(--line)}
+  .h24main .k{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+  .h24main b.v{display:block;font-family:var(--fc);font-size:28px;font-weight:600;line-height:1.05;margin-top:3px;color:var(--led-y);font-variant-numeric:tabular-nums}
+  :root:not([data-theme]) .h24main b.v{text-shadow:0 0 14px rgba(255,200,61,.4)}
+  [data-theme="light"] .h24main b.v{color:#B87D00}
+  .h24main small{display:block;font-size:11.5px;color:var(--ink2);margin-top:1px;line-height:1.35}
+  .h24main .prs{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .h24main .prs span{font-size:11.5px;font-weight:600;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:4px;padding:1px 7px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .h24m{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--rule);align-content:start}
+  .h24t{background:var(--surface);padding:8px 12px;position:relative}
+  .h24t::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tc)}
+  .h24t .d{font-size:11.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:64px}
+  .h24t .d em{font-style:normal;color:var(--ink3);font-weight:500}
+  .h24t b{display:block;font-family:var(--fc);font-size:20px;font-weight:600;line-height:1.1;margin-top:1px;color:var(--tc);font-variant-numeric:tabular-nums}
+  .h24t small{display:block;font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums;line-height:1.35}
+  .h24t .add{position:absolute;right:8px;top:7px;padding:1px 7px;font-size:11px}
+  .h24none{padding:12px 14px;font-size:12.5px;color:var(--ink2);background:var(--surface)}
+  @media(max-width:700px){.h24{grid-template-columns:1fr}.h24main{border-right:0;border-bottom:1px solid var(--line)}}
+  /* ---------- per-day progress by diameter ---------- */
+  .pdhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin-top:4px}
+  .pdhead b{font-family:var(--fc);font-size:19px;font-weight:600;color:var(--ink)}
+  .pdhead span{font-size:12.5px;color:var(--ink2)}
+  .pdbar{height:6px;background:var(--track);border-radius:3px;overflow:hidden;min-width:56px;margin-top:3px}
+  .pdbar i{display:block;height:100%;border-radius:3px;background:var(--acc)}
+  #pdRow td .sub{font-size:11.5px}
+  #printRoot #h24 .add{display:none!important}
+  #printRoot #h24 .dayall{display:none!important}
+  .h24main .dayall{padding:2px 9px;font-size:11.5px}
+  #dyTbl input{width:110px;text-align:right;font-variant-numeric:tabular-nums;padding:5px 7px}
+  #dyTbl td.dv{font-weight:700;font-variant-numeric:tabular-nums;text-align:right;min-width:80px}
+  #dyTbl tr.warn td.dv{color:var(--bad)}
 </style>
 <style>
 .mhtab{display:inline-flex;align-items:center;padding:11px 16px 12px;color:var(--ink2,#B3C4CD);white-space:nowrap;font-size:14px;font-weight:600;text-decoration:none;border-bottom:2px solid transparent;border-radius:6px 6px 0 0}
@@ -668,11 +712,12 @@
 <section class="panel on" id="p-dash">
   <div class="btban" id="btBanner"></div>
   <div class="kpis" id="kpis"></div>
+  <div class="h24" id="h24"></div>
   <div class="card mapcard">
     <div class="maphead">
       <div>
         <h3>Alignment map</h3>
-        <p class="sub">Every drive lights up from the register. Green is holed through, amber is boring now, a red machine has stopped at the face, dim red is still to launch. Fireworks mark a breakthrough on the day and the day after. Hover a drive for its figures.</p>
+        <p class="sub">Every drive lights up from the register. Green is holed through, amber is boring now, a red machine has stopped at the face, cyan is mobilising with the crane lowering the MTBM into the launch shaft, dim red is still to launch. Fireworks mark a breakthrough on the day and the day after. Hover a drive for its figures.</p>
       </div>
       <div class="mapstat" id="mapStat"></div>
     </div>
@@ -682,6 +727,7 @@
       <label class="mapchk"><input type="checkbox" id="mapSn"> Drive S/N</label>
       <label class="mapchk"><input type="checkbox" id="mapLR" checked=""> Direction arrows</label>
       <label class="mapchk"><input type="checkbox" id="mapCo" checked=""> MTBM close-ups</label>
+      <label class="mapchk"><input type="checkbox" id="mapMob" checked=""> Mobilisation cranes</label>
       <label class="mapchk">Zoom <select id="mapZoom" style="width:auto;padding:3px 7px"><option value="1">Fit width</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="3">3×</option></select></label>
     </div>
     <div class="mapwrap"><div id="mapSvg" style="width: 100%;"></div></div>
@@ -689,6 +735,11 @@
     <p class="maptag" id="mapNote"></p>
   </div>
   <div class="cols" id="contractRow"></div>
+  <div class="card" id="pdCard">
+    <h3>Per-day progress by diameter — each contract</h3>
+    <p class="sub">Metres bored per boring day for every DN, contract by contract. Average is bored metres over boring days (launch to breakthrough, or to the data date while boring). Last 24 h is today's total minus yesterday's total, entered with Daily 24 h entry.</p>
+    <div id="pdRow" style="margin-top:12px;display:grid;gap:18px"></div>
+  </div>
   <div class="cols3">
     <div class="card"><h3>Overall completion</h3><div id="ring"></div><div id="ringNote" class="sub" style="margin-top:6px"></div></div>
     <div class="card"><h3>Total against completed length, by diameter</h3><div id="dnChart" style="margin-top:10px"></div><div class="legend" id="dnLeg"></div></div>
@@ -733,7 +784,7 @@
   <div class="card" style="padding:12px 15px">
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center">
       <p class="sub" style="margin:0">Same rows and columns as the workbook. Use <b>Progress</b> on a drive’s row to enter its metres, or <b>Edit</b> to change any other field. Double-clicking a row opens Edit too. The shaded columns work themselves out.</p>
-      <div style="display:flex;gap:8px"><button class="btn ghost" id="renumber">Renumber S/N</button><button class="btn ghost" id="addRow">Add drive</button></div>
+      <div style="display:flex;gap:8px"><button class="btn ghost" id="renumber">Renumber S/N</button><button class="btn" id="dayBtn">Daily 24 h entry</button><button class="btn ghost" id="addRow">Add drive</button></div>
     </div>
   </div>
   <div class="sheet"><table id="tSheet"></table></div>
@@ -766,6 +817,7 @@
       <span><i class="sw" style="background:var(--led-g)"></i>Bored</span>
       <span><i class="sw" style="background:var(--amber)"></i>In progress</span>
       <span><i class="sw" style="background:var(--stop)"></i>Machine stopped</span>
+      <span><i class="sw" style="background:var(--mob)"></i>Mobilisation</span>
       <span><i class="sw" style="background:var(--bad);width:2px;height:12px"></i>Data date</span>
     </div>
   </div>
@@ -842,12 +894,15 @@
     <div class="mbody">
       <div class="preview" id="pgNow" style="margin-top:0"></div>
       <div class="mgrid" style="margin-top:14px">
-        <div><label for="pgDate">Date of this figure</label><input type="date" id="pgDate"></div>
+        <div><label for="pgDate" id="pgDateL">Date of this figure</label><input type="date" id="pgDate"></div>
         <div><label for="pgMode">Figure you are entering</label><select id="pgMode">
           <option value="total">Total bored to date</option>
           <option value="add">Metres bored since the last figure</option>
+          <option value="yt">Yesterday and today totals (last 24 h)</option>
         </select></div>
-        <div class="full bignum"><label for="pgVal">Metres</label><input type="number" id="pgVal" step="0.01" min="0"></div>
+        <div class="full bignum" id="pgValRow"><label for="pgVal">Metres</label><input type="number" id="pgVal" step="0.01" min="0"></div>
+        <div class="bignum" id="pgYRow" style="display:none"><label for="pgY">Yesterday's total bored (m)</label><input type="number" id="pgY" step="0.01" min="0"></div>
+        <div class="bignum" id="pgTRow" style="display:none"><label for="pgT">Today's total bored (m)</label><input type="number" id="pgT" step="0.01" min="0"></div>
       </div>
       <div class="preview" id="pgPrev"></div>
       <div id="pgMachRow" style="margin-top:14px">
@@ -936,6 +991,8 @@
         <div><label for="efMs">Machine</label><select id="efMs"><option value="">Running</option><option value="stop">Stopped</option></select></div>
         <div><label for="efMsd">Stopped since</label><input id="efMsd" type="date"></div>
         <div class="full"><label for="efMsr">Stop reason</label><input id="efMsr" type="text" list="stReasons"></div>
+        <div><label for="efMob">Mobilisation started (blank = none)</label><input id="efMob" type="date"></div>
+        <div><label for="efMobn">Mobilisation note</label><input id="efMobn" type="text" placeholder="e.g. 100 t crawler crane on site"></div>
       </div>
     </div>
     <div class="mfoot">
@@ -960,6 +1017,39 @@
     <div class="mfoot">
       <button class="btn ghost" data-close="">Cancel</button>
       <button class="btn" id="stSave" style="background:var(--stop);border-color:var(--stop);color:#fff">Mark machine stopped</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="ovDay">
+  <div class="modal" role="dialog" aria-label="Daily progress" style="max-width:900px">
+    <div class="mhead"><b>Daily progress — last 24 hours</b><span>For each machine, enter the total bored at yesterday's reading and at today's reading. Today minus yesterday is the last 24 hours. Leave today blank to skip a drive.</span></div>
+    <div class="mbody">
+      <div class="mgrid" style="grid-template-columns:200px 1fr;align-items:end">
+        <div><label for="dyDate">Today's reading date</label><input type="date" id="dyDate"></div>
+        <div class="sub" id="dySum" style="padding-bottom:8px"></div>
+      </div>
+      <div class="tblwrap" style="margin-top:12px"><table class="compact" id="dyTbl"></table></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn ghost" data-close="">Cancel</button>
+      <button class="btn" id="dySave">Save daily progress</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="ovMob">
+  <div class="modal" role="dialog" aria-label="Mobilisation" style="max-width:480px">
+    <div class="mhead"><b id="mbTitle"></b><span id="mbMeta"></span></div>
+    <div class="mbody">
+      <div class="mgrid">
+        <div><label for="mbDate">Mobilisation started</label><input type="date" id="mbDate"></div>
+        <div></div>
+        <div class="full"><label for="mbNote">Note (optional)</label><input id="mbNote" placeholder="e.g. 100 t crawler crane on site, jacking frame being set"></div>
+      </div>
+      <p class="note">The drive lights cyan on the alignment map with a crane lowering the MTBM into the launch shaft. It switches to boring by itself when you enter its first metres with Progress.</p>
+    </div>
+    <div class="mfoot">
+      <button class="btn ghost" data-close="">Cancel</button>
+      <button class="btn" id="mbSave" style="background:var(--mob);border-color:var(--mob);color:#06121C">Mark mobilising</button>
     </div>
   </div>
 </div>
@@ -1174,10 +1264,25 @@ function calc(d){
   if(done&&d.g){status='done';label='Complete + grouted'}
   else if(done){status='bored';label='Bored'}
   else if(p>0){status='run';label='In progress'}
+  else if(d.mob){status='mob';label='Mobilising'}
   const stop=status==='run'&&d.ms==='stop';
   if(stop)label='Machine stopped';
-  return{len,p,pct,done,days,rate,delay,status,label,stop,rem:Math.max(0,len-p)};
+  const mobDay=status==='mob'?Math.max(1,dd(d.mob,AS||today())+1):0;
+  return{len,p,pct,done,days,rate,delay,status,label,stop,mobDay,rem:Math.max(0,len-p)};
 }
+/* daily log on each drive: [[date, metres bored that day], ...] — feeds "last 24 hours" */
+const LOGMAX=120;
+function logAdd(d,date,m){
+  m=Math.round((+m||0)*100)/100;if(!date||Math.abs(m)<0.005)return;
+  if(!Array.isArray(d.lg))d.lg=[];
+  const e=d.lg.find(x=>x[0]===date);
+  if(e){e[1]=Math.round((e[1]+m)*100)/100;if(Math.abs(e[1])<0.005)d.lg.splice(d.lg.indexOf(e),1)}
+  else d.lg.push([date,m]);
+  d.lg.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);
+  if(d.lg.length>LOGMAX)d.lg=d.lg.slice(-LOGMAX);
+}
+const dayM=(d,date)=>{const e=Array.isArray(d.lg)?d.lg.find(x=>x[0]===date):null;return e?+e[1]||0:0};
+const hasLog=(d,date)=>Array.isArray(d.lg)&&d.lg.some(x=>x[0]===date);
 function group(l){
   const t={len:0,p:0,days:0,cnt:0,done:0};
   l.forEach(d=>{const c=calc(d);t.len+=c.len;t.p+=c.p;t.days+=c.days;t.cnt++;if(c.done)t.done++});
@@ -1194,6 +1299,8 @@ function cumAt(date,plan){
 const dnOrder=()=>[...new Set(D.map(d=>+d.dn))];
 /* breakthrough: holed through today or yesterday (by the calendar, not the data date) */
 const freshBT=d=>{const c=calc(d);if(!c.done||!d.af)return false;const k=dd(d.af,today());return k>=0&&k<=1};
+const MOBDAYS=15;
+const mobTxt=d=>'mobilising'+(d.mob?' since '+fmt(d.mob)+' · day '+Math.max(1,dd(d.mob,AS||today())+1)+' of '+MOBDAYS+' allowed':'')+(d.mobn?' · '+d.mobn:'');
 const stopTxt=d=>'stopped'+(d.msd?' since '+fmt(d.msd)+(dd(d.msd,today())>0?' ('+dd(d.msd,today())+' d)':''):'')+(d.msr?' \u00b7 '+d.msr:'');
 
 /* ---------- entry sheet ---------- */
@@ -1231,9 +1338,11 @@ function sheet(){
         '<td class="calc">'+(c.rate?n(c.rate,2):'—')+'</td>'+
         '<td class="calc">'+n(c.pct*100,1)+'%</td>'+
         '<td class="calc">'+(c.delay===null?'—':'<span class="'+(c.delay>0?'late':'early')+'">'+(c.delay>0?'+':'')+c.delay+'</span>')+'</td>'+
-        '<td class="pad"><span class="chip c-'+(c.stop?'stop':c.status)+'"'+(c.stop?' title="'+esc(stopTxt(d))+'"':'')+'>'+c.label+'</span></td>'+
+        '<td class="pad"><span class="chip c-'+(c.stop?'stop':c.status)+'"'+(c.stop?' title="'+esc(stopTxt(d))+'"':c.status==='mob'?' title="'+esc(mobTxt(d))+'"':'')+'>'+c.label+(c.status==='mob'?' · day '+c.mobDay:'')+'</span></td>'+
         '<td class="pad" style="white-space:nowrap">'+
           '<button class="mini pri" data-prog="'+i+'">Progress</button>'+
+          (c.status==='idle'?'<button class="mini mob" data-mob="'+i+'" title="Crane lowering the MTBM into the launch shaft">⚙ Mobilise</button>':'')+
+          (c.status==='mob'?'<button class="mini" data-mobx="'+i+'" title="Take the drive back to not started">✕ Mob</button>':'')+
           (c.status==='run'?(c.stop?'<button class="mini rsm" data-run="'+i+'" title="Set the machine running again">\u25B6 Run</button>':'<button class="mini stp" data-stop="'+i+'" title="Machine stopped at the face">\u25A0 Stop</button>'):'')+
           '<button class="mini" data-edit="'+i+'">Edit</button>'+
           '<button class="rowdel" data-del="'+i+'" title="Remove this drive">×</button></td></tr>';
@@ -1253,6 +1362,8 @@ $('tSheet').addEventListener('click',e=>{
   if(b.dataset.prog!==undefined)return openProg(+b.dataset.prog);
   if(b.dataset.edit!==undefined)return openEdit(+b.dataset.edit);
   if(b.dataset.stop!==undefined)return openStop(+b.dataset.stop);
+  if(b.dataset.mob!==undefined)return openMob(+b.dataset.mob);
+  if(b.dataset.mobx!==undefined){const d=D[+b.dataset.mobx];if(!confirm('Cancel mobilisation on '+d.f+' → '+d.t+'?'))return;d.mob='';d.mobn='';save();render();return}
   if(b.dataset.run!==undefined){const d=D[+b.dataset.run];d.ms='';d.msd='';d.msr='';save();render();return}
   if(b.dataset.del!==undefined){
     const i=+b.dataset.del;
@@ -1264,52 +1375,98 @@ $('tSheet').addEventListener('dblclick',e=>{const tr=e.target.closest('tr[data-r
 
 /* ---------- progress dialog ---------- */
 let cur=-1;
-function openProg(i){
+/* one place that moves a drive to a new total bored, keeping dates and the daily log straight */
+function setTotal(d,tot,date){
+  d.p=Math.round(tot*100)/100;
+  if(d.p>0&&!d.as)d.as=date;
+  if(d.p>=(+d.len||0)-0.005){if(!d.af)d.af=date}else d.af='';
+  if(date>AS){AS=date;$('asAt').value=AS}
+}
+/* last-24-hours reading pair: yesterday's total and today's total on a drive */
+function setYT(d,date,y,t){
+  y=Math.round(y*100)/100;t=Math.round(t*100)/100;
+  if(!Array.isArray(d.lg))d.lg=[];
+  d.lg=d.lg.filter(x=>x[0]!==date);
+  if(Math.abs(t-y)>=0.005)d.lg.push([date,Math.round((t-y)*100)/100]);
+  d.lg.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);
+  if(d.lg.length>LOGMAX)d.lg=d.lg.slice(-LOGMAX);
+  d.yt={d:date,y:y,t:t};
+  setTotal(d,t,date);
+}
+const ytOf=(d,date)=>d.yt&&d.yt.d===date?d.yt:null;
+function pgLayout(){
+  const yt=$('pgMode').value==='yt';
+  $('pgValRow').style.display=yt?'none':'';
+  $('pgYRow').style.display=yt?'':'none';$('pgTRow').style.display=yt?'':'none';
+  $('pgDateL').textContent=yt?"Today's reading date":'Date of this figure';
+}
+function openProg(i,md){
   cur=i;const d=D[i],c=calc(d);
   $('pgTitle').textContent=d.sn+'. '+d.f+' → '+d.t;
   $('pgMeta').textContent='DN'+d.dn+' · '+n(c.len,2)+' m drive'+(d.pr?' · '+d.pr:'')+(d.as?' · launched '+fmt(d.as):' · not launched yet');
   $('pgNow').innerHTML='Recorded now: <b>'+n(c.p,2)+' m</b> of '+n(c.len,2)+' m — '+n(c.pct*100,1)+'%, '+n(c.rem,2)+' m remaining'+
     '<div class="bar" style="margin-top:7px"><i style="width:'+(c.pct*100)+'%"></i></div>';
-  $('pgDate').value=AS||today();
-  $('pgMode').value='total';$('pgVal').value='';
+  const date=AS||today();
+  $('pgDate').value=date;
+  $('pgMode').value=md==='add'||md==='yt'?md:'total';$('pgVal').value='';
+  const yt=ytOf(d,date);
+  $('pgY').value=yt?yt.y:c.p;$('pgT').value=yt?yt.t:'';
+  pgLayout();
   $('pgGrout').checked=!!d.g;
   $('pgGroutRow').style.display=c.done?'block':'none';
   document.querySelectorAll('input[name=pgMs]').forEach(r=>r.checked=r.value===(d.ms==='stop'?'stop':'run'));
   $('pgMsr').value=d.msr||'';
   pgPreview();
-  $('ovProg').classList.add('on');setTimeout(()=>$('pgVal').focus(),50);
+  $('ovProg').classList.add('on');setTimeout(()=>($('pgMode').value==='yt'?$('pgT'):$('pgVal')).focus(),50);
+}
+/* the new total the dialog would save, or null */
+function pgTot(c){
+  const m=$('pgMode').value;
+  if(m==='yt'){const t=parseFloat($('pgT').value);return isNaN(t)?null:Math.max(0,t)}
+  const v=parseFloat($('pgVal').value);if(isNaN(v))return null;
+  return Math.max(0,m==='total'?v:c.p+v);
 }
 function pgPreview(){
   const d=D[cur];if(!d)return;const c=calc(d);
-  const raw=$('pgVal').value,v=parseFloat(raw);
-  $('pgVal').placeholder=$('pgMode').value==='total'?n(c.p,2):'0.00';
-  const willDone=raw!==''&&!isNaN(v)?Math.max(0,$('pgMode').value==='total'?v:c.p+v)>=c.len-0.005:c.done;
+  const m=$('pgMode').value;
+  $('pgVal').placeholder=m==='total'?n(c.p,2):'0.00';
+  const tot=pgTot(c);
+  const willDone=tot!==null?tot>=c.len-0.005:c.done;
   $('pgMachRow').style.display=willDone?'none':'block';
   $('pgStopBox').style.display=pgMs()==='stop'?'grid':'none';
-  if(raw===''||isNaN(v)){$('pgPrev').innerHTML='Enter a figure to see where it puts the drive.';return}
-  const tot=Math.max(0,$('pgMode').value==='total'?v:c.p+v);
-  const add=tot-c.p,capped=Math.min(tot,c.len),pc=c.len?capped/c.len*100:0;
-  let msg='New total <b>'+n(tot,2)+' m</b> · '+n(pc,1)+'% · '+(add>=0?'+':'')+n(add,2)+' m since the last figure';
+  if(tot===null){$('pgPrev').innerHTML=m==='yt'?"Enter yesterday's and today's total bored to get the last 24 hours.":'Enter a figure to see where it puts the drive.';return}
+  const capped=Math.min(tot,c.len),pc=c.len?capped/c.len*100:0;
+  let msg;
+  if(m==='yt'){
+    const y=parseFloat($('pgY').value),yy=isNaN(y)?c.p:y,h=tot-yy;
+    msg='Last 24 hours: <b style="font-size:16px">'+sgn(h)+' m</b> &nbsp;('+n(yy,2)+' → '+n(tot,2)+' m) · new total '+n(pc,1)+'%';
+    if(h<0)msg+='<br><span class="late">Today’s total is less than yesterday’s.</span>';
+  }else{
+    const add=tot-c.p;
+    msg='New total <b>'+n(tot,2)+' m</b> · '+n(pc,1)+'% · '+(add>=0?'+':'')+n(add,2)+' m since the last figure';
+  }
   if(tot>c.len+0.005)msg+='<br><span class="late">That is '+n(tot-c.len,2)+' m past the drive length of '+n(c.len,2)+' m.</span>';
   else if(tot>=c.len-0.005)msg+='<br><span class="early">Holes through — the actual finish date will be set to '+fmt($('pgDate').value)+'. Breakthrough fireworks show on the map that day and the next.</span>';
   else if(!d.as)msg+='<br>The actual start date will be set to '+fmt($('pgDate').value)+'.';
   $('pgPrev').innerHTML=msg;
 }
-$('pgVal').addEventListener('input',pgPreview);
-$('pgMode').addEventListener('change',()=>{$('pgVal').value='';pgPreview()});
-$('pgDate').addEventListener('change',pgPreview);
+['pgVal','pgY','pgT'].forEach(id=>$(id).addEventListener('input',pgPreview));
+$('pgMode').addEventListener('change',()=>{$('pgVal').value='';pgLayout();pgPreview()});
+$('pgDate').addEventListener('change',()=>{const d=D[cur];if(d&&$('pgMode').value==='yt'){const yt=ytOf(d,$('pgDate').value);if(yt){$('pgY').value=yt.y;$('pgT').value=yt.t}}pgPreview()});
 const pgMs=()=>(document.querySelector('input[name=pgMs]:checked')||{}).value||'run';
 document.querySelectorAll('input[name=pgMs]').forEach(r=>r.addEventListener('change',pgPreview));
 $('pgSave').onclick=()=>{
   const d=D[cur];if(!d)return;
-  const c=calc(d),date=$('pgDate').value||AS,v=parseFloat($('pgVal').value);
-  if(!isNaN(v)){
-    const tot=Math.max(0,$('pgMode').value==='total'?v:c.p+v);
+  const c=calc(d),date=$('pgDate').value||AS,tot=pgTot(c);
+  if(tot!==null){
     if(tot>c.len+0.005&&!confirm('That is past the drive length of '+n(c.len,2)+' m. Save anyway?'))return;
-    d.p=Math.round(tot*100)/100;
-    if(d.p>0&&!d.as)d.as=date;
-    if(d.p>=(+d.len||0)-0.005){if(!d.af)d.af=date}else d.af='';
-    if(date>AS){AS=date;$('asAt').value=AS}
+    if($('pgMode').value==='yt'){
+      const y=parseFloat($('pgY').value);
+      setYT(d,date,isNaN(y)?c.p:y,tot);
+    }else{
+      logAdd(d,date,Math.round(tot*100)/100-c.p);
+      setTotal(d,tot,date);
+    }
   }
   if($('pgGroutRow').style.display!=='none')d.g=$('pgGrout').checked?1:0;
   if(calc(d).done){d.ms='';d.msd='';d.msr=''}
@@ -1317,8 +1474,49 @@ $('pgSave').onclick=()=>{
   else{d.ms='';d.msd='';d.msr=''}
   close();save();render();
 };
+/* ---------- daily 24 h entry: every machine on one sheet ---------- */
+let dyRows=[];
+function openDay(only){
+  const date=AS||today();$('dyDate').value=date;
+  dyRows=D.map((d,i)=>i).filter(i=>{const c=calc(D[i]);return c.status==='run'||c.status==='mob'||hasLog(D[i],date)||(D[i].af&&D[i].af===date)});
+  if(only!=null&&dyRows.indexOf(only)<0)dyRows.unshift(only);
+  dyFill();
+  $('ovDay').classList.add('on');
+  setTimeout(()=>{const e=document.querySelector('#dyTbl input[data-t]');if(e)e.focus()},60);
+}
+function dyFill(){
+  const date=$('dyDate').value||AS||today();
+  $('dyTbl').innerHTML='<thead><tr><th>S/N</th><th>Drive</th><th class="n">DN</th><th>Contract</th><th class="n">Length m</th><th class="n">Yesterday total m</th><th class="n">Today total m</th><th class="n">Last 24 h</th></tr></thead><tbody>'+
+    (dyRows.length?dyRows.map(i=>{const d=D[i],c=calc(d),yt=ytOf(d,date);
+      return '<tr data-i="'+i+'"><td>'+esc(d.sn)+'</td><td>'+esc(d.f)+' → '+esc(d.t)+(c.stop?' <span class="chip c-stop">Stopped</span>':c.status==='mob'?' <span class="chip c-mob">Mobilising</span>':'')+'</td><td class="n">'+esc(d.dn)+'</td><td>'+esc(d.pr||'')+'</td><td class="n">'+n(c.len,1)+'</td>'+
+        '<td class="n"><input type="number" step="0.01" min="0" data-y value="'+(yt?yt.y:c.p)+'"></td>'+
+        '<td class="n"><input type="number" step="0.01" min="0" data-t value="'+(yt?yt.t:'')+'" placeholder="'+n(c.p,2)+'"></td>'+
+        '<td class="dv">—</td></tr>'}).join('')
+     :'<tr><td colspan="8" class="sub">No machine is boring or mobilising.</td></tr>')+'</tbody>';
+  dyCalc();
+}
+function dyCalc(){
+  let tot=0,k=0;
+  document.querySelectorAll('#dyTbl tr[data-i]').forEach(tr=>{
+    const y=parseFloat(tr.querySelector('[data-y]').value),t=parseFloat(tr.querySelector('[data-t]').value),cell=tr.querySelector('.dv');
+    if(isNaN(t)||isNaN(y)){cell.textContent='—';tr.classList.remove('warn');return}
+    const h=t-y;cell.textContent=sgn(h)+' m';tr.classList.toggle('warn',h<0);tot+=h;k++;
+  });
+  $('dySum').innerHTML=k?'Total last 24 hours: <b style="font-size:16px;color:var(--led-y)">'+sgn(tot)+' m</b> from '+k+' machine'+(k===1?'':'s'):'Enter today’s totals to see the last 24 hours.';
+}
+$('dyTbl').addEventListener('input',dyCalc);
+$('dyDate').addEventListener('change',dyFill);
+$('dySave').onclick=()=>{
+  const date=$('dyDate').value||AS||today();let k=0,over=[];
+  const rows=[...document.querySelectorAll('#dyTbl tr[data-i]')].map(tr=>({d:D[+tr.dataset.i],y:parseFloat(tr.querySelector('[data-y]').value),t:parseFloat(tr.querySelector('[data-t]').value)})).filter(r=>!isNaN(r.t));
+  rows.forEach(r=>{if(r.t>(+r.d.len||0)+0.005)over.push(r.d.sn)});
+  if(over.length&&!confirm('Drive '+over.join(', ')+' goes past its drive length. Save anyway?'))return;
+  rows.forEach(r=>{setYT(r.d,date,isNaN(r.y)?calc(r.d).p:r.y,Math.max(0,r.t));if(calc(r.d).done){r.d.ms='';r.d.msd='';r.d.msr=''}k++});
+  close();save();render();
+};
+$('dayBtn').onclick=()=>openDay();
 /* ---------- edit dialog ---------- */
-const EF=[['efSn','sn'],['efFrom','f'],['efTo','t'],['efDn','dn'],['efLen','len'],['efPs','ps'],['efPf','pf'],['efAs','as'],['efAf','af'],['efP','p'],['efPr','pr']];
+const EF=[['efSn','sn'],['efFrom','f'],['efTo','t'],['efDn','dn'],['efLen','len'],['efPs','ps'],['efPf','pf'],['efAs','as'],['efAf','af'],['efP','p'],['efPr','pr'],['efMob','mob'],['efMobn','mobn']];
 function openEdit(i){
   cur=i;const d=D[i];
   $('efTitle').textContent='Edit '+(d.f||'new drive')+(d.t?' → '+d.t:'');
@@ -1330,7 +1528,9 @@ function openEdit(i){
 }
 $('efSave').onclick=()=>{
   const d=D[cur];if(!d)return;
+  const p0=+d.p||0;
   EF.forEach(([id,k])=>{const el=$(id);d[k]=el.type==='number'?(el.value===''?0:+el.value):el.value});
+  if(Math.abs((+d.p||0)-p0)>0.005)logAdd(d,AS||today(),(+d.p||0)-p0);
   d.g=+$('efG').value;
   d.ms=$('efMs').value;d.msd=d.ms?($('efMsd').value||d.msd||AS||today()):'';d.msr=d.ms?$('efMsr').value.trim():'';
   if(calc(d).done){d.ms='';d.msd='';d.msr=''}
@@ -1351,7 +1551,17 @@ function openStop(i){
 }
 $('stSave').onclick=()=>{const d=D[cur];if(!d)return;
   d.ms='stop';d.msd=$('stDate').value||today();d.msr=$('stReason').value.trim();close();save();render()};
-function close(){['ovProg','ovEdit','ovPrint','ovStop'].forEach(id=>$(id).classList.remove('on'));if(lkDone)lkClose(false);cur=-1}
+/* ---------- mobilisation dialog ---------- */
+function openMob(i){
+  cur=i;const d=D[i],c=calc(d);
+  $('mbTitle').textContent='Mobilisation — '+d.sn+'. '+d.f+' → '+d.t;
+  $('mbMeta').textContent='DN'+d.dn+' · '+n(c.len,1)+' m drive · crane lowers the MTBM into '+d.f+' · '+MOBDAYS+' days allowed for mobilisation, grouting and demobilisation';
+  $('mbDate').value=d.mob||AS||today();$('mbNote').value=d.mobn||'';
+  $('ovMob').classList.add('on');setTimeout(()=>$('mbNote').focus(),50);
+}
+$('mbSave').onclick=()=>{const d=D[cur];if(!d)return;
+  d.mob=$('mbDate').value||AS||today();d.mobn=$('mbNote').value.trim();close();save();render()};
+function close(){['ovProg','ovEdit','ovPrint','ovStop','ovMob','ovDay'].forEach(id=>$(id).classList.remove('on'));if(lkDone)lkClose(false);cur=-1}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)close()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
@@ -1375,21 +1585,22 @@ function render(){try{render_()}catch(e){
 function render_(){
   const T=group(D);
   const run=D.filter(d=>{const c=calc(d);return c.p>0&&!c.done});
-  const idle=D.filter(d=>calc(d).p===0);
+  const idle=D.filter(d=>calc(d).status==='idle');
+  const mobL=D.filter(d=>calc(d).status==='mob');
   const doneN=D.filter(d=>calc(d).done).length;
   const grouted=D.filter(d=>calc(d).done&&d.g).length;
   const stopped=run.filter(d=>calc(d).stop);
-  btBanner();
+  btBanner();h24();
   $('asAtPrint').textContent='Data date '+fmt(AS);
   $('kpis').innerHTML=[
     ['hi',n(T.pct*100,1)+'%','Bored by length',n(T.p,0)+' of '+n(T.len,0)+' m','g',T.pct],
     ['',n(T.len,0)+' m','Total drive length',D.length+' drives in the register',''],
     ['gr',n(T.p,0)+' m','Completed length',doneN+' drives holed through, '+grouted+' grouted','g',D.length?doneN/D.length:0],
     ['',n(T.rem,0)+' m','Remaining length',(D.length-doneN)+' drives outstanding','r',T.len?T.rem/T.len:0],
-    ['run',run.length,'Boring now',idle.length+' yet to launch'+(stopped.length?' \u00b7 <em style="font-style:normal;font-weight:600;color:var(--stop)">'+stopped.length+' machine'+(stopped.length>1?'s':'')+' stopped</em>':''),run.length?'y':''],
+    ['run',run.length,'Boring now',idle.length+' yet to launch'+(mobL.length?' · <em style="font-style:normal;font-weight:600;color:var(--mob)">'+mobL.length+' mobilising</em>':'')+(stopped.length?' \u00b7 <em style="font-style:normal;font-weight:600;color:var(--stop)">'+stopped.length+' machine'+(stopped.length>1?'s':'')+' stopped</em>':''),run.length?'y':''],
     ['',n(T.rate,1)+' m','Average per boring day',T.days+' boring days recorded','']
   ].map(k=>'<div class="kpi '+k[0]+'"><b class="num">'+k[1]+'</b><span>'+(k[4]?'<i class="led '+k[4]+'"></i>':'')+k[2]+'</span><small>'+k[3]+'</small>'+(k[5]!=null?'<i class="kbar"><i style="width:'+Math.min(100,k[5]*100).toFixed(1)+'%"></i></i>':'')+'</div>').join('');
-  ring(T);contracts();alignMap();cdnTable();dnChart();prChart();moChart();drChart();curve();
+  ring(T);contracts();perDay();alignMap();cdnTable();dnChart();prChart();moChart();drChart();curve();
   $('tRun').innerHTML=run.length
     ?'<thead><tr><th>S/N</th><th>Drive</th><th class="n">DN</th><th class="n">Total m</th><th class="n">Bored m</th><th class="n">Left m</th><th style="width:110px">Progress</th><th class="n">m/day</th><th>Started</th><th>Machine</th></tr></thead><tbody>'+
      run.map(d=>{const c=calc(d);
@@ -1407,6 +1618,68 @@ function render_(){
     :'<tbody><tr><td class="sub">Nothing finished behind baseline.</td></tr></tbody>';
   sheet();gantt();
   celebrate();
+}
+/* ---------- last 24 hours: what the running machines bored on the data date ---------- */
+const sgn=v=>(v>=0?'+':'−')+n(Math.abs(v),1);
+function h24(){
+  const e=$('h24');if(!e)return;
+  const day=AS||today(),prev=addD(day,-1),edit=!(RO||VIEWER);
+  const rows=D.map((d,i)=>({d,i,c:calc(d),m:dayM(d,day),has:hasLog(d,day)}))
+    .filter(o=>o.c.status==='run'||o.has).sort((a,b)=>b.m-a.m||(+a.d.sn||0)-(+b.d.sn||0));
+  const tot=rows.reduce((s,o)=>s+o.m,0),ptot=D.reduce((s,d)=>s+dayM(d,prev),0);
+  const anyLog=rows.some(o=>o.has),anyPrev=D.some(d=>hasLog(d,prev));
+  const nRun=rows.filter(o=>o.c.status==='run'&&!o.c.stop).length,nStop=rows.filter(o=>o.c.stop).length;
+  const names=[...new Set(D.map(d=>d.pr).filter(Boolean))].sort(),acc=['var(--c1)','var(--c2)'];
+  const prs=names.map((nm,k)=>{const L=D.filter(d=>d.pr===nm),s=L.reduce((a,d)=>a+dayM(d,day),0);
+    return '<span style="--acc:'+acc[k%2]+'">'+esc(nm)+' '+(L.some(d=>hasLog(d,day))?sgn(s)+' m':'\u2014')+'</span>'}).join('');
+  const tiles=rows.map(o=>{
+    const d=o.d,c=o.c,tc=c.stop?'var(--stop)':c.done?'var(--led-g)':o.has?'var(--led-y)':'var(--ink3)';
+    const l2=c.stop?'<span style="color:var(--stop);font-weight:600">Machine '+esc(stopTxt(d))+'</span>'
+      :c.done?'<span style="color:var(--led-g);font-weight:600">Holed through '+esc(fmt(d.af))+'</span>'
+      :!o.has?'No figure entered for '+esc(fmt(day))
+      :ytOf(d,day)?'yesterday '+n(ytOf(d,day).y,1)+' \u2192 today '+n(ytOf(d,day).t,1)+' m'
+      :(c.rate?'average '+n(c.rate,1)+' m/day':'');
+    return '<div class="h24t" style="--tc:'+tc+'">'+
+      (edit&&c.status==='run'?'<button class="mini add" type="button" data-h24="'+o.i+'" title="Enter yesterday\u2019s and today\u2019s totals for '+esc(fmt(day))+'">Enter 24 h</button>':'')+
+      '<div class="d">'+esc(d.sn)+'. '+esc(d.f)+' → '+esc(d.t)+' <em>DN'+esc(d.dn)+'</em></div>'+
+      '<b>'+(o.has?sgn(o.m)+' m':'—')+'</b>'+
+      '<small>'+n(c.p,1)+' / '+n(c.len,1)+' m · '+n(c.pct*100,1)+'%'+(d.pr?' · '+esc(d.pr):'')+'</small>'+
+      '<small>'+l2+'</small></div>'}).join('');
+  e.innerHTML='<div class="h24main"><span class="k"><i class="led '+(nRun?'y':'')+'"></i>Last 24 hours</span>'+
+    '<b class="v">'+(anyLog?sgn(tot):'—')+' m</b>'+
+    '<small>'+esc(fmt(day))+' · '+nRun+' machine'+(nRun===1?'':'s')+' running'+(nStop?' · <span style="color:var(--stop);font-weight:600">'+nStop+' stopped</span>':'')+'</small>'+
+    (anyPrev?'<small>day before: '+sgn(ptot)+' m</small>':'')+
+    '<div class="prs">'+prs+(edit?'<button class="btn dayall" type="button" id="h24Day">Daily 24 h entry</button>':'')+'</div></div>'+
+    '<div class="h24m">'+(tiles||'<div class="h24none">No machine is boring at the data date.</div>')+'</div>';
+}
+$('h24').addEventListener('click',e=>{if(e.target.closest('#h24Day'))return openDay();const b=e.target.closest('[data-h24]');if(b)openProg(+b.dataset.h24,'yt')});
+/* ---------- per-day progress, DN by DN, each contract on its own ---------- */
+function perDay(){
+  const host=$('pdRow');if(!host)return;
+  const names=[...new Set(D.map(d=>d.pr).filter(Boolean))].sort(),acc=['var(--c1)','var(--c2)'],day=AS||today();
+  const stats=l=>{
+    const g=group(l);let best=null;
+    l.forEach(d=>{const q=calc(d);if(q.rate&&(!best||q.rate>best.r))best={r:q.rate,d:d}});
+    const rl=l.filter(d=>calc(d).status==='run');
+    return{g:g,best:best,rl:rl,rr:rl.length?rl.reduce((s,d)=>s+calc(d).rate,0)/rl.length:0,
+      h:l.reduce((s,d)=>s+dayM(d,day),0),hh:l.some(d=>hasLog(d,day)),st:l.filter(d=>calc(d).p>0).length};
+  };
+  const cells=(r,c,mx)=>'<td class="n">'+r.st+' of '+r.g.cnt+'</td><td class="n">'+n(r.g.p,1)+'</td><td class="n">'+(r.g.days||'—')+'</td>'+
+    '<td><div style="display:flex;align-items:center;gap:8px"><b class="num" style="min-width:34px;text-align:right">'+(r.g.days?n(r.g.rate,1):'—')+'</b>'+
+    (mx?'<div class="pdbar" style="--acc:'+c+';flex:1"><i style="width:'+Math.min(100,r.g.rate/mx*100).toFixed(1)+'%"></i></div>':'')+'</div></td>'+
+    '<td class="n">'+(r.best?n(r.best.r,1)+' <span class="sub">#'+esc(r.best.d.sn)+'</span>':'—')+'</td>'+
+    '<td class="n">'+(r.rl.length?n(r.rr,1)+' <span class="sub">('+r.rl.length+')</span>':'—')+'</td>'+
+    '<td class="n" style="font-weight:600;color:'+(r.hh&&r.h?'var(--led-y)':'var(--ink3)')+'">'+(r.hh?sgn(r.h):'—')+'</td>';
+  host.innerHTML=names.map((nm,k)=>{
+    const list=D.filter(d=>d.pr===nm),c=acc[k%2],A=stats(list);
+    const R=[...new Set(list.map(d=>+d.dn))].sort((a,b)=>a-b).map(x=>Object.assign({x:x},stats(list.filter(d=>+d.dn===x))));
+    const mx=Math.max(1,...R.map(r=>r.g.rate));
+    return '<div><div class="pdhead" style="--acc:'+c+'"><b>'+esc(nm)+'</b><span>'+n(A.g.rate,1)+' m/day overall · last 24 h '+(A.hh?sgn(A.h)+' m':'—')+'</span></div>'+
+      '<div class="tblwrap" style="margin-top:8px"><table class="compact"><thead><tr><th>DN</th><th class="n">Drives started</th><th class="n">Bored m</th><th class="n">Boring days</th>'+
+      '<th style="min-width:130px">Average m/day</th><th class="n">Best drive m/day</th><th class="n">Boring now m/day</th><th class="n">Last 24 h m</th></tr></thead><tbody>'+
+      R.map(r=>'<tr><td><b>DN-'+r.x+'</b></td>'+cells(r,c,mx)+'</tr>').join('')+
+      '</tbody><tfoot><tr><td>All DN</td>'+cells(A,c,0)+'</tr></tfoot></table></div></div>';
+  }).join('');
 }
 function sumTable(id,head,rows){
   const T=group(D);
@@ -1494,7 +1767,7 @@ function contracts(){
   $('contractRow').innerHTML=names.map((nm,k)=>{
     const list=D.filter(d=>d.pr===nm),g=group(list),c=acc[k%2];
     const run=list.filter(d=>{const x=calc(d);return x.p>0&&!x.done}).length;
-    const stp=list.filter(d=>calc(d).stop).length;
+    const stp=list.filter(d=>calc(d).stop).length,mob=list.filter(d=>calc(d).status==='mob').length;
     const R=44,C=2*Math.PI*R;
     const dnRows=dnOrder().sort((a,b)=>a-b).map(x=>[x,group(list.filter(d=>+d.dn===x))]).filter(r=>r[1].cnt);
     return '<div class="card cpanel">'+
@@ -1509,16 +1782,16 @@ function contracts(){
           '<div class="cprow"><span>Total drive length</span><b>'+n(g.len,0)+' m</b></div>'+
           '<div class="cprow"><span>Completed length</span><b style="color:'+c+'">'+n(g.p,0)+' m</b></div>'+
           '<div class="cprow"><span>Remaining length</span><b>'+n(g.rem,0)+' m</b></div>'+
-          '<div class="cprow"><span>Boring now</span><b>'+run+' of '+(g.cnt-g.done)+' outstanding'+(stp?' <span style="color:var(--stop)">\u00b7 '+stp+' stopped</span>':'')+'</b></div>'+
+          '<div class="cprow"><span>Boring now</span><b>'+run+' of '+(g.cnt-g.done)+' outstanding'+(stp?' <span style="color:var(--stop)">\u00b7 '+stp+' stopped</span>':'')+(mob?' <span style="color:var(--mob)">\u00b7 '+mob+' mobilising</span>':'')+'</b></div>'+
           '<div class="cprow"><span>Average rate</span><b>'+n(g.rate,1)+' m/day</b></div>'+
         '</div></div>'+
       '<div class="cpdn">'+dnRows.map(([x,gg])=>{
         const dl=list.filter(d=>+d.dn===x);
         const rn=dl.filter(d=>{const y=calc(d);return y.p>0&&!y.done}).length;
-        const iN=dl.filter(d=>calc(d).p===0).length;
+        const iN=dl.filter(d=>calc(d).status==='idle').length,mN=dl.filter(d=>calc(d).status==='mob').length;
         return '<div class="l"><span>DN-'+x+' · '+gg.cnt+' drive'+(gg.cnt===1?'':'s')+'</span><em>'+n(gg.p,0)+' / '+n(gg.len,0)+' m · '+n(gg.pct*100,0)+'%</em></div>'+
         '<div class="bar"><i style="width:'+(gg.pct*100)+'%;background:'+c+';box-shadow:0 0 8px '+c+'"></i></div>'+
-        '<div class="dnsub"><i class="led g" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+gg.done+'</b> done &nbsp; <i class="led '+(rn?'y':'')+'" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+rn+'</b> boring &nbsp; <i class="led r" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+iN+'</b> to start &nbsp;·&nbsp; <b>'+
+        '<div class="dnsub"><i class="led g" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+gg.done+'</b> done &nbsp; <i class="led '+(rn?'y':'')+'" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+rn+'</b> boring &nbsp; <i class="led r" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+iN+'</b> to start'+(mN?' &nbsp; <i class="led m" style="width:6px;height:6px;flex-basis:6px"></i> <b>'+mN+'</b> mobilising':'')+' &nbsp;·&nbsp; <b>'+
           n(gg.rem,0)+' m</b> left</div>'}).join('')+
       '</div></div>';
   }).join('');
@@ -1529,9 +1802,9 @@ function cdnTable(){
   const cell=l=>{
     const g=group(l);
     const rn=l.filter(d=>{const c=calc(d);return c.p>0&&!c.done}).length;
-    const iN=l.filter(d=>calc(d).p===0).length;
+    const iN=l.filter(d=>calc(d).status==='idle').length,mN=l.filter(d=>calc(d).status==='mob').length;
     return '<td class="n">'+g.cnt+'</td><td class="n" style="color:var(--ok);font-weight:600">'+g.done+
-      '</td><td class="n">'+rn+'</td><td class="n">'+iN+'</td><td class="n">'+n(g.len,0)+
+      '</td><td class="n">'+rn+'</td><td class="n"'+(mN?' style="color:var(--mob);font-weight:600"':'')+'>'+mN+'</td><td class="n">'+iN+'</td><td class="n">'+n(g.len,0)+
       '</td><td class="n">'+n(g.p,0)+'</td><td class="n">'+n(g.rem,0)+'</td><td class="n">'+n(g.pct*100,0)+'%</td>';
   };
   let body='';
@@ -1540,14 +1813,14 @@ function cdnTable(){
     [...new Set(list.map(d=>+d.dn))].sort((a,b)=>a-b).forEach(x=>{
       const l=list.filter(d=>+d.dn===x);
       const left=l.filter(d=>!calc(d).done).map(d=>{const c=calc(d);
-        return esc(d.f)+' → '+esc(d.t)+(c.p>0?' ('+n(c.pct*100,0)+'%)':'')});
+        return esc(d.f)+' → '+esc(d.t)+(c.p>0?' ('+n(c.pct*100,0)+'%)':c.status==='mob'?' <span style="color:var(--mob)">(mobilising)</span>':'')});
       body+='<tr><td>'+esc(nm)+'</td><td><b>DN-'+x+'</b></td>'+cell(l)+
         '<td class="wrapcell">'+(left.length?left.join(' · '):'<span class="early">all through</span>')+'</td></tr>';
     });
     body+='<tr class="grp"><td>'+esc(nm)+'</td><td>all DN</td>'+cell(list)+'<td class="wrapcell"></td></tr>';
   });
   $('tCdn').innerHTML='<thead><tr><th>Contract</th><th>Diameter</th><th class="n">Drives</th><th class="n">Done</th>'+
-    '<th class="n">Boring</th><th class="n">To start</th><th class="n">Total m</th><th class="n">Bored m</th>'+
+    '<th class="n">Boring</th><th class="n">Mobilising</th><th class="n">To start</th><th class="n">Total m</th><th class="n">Bored m</th>'+
     '<th class="n">Left m</th><th class="n">%</th><th>Drives still to complete</th></tr></thead><tbody>'+body+'</tbody>';
 }
 function dnChart(){
@@ -1579,17 +1852,17 @@ function moChart(){
 }
 function drChart(){
   if(!D.length){$('drChart').innerHTML='';return}
-  const col={done:'var(--led-g)',bored:'var(--bored)',run:'var(--led-y)',idle:'var(--idlebar)'};
+  const col={done:'var(--led-g)',bored:'var(--bored)',run:'var(--led-y)',idle:'var(--idlebar)',mob:'var(--mob)'};
   const W=980,H=170,pad={l:34,r:6,t:10,b:30},bw=(W-pad.l-pad.r)/D.length,ch=H-pad.t-pad.b;
   let g='';for(let i=0;i<=4;i++){const y=H-pad.b-ch*i/4;
     g+='<line x1="'+pad.l+'" x2="'+(W-pad.r)+'" y1="'+y+'" y2="'+y+'" stroke="var(--rule)"/><text x="'+(pad.l-6)+'" y="'+(y+4)+'" font-size="10" fill="var(--ink3)" text-anchor="end">'+(i*25)+'%</text>'}
   $('drChart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+D.map((d,i)=>{
     const c=calc(d),x=pad.l+i*bw+bw*0.13,w=bw*0.74,hgt=ch*c.pct,y=H-pad.b-hgt,fc=c.stop?'var(--stop)':col[c.status];
-    return '<rect x="'+x.toFixed(1)+'" y="'+(H-pad.b-ch)+'" width="'+w.toFixed(1)+'" height="'+ch+'" fill="var(--bar0)" rx="1"/>'+
+    return '<rect x="'+x.toFixed(1)+'" y="'+(H-pad.b-ch)+'" width="'+w.toFixed(1)+'" height="'+ch+'" fill="'+(c.status==='mob'?'var(--mob)':'var(--bar0)')+'"'+(c.status==='mob'?' fill-opacity=".28"':'')+' rx="1"/>'+
       '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1,hgt).toFixed(1)+'" fill="'+fc+'" rx="1"'+(c.status==='run'||c.status==='done'?' style="filter:drop-shadow(0 0 3px '+fc+')"':'')+'><title>'+esc(d.f)+' → '+esc(d.t)+' · DN'+d.dn+' · '+n(c.p,1)+' of '+n(c.len,1)+' m · '+n(c.pct*100,1)+'%'+(c.stop?' · machine '+esc(stopTxt(d)):'')+'</title></rect>'+
       '<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-17)+'" font-size="9" fill="var(--ink2)" text-anchor="middle">'+esc(d.sn)+'</text>'+
       (i===0||+D[i-1].dn!==+d.dn?'<text x="'+x.toFixed(1)+'" y="'+(H-5)+'" font-size="10" font-weight="600" fill="var(--ink)">DN'+d.dn+'</text>':'')}).join('')+'</svg>';
-  legend('drLeg',[[col.done,'Complete + grouted'],[col.bored,'Bored, grouting due'],[col.run,'In progress'],['var(--stop)','Machine stopped'],[col.idle,'Not started']]);
+  legend('drLeg',[[col.done,'Complete + grouted'],[col.bored,'Bored, grouting due'],[col.run,'In progress'],['var(--stop)','Machine stopped'],[col.mob,'Mobilising'],[col.idle,'Not started']]);
 }
 
 /* ---------- alignment map ---------- */
@@ -1608,36 +1881,38 @@ function alignMap(){
         showDn=$('mapDn')?$('mapDn').checked:false,
         showSn=$('mapSn')?$('mapSn').checked:false,
         showAr=$('mapLR')?$('mapLR').checked:true,
-        showCo=$('mapCo')?$('mapCo').checked:true;
+        showCo=$('mapCo')?$('mapCo').checked:true,
+        showMob=$('mapMob')?$('mapMob').checked:true;
   const C=isClassic()
     ?{classic:true,plan:'#E03A2B',run:'#F79009',done:'#12B76A',ink:'#16242C',frame:'#8FA0A9',mag:'#CC00CC',tag:'#AEBBC2',
       bg:'#FFFFFF',panel:'#FFFFFF',callout:'#FFF6E8',house:'#FFFFFF',dim:'#8FA0A9',dot:'#FFFFFF',vig:'#FFFFFF',
       coreG:'#12B76A',coreY:'#FCE3B8',hotG:'#FFFFFF',hotY:'#FFFFFF',chase:'#FFFFFF',
       liveRing:'#16242C',offRing:'#16242C',leader:'#93A2AA',tagLive:'#AEBBC2',tagTxtLive:'#16242C',tagTxt:'#16242C',
       box:'#16242C',lgTxt:'#16242C',noteTxt:'#16242C',dnTxt:'#3D4C55',scale:'#42525C',scaleTxt:'#42525C',glowOp:'0',idleOp:'1',
-      stop:'#C01048',coreR:'#FFE4E8',hotR:'#FFFFFF'}
+      stop:'#C01048',coreR:'#FFE4E8',hotR:'#FFFFFF',mob:'#0E7490',coreM:'#CFF4FA',hotM:'#FFFFFF'}
     :isLight()
     ?{plan:'#E0483C',run:'#F2A900',done:'#12B866',ink:'#12212B',frame:'#B5C3CD',mag:'#A23BD6',tag:'#B5C3CD',
       bg:'#F7FAFC',panel:'#FFFFFF',house:'#DDE6EC',dim:'#7C8E9A',dot:'#DCE5EB',vig:'#C9D6DF',
       coreG:'#0C8A4C',coreY:'#B37A00',hotG:'#EFFFF6',hotY:'#FFF8DD',chase:'#FFFFFF',
       liveRing:'#0B6B3A',offRing:'#8FA2AE',leader:'#A9B8C2',tagLive:'#79C8A0',tagTxtLive:'#0B4F2C',tagTxt:'#3A4D59',
       box:'#7E93A1',lgTxt:'#2E414D',noteTxt:'#3A4D59',dnTxt:'#44576A',scale:'#7C8E9A',scaleTxt:'#4B5E6A',glowOp:'.55',idleOp:'.55',
-      stop:'#D92D20',coreR:'#9E1B12',hotR:'#FFEDEB'}
+      stop:'#D92D20',coreR:'#9E1B12',hotR:'#FFEDEB',mob:'#0891B2',coreM:'#0E6A80',hotM:'#E6FAFE'}
     :{plan:'#FF5B4F',run:'#FFC83D',done:'#3BF08C',ink:'#E4EDF3',frame:'#2A4358',mag:'#C77DFF',tag:'#34536B',
       bg:'#08131C',panel:'#0E1D2A',house:'#12263A',dim:'#6D8597',dot:'#1A3144',vig:'#040A10',
       coreG:'#0C6A3C',coreY:'#6B4E0C',hotG:'#E2FFEE',hotY:'#FFF6D6',chase:'#FFFBEA',
       liveRing:'#E2FFEE',offRing:'#5C7488',leader:'#3E5970',tagLive:'#2F6B52',tagTxtLive:'#E6FFF1',tagTxt:'#B9C9D5',
       box:'#3A5A74',lgTxt:'#C9D7E1',noteTxt:'#B9C9D5',dnTxt:'#AFC2D0',scale:'#6D8597',scaleTxt:'#9DB2C1',glowOp:'.9',idleOp:'.42',
-      stop:'#FF3B30',coreR:'#6B1612',hotR:'#FFE4E1'};
+      stop:'#FF3B30',coreR:'#6B1612',hotR:'#FFE4E1',mob:'#22D3EE',coreM:'#0B4F5C',hotM:'#E0FBFF'};
   /* one LED strip between two points: a dark housing, a blurred glow (lit only)
      and a row of beads. kind: done | bored | run | idle */
   const strip=(x1,y1,x2,y2,w,kind,chase)=>{
     const L='x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'"';
     const p=(w+3.2).toFixed(1),cap=' stroke-linecap="round"';
-    const col=kind==='run'?C.run:kind==='stop'?C.stop:kind==='idle'?C.plan:C.done;
+    const col=kind==='run'?C.run:kind==='stop'?C.stop:kind==='mob'?C.mob:kind==='idle'?C.plan:C.done;
     if(C.classic){   /* the original drawing: white casing, solid colour, dashed white for grouting due */
       let bd='<line '+L+' stroke="#fff" stroke-width="'+(w+4).toFixed(1)+'"'+cap+'/><line '+L+' stroke="'+col+'" stroke-width="'+w.toFixed(1)+'"'+cap+'/>';
       if(kind==='bored')bd+='<line '+L+' stroke="#fff" stroke-width="1.5" stroke-dasharray="5 5"/>';
+      if(kind==='mob')bd+='<line '+L+' stroke="#fff" stroke-width="1.6" stroke-dasharray="9 4 2 4"/>';
       return{glow:'',body:bd};
     }
     let glow='',body='<line '+L+' stroke="'+C.house+'" stroke-width="'+(w+5).toFixed(1)+'"'+cap+'/>';
@@ -1647,13 +1922,13 @@ function alignMap(){
       return{glow,body};
     }
     glow='<line '+L+' stroke="'+col+'" stroke-width="'+(w+3).toFixed(1)+'"'+(kind==='bored'?' stroke-opacity=".5"':'')+cap+'/>';
-    body+='<line '+L+' stroke="'+(kind==='run'?C.coreY:kind==='stop'?C.coreR:C.coreG)+'" stroke-width="'+w.toFixed(1)+'"'+cap+'/>';
+    body+='<line '+L+' stroke="'+(kind==='run'?C.coreY:kind==='stop'?C.coreR:kind==='mob'?C.coreM:C.coreG)+'" stroke-width="'+w.toFixed(1)+'"'+cap+'/>';
     if(kind==='bored'){
       body+='<line '+L+' stroke="'+col+'" stroke-opacity=".45" stroke-width="'+(w*.9).toFixed(1)+'" stroke-dasharray="0 '+p+'"'+cap+'/>'+
             '<line '+L+' stroke="'+col+'" stroke-width="'+(w*.9).toFixed(1)+'" stroke-dasharray="0 '+(p*2).toFixed(1)+'"'+cap+'/>';
     }else{
       body+='<line '+L+' stroke="'+col+'" stroke-width="'+(w*.95).toFixed(1)+'" stroke-dasharray="0 '+p+'"'+cap+'/>'+
-            '<line '+L+' stroke="'+(kind==='run'?C.hotY:kind==='stop'?C.hotR:C.hotG)+'" stroke-width="'+(w*.42).toFixed(1)+'" stroke-dasharray="0 '+p+'"'+cap+'/>';
+            '<line '+L+' stroke="'+(kind==='run'?C.hotY:kind==='stop'?C.hotR:kind==='mob'?C.hotM:C.hotG)+'" stroke-width="'+(w*.42).toFixed(1)+'" stroke-dasharray="0 '+p+'"'+cap+'/>';
     }
     if(chase)body+='<line '+L+' class="chase" stroke="'+C.chase+'" stroke-width="'+(w*1.05).toFixed(1)+'" stroke-dasharray="0 16"'+cap+'/>';
     return{glow,body};
@@ -1689,7 +1964,7 @@ function alignMap(){
     for(let t=-7;t<=7;t+=3.5)h+='<polygon points="'+(fx+2).toFixed(1)+','+(y+t-1.4).toFixed(1)+' '+(fx+5.5).toFixed(1)+','+(y+t).toFixed(1)+' '+(fx+2).toFixed(1)+','+(y+t+1.4).toFixed(1)+'" fill="'+col+'"/>';
     return h;
   };
-  const dcol=st=>st==='idle'?C.plan:st==='run'?C.run:C.done;
+  const dcol=st=>st==='idle'?C.plan:st==='run'?C.run:st==='mob'?C.mob:C.done;
 
   const seg=[],miss=[],used=new Set();
   D.forEach(d=>{
@@ -1736,13 +2011,12 @@ function alignMap(){
   const pos={};
   keys.forEach(k=>pos[k]=[PD.l+(raw[k][0]-bx0)*sc,PD.t+(raw[k][1]-by0)*sc]);
   let hy=0;keys.forEach(k=>hy=Math.max(hy,pos[k][1]));
-  const NOTES=['15 days required for mobilisation, grouting and demobilisation on each drive.',
-    'MHB-8.1 set out at E 448471.664, N 2894987.708 \u2014 201 m spur off MHB-8, opposite hand to MHB-9.1.'];
+  const NOTES=['15 days required for mobilisation, grouting and demobilisation on each drive.'];
   const NOTEH=22+NOTES.length*13;
   const CB=Math.round(hy)+PD.b;          /* bottom of the drawing itself */
   const H=CB+NOTEH;                      /* plus the notes band */
   /* everything drawn is also recorded, so PowerPoint can rebuild the map from editable shapes */
-  const GEO={W:W,H:H,C:C,segs:[],shafts:[],tags:[],calls:[],bts:[],dn:[],title:null,boundary:null,legend:null,notes:null,scale:null};
+  const GEO={W:W,H:H,C:C,segs:[],shafts:[],tags:[],calls:[],mcalls:[],cranes:[],bts:[],dn:[],title:null,boundary:null,legend:null,notes:null,scale:null};
   window.MAPGEO=GEO;
 
   const lw=dn=>Math.max(5,(+dn||1200)/1200*6);
@@ -1776,6 +2050,7 @@ function alignMap(){
                ['#fff','node','Shaft not yet used'],
                [C.ink,'arrow','Boring direction']];
   if(seg.some(o=>o.c.stop))items.splice(2,0,[C.stop,'line','Machine stopped']);
+  if(seg.some(o=>o.c.status==='mob'))items.splice(1,0,[C.mob,'line','Mobilising \u2014 crane lowering MTBM']);
   if(seg.some(o=>freshBT(o.d)))items.push(['#FFD23F','fw','Breakthrough (today / yesterday)']);
   const LW=226,LH=34+items.length*17,LX=W-22-LW,LY=CB-22-LH;
   taken.push([LX,LY,LW,LH]);
@@ -1804,7 +2079,7 @@ function alignMap(){
     const ax=A[0]+ux*trim,ay=A[1]+uy*trim,bx=B[0]-ux*tEnd,by=B[1]-uy*tEnd;
     const tip=esc(d.sn)+'. '+esc(d.f)+' \u2192 '+esc(d.t)+' \u00b7 DN'+esc(d.dn)+' \u00b7 L='+n(c.len,1)+' m \u00b7 '+
       n(c.p,1)+' m bored ('+n(c.pct*100,1)+'%) \u00b7 '+c.label+
-      (d.as?' \u00b7 launched '+fmt(d.as):'')+(d.af?', holed through '+fmt(d.af):'');
+      (d.as?' \u00b7 launched '+fmt(d.as):'')+(d.af?', holed through '+fmt(d.af):'')+(c.status==='mob'?' \u00b7 '+esc(mobTxt(d)):'');
     const t='<title>'+tip+'</title>';
     if(c.status==='run'){
       const fx=ax+(bx-ax)*c.pct,fy=ay+(by-ay)*c.pct;
@@ -1830,7 +2105,7 @@ function alignMap(){
       const tx=B[0]-ux*R,ty=B[1]-uy*R,hw=w*0.72+1.8;
       const pts=tx.toFixed(1)+','+ty.toFixed(1)+' '+
         (bx-uy*hw).toFixed(1)+','+(by+ux*hw).toFixed(1)+' '+(bx+uy*hw).toFixed(1)+','+(by-ux*hw).toFixed(1);
-      const lit=c.status==='done'||c.status==='bored';
+      const lit=c.status==='done'||c.status==='bored'||c.status==='mob';
       arrows+='<polygon points="'+pts+'" fill="'+(lit?col:C.plan)+'"'+(lit||C.classic?'':' fill-opacity=".5"')+'/>';
       if(lit)glow+='<polygon points="'+pts+'" fill="'+col+'"/>';
     }
@@ -1849,17 +2124,64 @@ function alignMap(){
 
   /* ---- shafts ---- */
   const live={};
-  seg.forEach(o=>{if(o.c.p>0){live[o.ka]=1;live[o.kb]=1}});
+  const mobS={};
+  seg.forEach(o=>{if(o.c.p>0){live[o.ka]=1;live[o.kb]=1}else if(o.c.status==='mob')mobS[o.ka]=o});
   let dots='';const order=keys.slice().sort((a,b)=>pos[a][0]-pos[b][0]);
   order.forEach(k=>{
     const cx=pos[k][0],cy=pos[k][1];
-    if(live[k])glow+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6.5" fill="'+C.done+'"/>';
-    dots+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6.6" fill="'+(live[k]?C.done:C.bg)+
-      '" stroke="'+(live[k]?C.liveRing:C.offRing)+'" stroke-width="'+(live[k]?1.6:1.5)+'"><title>'+esc(k)+
+    const mb=!live[k]&&mobS[k];
+    if(live[k]||mb)glow+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6.5" fill="'+(mb?C.mob:C.done)+'"/>';
+    dots+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6.6" fill="'+(live[k]?C.done:mb?C.mob:C.bg)+
+      '" stroke="'+(live[k]?C.liveRing:mb?C.hotM:C.offRing)+'" stroke-width="'+(live[k]||mb?1.6:1.5)+'"><title>'+esc(k)+
       (COORD[k]?' \u2014 '+COORD[k]:'')+
-      (live[k]?' \u2014 shaft in use':' \u2014 no drive launched or received yet')+'</title></circle>';
+      (live[k]?' \u2014 shaft in use':mb?' \u2014 mobilising: MTBM being lowered':' \u2014 no drive launched or received yet')+'</title></circle>';
     taken.push([cx-9,cy-9,18,18]);
-    GEO.shafts.push({k:k,x:cx,y:cy,live:!!live[k]});
+    GEO.shafts.push({k:k,x:cx,y:cy,live:!!live[k],mob:!!mb});
+  });
+
+  /* ---- mobilisation: a crawler crane lowering the MTBM into each launch shaft ---- */
+  const noMo=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
+  const anim=(attr,vals,dur)=>noMo?'':'<animate attributeName="'+attr+'" values="'+vals+'" keyTimes="0;.42;.62;.95;1" dur="'+dur+'s" repeatCount="indefinite"/>';
+  const animT=(dy,dur)=>noMo?'':'<animateTransform attributeName="transform" type="translate" values="0 0;0 '+dy+';0 '+dy+';0 0;0 0" keyTimes="0;.42;.62;.95;1" dur="'+dur+'s" repeatCount="indefinite"/>';
+  /* lattice boom between two points: two chords and zig-zag bracing */
+  const boom=(x1,y1,x2,y2,wd,col)=>{
+    const L=Math.hypot(x2-x1,y2-y1)||1,nx=-(y2-y1)/L*wd/2,ny=(x2-x1)/L*wd/2,k=Math.max(3,Math.round(L/6));
+    let h='<line x1="'+(x1+nx).toFixed(1)+'" y1="'+(y1+ny).toFixed(1)+'" x2="'+(x2+nx*.4).toFixed(1)+'" y2="'+(y2+ny*.4).toFixed(1)+'" stroke="'+col+'" stroke-width="1.2"/>'+
+      '<line x1="'+(x1-nx).toFixed(1)+'" y1="'+(y1-ny).toFixed(1)+'" x2="'+(x2-nx*.4).toFixed(1)+'" y2="'+(y2-ny*.4).toFixed(1)+'" stroke="'+col+'" stroke-width="1.2"/>';
+    let pts='';for(let i=0;i<=k;i++){const t=i/k,sg=i%2?1:-1,w=1-.6*t;
+      pts+=(x1+(x2-x1)*t+nx*sg*w).toFixed(1)+','+(y1+(y2-y1)*t+ny*sg*w).toFixed(1)+' '}
+    return h+'<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width=".7" stroke-opacity=".85"/>';
+  };
+  /* the machine hanging nose-down: shield body and cutter face */
+  const hung=(x,y,w,hh,col,core,hot)=>'<rect x="'+(x-w/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w+'" height="'+hh+'" rx="1.5" fill="'+core+'" stroke="'+col+'" stroke-width="1.1"/>'+
+    '<line x1="'+(x-w/2).toFixed(1)+'" x2="'+(x+w/2).toFixed(1)+'" y1="'+(y+hh*.38).toFixed(1)+'" y2="'+(y+hh*.38).toFixed(1)+'" stroke="'+col+'" stroke-width=".8"/>'+
+    '<rect x="'+(x-w/2-1).toFixed(1)+'" y="'+(y+hh-2).toFixed(1)+'" width="'+(w+2)+'" height="3" rx="1" fill="'+col+'"/>'+
+    '<circle cx="'+x.toFixed(1)+'" cy="'+(y+hh*.7).toFixed(1)+'" r="1.3" fill="'+hot+'"/>';
+  let cranes='';const mobSeg=seg.filter(o=>o.c.status==='mob');
+  if(showMob)Object.keys(mobS).forEach(k=>{
+    const o=mobS[k],x=pos[k][0],y=pos[k][1],B=pos[o.kb];
+    const pref=(B[0]-x)>0?-1:1,bb=q=>[Math.min(x-9,x+q*27-14),y-50,41,48];
+    const sd=!clash(bb(pref))?pref:!clash(bb(-pref))?-pref:pref,bx=x+sd*27,gy=y-3;
+    const tipY=y-46,top=y-34,drop=24;
+    glow+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="'+C.mob+'"/>';
+    cranes+='<g><title>'+esc(o.d.sn)+'. '+esc(o.d.f)+' \u2192 '+esc(o.d.t)+' \u00b7 '+esc(mobTxt(o.d))+'</title>'+
+      '<circle class="pulse" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="9" fill="none" stroke="'+C.mob+'" stroke-width="1.8"/>'+
+      '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="10.5" fill="none" stroke="'+C.mob+'" stroke-width="1.2" stroke-dasharray="2.5 2.5"/>'+
+      /* crawler tracks and cab */
+      '<rect x="'+(bx-12).toFixed(1)+'" y="'+(gy-1).toFixed(1)+'" width="24" height="6" rx="3" fill="'+C.coreM+'" stroke="'+C.mob+'" stroke-width="1"/>'+
+      '<circle cx="'+(bx-8.5).toFixed(1)+'" cy="'+(gy+2).toFixed(1)+'" r="1.4" fill="'+C.mob+'"/><circle cx="'+(bx+8.5).toFixed(1)+'" cy="'+(gy+2).toFixed(1)+'" r="1.4" fill="'+C.mob+'"/>'+
+      '<rect x="'+(bx-6-sd*2).toFixed(1)+'" y="'+(gy-9).toFixed(1)+'" width="12" height="8" rx="1.5" fill="'+C.mob+'" stroke="'+C.hotM+'" stroke-width=".7"/>'+
+      '<rect x="'+(bx-(sd>0?-1:5)-sd*2).toFixed(1)+'" y="'+(gy-7.5).toFixed(1)+'" width="4" height="3.4" fill="'+C.hotM+'" fill-opacity=".85"/>'+
+      '<line x1="'+(bx+sd*6).toFixed(1)+'" y1="'+(gy-6).toFixed(1)+'" x2="'+(bx+sd*12).toFixed(1)+'" y2="'+(gy-6).toFixed(1)+'" stroke="'+C.mob+'" stroke-width="2.4"/>'+
+      boom(bx-sd*3,gy-8,x,tipY,3.4,C.mob)+
+      '<circle cx="'+x.toFixed(1)+'" cy="'+tipY.toFixed(1)+'" r="1.8" fill="'+C.hotM+'" stroke="'+C.mob+'" stroke-width=".8"/>'+
+      /* pendant line back to the cab */
+      '<line x1="'+(bx-sd*2).toFixed(1)+'" y1="'+(gy-14).toFixed(1)+'" x2="'+(x+sd*3).toFixed(1)+'" y2="'+(tipY+2).toFixed(1)+'" stroke="'+C.mob+'" stroke-width=".5" stroke-opacity=".7"/>'+
+      /* hoist rope and the machine going down the shaft */
+      '<line x1="'+x.toFixed(1)+'" y1="'+(tipY+1.5).toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+(noMo?top+drop/2:top).toFixed(1)+'" stroke="'+C.hotM+'" stroke-width=".9">'+anim('y2',top+';'+(top+drop)+';'+(top+drop)+';'+top+';'+top,5)+'</line>'+
+      '<g'+(noMo?' transform="translate(0 '+(drop/2)+')"':'')+'>'+animT(drop,5)+hung(x,top,9,13,C.mob,C.coreM,C.hotM)+'</g></g>';
+    taken.push([Math.min(x-9,bx-14),tipY-4,Math.abs(bx-x)+24,y-tipY+14]);
+    GEO.cranes.push({x:x,y:y,bx:bx,gy:gy,tipY:tipY,sd:sd});
   });
 
   /* ---- DN labels, only when asked for, and only clear of everything ---- */
@@ -1929,6 +2251,55 @@ function alignMap(){
       (c.stop?txt((X+12).toFixed(1),(Y+89).toFixed(1),'Machine '+esc(stopTxt(d).slice(0,56)),{fs:9.4,w:700,c:MC}):'');
   });
 
+  /* ---- close-ups of each mobilisation: crane lowering the MTBM into the launch shaft ---- */
+  let mcalls='';
+  if(showCo&&showMob)mobSeg.forEach(o=>{
+    const d=o.d,c=o.c,BW=262,BH=100,MC=C.mob,fx=pos[o.ka][0],fy=pos[o.ka][1];
+    let best=null;
+    for(const dist of [80,105,135,170,210,260,320])for(let a=0;a<24&&!best;a++){
+      const t=a*Math.PI/12,cx=fx+Math.cos(t)*dist,cy=fy+Math.sin(t)*dist*0.8;
+      const r=[cx-BW/2,cy-BH/2,BW,BH];
+      if(!clash(r))best=r;
+      if(best)break;
+    }
+    if(!best)return;
+    taken.push([best[0]-4,best[1]-4,BW+8,BH+8]);
+    const [X,Y]=best;
+    const ex=Math.max(X,Math.min(X+BW,fx)),ey=Math.max(Y,Math.min(Y+BH,fy));
+    GEO.mcalls.push({d:d,c:c,X:X,Y:Y,BW:BW,BH:BH,fx:fx,fy:fy,lx:ex,ly:ey});
+    const gy=Y+52,sx=X+BW*0.6,cb=X+BW*0.27,tip=Y+27,top=Y+31,drop=24;
+    let sk='';
+    /* ground, hatching and the shaft */
+    sk+='<line x1="'+(X+12)+'" x2="'+(sx-13).toFixed(1)+'" y1="'+gy+'" y2="'+gy+'" stroke="'+C.dim+'" stroke-width="1.2"/>'+
+        '<line x1="'+(sx+13).toFixed(1)+'" x2="'+(X+BW-12)+'" y1="'+gy+'" y2="'+gy+'" stroke="'+C.dim+'" stroke-width="1.2"/>';
+    for(let hx=X+16;hx<X+BW-14;hx+=9){if(hx>sx-17&&hx<sx+15)continue;sk+='<line x1="'+hx.toFixed(1)+'" y1="'+(gy+1)+'" x2="'+(hx-4).toFixed(1)+'" y2="'+(gy+5)+'" stroke="'+C.dim+'" stroke-width=".6" stroke-opacity=".7"/>'}
+    sk+='<rect x="'+(sx-12).toFixed(1)+'" y="'+gy+'" width="24" height="25" fill="'+C.house+'" fill-opacity=".9"/>'+
+        '<polyline points="'+(sx-12).toFixed(1)+','+gy+' '+(sx-12).toFixed(1)+','+(gy+25)+' '+(sx+12).toFixed(1)+','+(gy+25)+' '+(sx+12).toFixed(1)+','+gy+'" fill="none" stroke="'+C.dim+'" stroke-width="1.4"/>'+
+        '<line x1="'+(sx+12).toFixed(1)+'" x2="'+(X+BW-16)+'" y1="'+(gy+19)+'" y2="'+(gy+19)+'" stroke="'+C.plan+'" stroke-opacity="'+C.idleOp+'" stroke-width="4" stroke-dasharray="0 7" stroke-linecap="round"/>'+
+        txt((X+BW-14).toFixed(1),(gy+13).toFixed(1),'drive to '+esc(d.t)+' \u2192',{fs:8.4,a:'end',c:C.noteTxt});
+    /* crawler crane */
+    sk+='<rect x="'+(cb-19).toFixed(1)+'" y="'+(gy-7)+'" width="38" height="7" rx="3.5" fill="'+C.coreM+'" stroke="'+MC+'" stroke-width="1"/>';
+    for(let w=-14;w<=14;w+=7)sk+='<circle cx="'+(cb+w).toFixed(1)+'" cy="'+(gy-3.5)+'" r="1.6" fill="'+MC+'"/>';
+    sk+='<rect x="'+(cb-11).toFixed(1)+'" y="'+(gy-18)+'" width="17" height="11" rx="2" fill="'+MC+'" stroke="'+C.hotM+'" stroke-width=".8"/>'+
+        '<rect x="'+(cb-8).toFixed(1)+'" y="'+(gy-16)+'" width="6" height="5" fill="'+C.hotM+'" fill-opacity=".85"/>'+
+        '<rect x="'+(cb-19).toFixed(1)+'" y="'+(gy-16)+'" width="8" height="7" rx="1" fill="'+C.coreM+'" stroke="'+MC+'" stroke-width=".8"/>'+
+        boom(cb+4,gy-14,sx,tip,4.4,MC)+
+        '<line x1="'+(cb-4).toFixed(1)+'" y1="'+(gy-18)+'" x2="'+(sx-3).toFixed(1)+'" y2="'+(tip+2)+'" stroke="'+MC+'" stroke-width=".6" stroke-opacity=".75"/>'+
+        '<circle cx="'+sx.toFixed(1)+'" cy="'+tip+'" r="2.2" fill="'+C.hotM+'" stroke="'+MC+'" stroke-width=".9"/>'+
+        '<line x1="'+sx.toFixed(1)+'" y1="'+(tip+2)+'" x2="'+sx.toFixed(1)+'" y2="'+(noMo?top+drop/2:top)+'" stroke="'+C.hotM+'" stroke-width="1">'+anim('y2',top+';'+(top+drop)+';'+(top+drop)+';'+top+';'+top,5)+'</line>'+
+        '<g'+(noMo?' transform="translate(0 '+(drop/2)+')"':'')+'>'+animT(drop,5)+hung(sx,top,12,17,MC,C.coreM,C.hotM)+'</g>';
+    mcalls+='<line x1="'+fx.toFixed(1)+'" y1="'+fy.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+
+      '" stroke="'+MC+'" stroke-width="1" stroke-dasharray="3 3"/>'+
+      '<circle cx="'+ex.toFixed(1)+'" cy="'+ey.toFixed(1)+'" r="2.2" fill="'+MC+'"/>'+
+      box(X.toFixed(1),Y.toFixed(1),BW,BH,C.classic?'#E8F8FB':C.panel,MC,1.3,5)+
+      '<rect x="'+X.toFixed(1)+'" y="'+Y.toFixed(1)+'" width="4" height="'+BH+'" rx="2" fill="'+MC+'"/>'+
+      txt((X+12).toFixed(1),(Y+16).toFixed(1),esc(d.sn)+'. '+esc(d.f)+' \u2192 '+esc(d.t),{fs:10.5,w:700})+
+      txt((X+BW-10).toFixed(1),(Y+16).toFixed(1),'\u2699 MOBILISING \u00b7 DN'+esc(d.dn),{fs:9.5,w:700,a:'end',c:MC})+
+      sk+
+      txt((X+12).toFixed(1),(Y+93).toFixed(1),(d.mob?'Since '+esc(fmt(d.mob))+' \u00b7 ':'')+'day '+c.mobDay+' / '+MOBDAYS,{fs:9.4,w:600,c:c.mobDay>MOBDAYS?C.stop:C.ink})+
+      txt((X+BW-10).toFixed(1),(Y+93).toFixed(1),n(c.len,1)+' m drive',{fs:9.2,a:'end',c:C.noteTxt});
+  });
+
   /* ---- breakthrough: fireworks over the receiving shaft, today and tomorrow ---- */
   const fwBurst=(x,y,sz,delay,k0)=>{
     let h='<g class="fw" style="animation-delay:'+delay+'s">';
@@ -1992,7 +2363,7 @@ function alignMap(){
   g+=box(LX,LY,LW,LH,C.panel,C.box,1.2)+
      txt(LX+11,LY+18,'CONSTRUCTION WORKS',{fs:10.5,w:700})+
      '<line x1="'+LX+'" x2="'+(LX+LW)+'" y1="'+(LY+25)+'" y2="'+(LY+25)+'" stroke="'+C.frame+'" stroke-width="0.7"/>';
-  const lgKind={'Not started':'idle','Boring in progress':'run','Machine stopped':'stop','Complete':'done','Holed through, grouting due':'bored'};
+  const lgKind={'Not started':'idle','Boring in progress':'run','Machine stopped':'stop','Complete':'done','Holed through, grouting due':'bored','Mobilising \u2014 crane lowering MTBM':'mob'};
   items.forEach((it,i)=>{
     const y=LY+42+i*17;
     if(it[1]==='line'||it[1]==='dash'){const s1=strip(LX+14,y,LX+46,y,5,lgKind[it[2]],lgKind[it[2]]==='run');g+=s1.body;lgGlow+=s1.glow}
@@ -2017,7 +2388,7 @@ function alignMap(){
   GEO.scale={x:PD.l,y:CB-28,len:500*sc};
 
   host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+
-    g+(C.classic?'':'<g filter="url(#mGlow)" opacity="'+C.glowOp+'">'+glow+lgGlow+'</g>')+lines+arrows+faces+dots+dnTxt+tags+calls+fwks+hits+
+    g+(C.classic?'':'<g filter="url(#mGlow)" opacity="'+C.glowOp+'">'+glow+lgGlow+'</g>')+lines+arrows+faces+dots+cranes+dnTxt+tags+calls+mcalls+fwks+hits+
     '<g><line x1="'+PD.l+'" y1="'+(CB-28)+'" x2="'+(PD.l+500*sc).toFixed(1)+'" y2="'+(CB-28)+'" stroke="'+C.scale+'" stroke-width="1.4"/>'+
     '<line x1="'+PD.l+'" y1="'+(CB-32)+'" x2="'+PD.l+'" y2="'+(CB-24)+'" stroke="'+C.scale+'" stroke-width="1.4"/>'+
     '<line x1="'+(PD.l+500*sc).toFixed(1)+'" y1="'+(CB-32)+'" x2="'+(PD.l+500*sc).toFixed(1)+'" y2="'+(CB-24)+'" stroke="'+C.scale+'" stroke-width="1.4"/>'+
@@ -2025,17 +2396,18 @@ function alignMap(){
     '</g></svg>';
 
   $('mapLeg').innerHTML='';
-  const st={done:0,bored:0,run:0,idle:0};seg.forEach(o=>st[o.c.status]++);
+  const st={done:0,bored:0,run:0,idle:0,mob:0};seg.forEach(o=>st[o.c.status]++);
   const T=group(seg.map(o=>o.d)),nStop=seg.filter(o=>o.c.stop).length;
   if($('mapStat'))$('mapStat').innerHTML=
     '<div class="g"><b>'+(st.done+st.bored)+'</b><span><i class="led g"></i>Holed through</span></div>'+
     '<div class="y"><b>'+st.run+'</b><span><i class="led '+(st.run?'y':'')+'"></i>Boring now</span></div>'+
     (nStop?'<div class="r"><b style="color:var(--stop)">'+nStop+'</b><span><i class="led r" style="background:var(--stop)"></i>Machine stopped</span></div>':'')+
+    (st.mob?'<div><b style="color:var(--mob)">'+st.mob+'</b><span><i class="led m"></i>Mobilising</span></div>':'')+
     '<div class="r"><b>'+st.idle+'</b><span><i class="led r"></i>To launch</span></div>'+
     '<div><b>'+n(T.pct*100,1)+'%</b><span>'+n(T.p,0)+' of '+n(T.len,0)+' m</span></div>';
   $('mapNote').innerHTML='<b>'+seg.length+'</b> drive'+(seg.length===1?'':'s')+' on the sheet \u00b7 '+
     '<b>'+(st.done+st.bored)+'</b> holed through ('+st.done+' grouted) \u00b7 <b>'+st.run+'</b> boring now'+(nStop?' (<b style="color:var(--stop)">'+nStop+' stopped</b>)':'')+' \u00b7 '+
-    '<b>'+st.idle+'</b> yet to launch \u00b7 <b>'+n(T.p,0)+'</b> of '+n(T.len,0)+' m bored.'+
+    (st.mob?'<b style="color:var(--mob)">'+st.mob+'</b> mobilising \u00b7 ':'')+'<b>'+st.idle+'</b> yet to launch \u00b7 <b>'+n(T.p,0)+'</b> of '+n(T.len,0)+' m bored.'+
     (warn?'<br>'+warn:'');
 }
 function curve(){
@@ -2059,8 +2431,8 @@ function curve(){
     '<div class="legend"><span><i class="sw" style="background:var(--muted)"></i>Baseline</span><span><i class="sw" style="background:var(--led-g)"></i>Actual</span><span><i class="sw" style="background:var(--bad);width:2px;height:12px"></i>Data date</span></div>';
 }
 function gantt(){
-  const ds=D.filter(d=>d.ps||d.as);if(!ds.length){$('gantt').innerHTML='<p class="note" style="padding:14px">No dates yet.</p>';return}
-  const all=ds.flatMap(d=>[d.ps,d.pf,d.as,d.af]).filter(Boolean).concat([AS]).sort();
+  const ds=D.filter(d=>d.ps||d.as||d.mob);if(!ds.length){$('gantt').innerHTML='<p class="note" style="padding:14px">No dates yet.</p>';return}
+  const all=ds.flatMap(d=>[d.ps,d.pf,d.as,d.af,d.mob]).filter(Boolean).concat([AS]).sort();
   const s=all[0],e=all[all.length-1],span=Math.max(1,dd(s,e));
   const X=v=>Math.max(0,Math.min(100,dd(s,v)/span*100));
   let mo='';const c=new Date(s);c.setDate(1);
@@ -2069,7 +2441,9 @@ function gantt(){
     ds.map(d=>{const cc=calc(d);
       const pl=(d.ps&&d.pf)?'<div class="gplan" style="left:'+X(d.ps)+'%;width:'+Math.max(.4,X(d.pf)-X(d.ps))+'%"></div>':'';
       const ac=d.as?'<div class="gact'+(cc.done?'':' part')+(cc.stop?' stop':'')+'" style="left:'+X(d.as)+'%;width:'+Math.max(.4,X(d.af||AS)-X(d.as))+'%"></div>':'';
-      return '<div class="grow"><div class="glabel" title="'+esc(d.f)+' → '+esc(d.t)+'">'+esc(d.sn)+'. '+esc(d.f)+' → '+esc(d.t)+'</div><div class="gtrack">'+pl+ac+'<div class="gnow" style="left:'+X(AS)+'%"></div></div></div>'}).join('');
+      const mEnd=d.as&&d.as>=(d.mob||'')?d.as:AS;
+      const mb=d.mob&&(cc.status==='mob'||d.as)?'<div class="gmob" title="Mobilisation '+esc(fmt(d.mob))+' \u2013 '+esc(fmt(mEnd))+'" style="left:'+X(d.mob)+'%;width:'+Math.max(.4,X(mEnd)-X(d.mob))+'%"></div>':'';
+      return '<div class="grow"><div class="glabel" title="'+esc(d.f)+' → '+esc(d.t)+'">'+esc(d.sn)+'. '+esc(d.f)+' → '+esc(d.t)+'</div><div class="gtrack">'+pl+mb+ac+'<div class="gnow" style="left:'+X(AS)+'%"></div></div></div>'}).join('');
 }
 
 /* ---------- paste ---------- */
@@ -2112,6 +2486,22 @@ $('xSum').onclick=()=>{
         l.filter(d=>!calc(d).done).map(d=>d.f+' > '+d.t).join(' | ')]);
     });
   });
+  const day=AS||today();
+  R.push([]);R.push(['Per-day progress by diameter','Data date '+day]);
+  R.push(['Contract','Diameter','Drives started','Bored m','Boring days','Average m/day','Best drive m/day','Best drive','Boring now avg m/day','Last 24 h m']);
+  [...new Set(D.map(d=>d.pr).filter(Boolean))].sort().forEach(p=>{
+    const list=D.filter(d=>d.pr===p);
+    [...new Set(list.map(d=>+d.dn))].sort((a,b)=>a-b).map(x=>['DN-'+x,list.filter(d=>+d.dn===x)]).concat([['All DN',list]]).forEach(([lab,l])=>{
+      const g=group(l);let best=null;l.forEach(d=>{const c=calc(d);if(c.rate&&(!best||c.rate>best.r))best={r:c.rate,d:d}});
+      const rl=l.filter(d=>calc(d).status==='run');
+      R.push([p,lab,l.filter(d=>calc(d).p>0).length+' of '+g.cnt,g.p.toFixed(2),g.days,g.rate.toFixed(2),best?best.r.toFixed(2):'',best?best.d.sn+'. '+best.d.f+' > '+best.d.t:'',
+        rl.length?(rl.reduce((t,d)=>t+calc(d).rate,0)/rl.length).toFixed(2):'',l.some(d=>hasLog(d,day))?l.reduce((t,d)=>t+dayM(d,day),0).toFixed(2):'']);
+    });
+  });
+  R.push([]);R.push(['Last 24 hours',day]);R.push(['S. No','Drive','DN','Project','Yesterday total m','Today total m','Last 24 h m','Bored to date','Status']);
+  D.filter(d=>calc(d).status==='run'||hasLog(d,day)).forEach(d=>{const c=calc(d);
+    const yt=ytOf(d,day);R.push([d.sn,d.f+' > '+d.t,d.dn,d.pr,yt?yt.y.toFixed(2):'',yt?yt.t.toFixed(2):'',hasLog(d,day)?dayM(d,day).toFixed(2):'no figure',c.p.toFixed(2),c.label])});
+  R.push(['','Total','','','','',D.reduce((t,d)=>t+dayM(d,day),0).toFixed(2)]);
   R.push([]);R.push(['Note','15 days required for mobilisation, grouting and demobilisation on each drive']);
   const T=group(D);R.push([]);R.push(['Total cumulative',T.len.toFixed(2),T.p.toFixed(2),T.rem.toFixed(2),(T.pct*100).toFixed(2),T.cnt,T.done,T.days,T.rate.toFixed(2)]);
   dl('progress-summary-'+AS+'.csv',R.map(r=>r.map(q).join(',')).join('\n'));
@@ -2130,7 +2520,7 @@ async function shareCopy(ro){
     if(!(await lockAsk('set')))return;
   }
   const clone=document.documentElement.cloneNode(true);
-  ['tSheet','gantt','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tCdn','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','mapStat','recBar','roFlag','storeBox','btBanner','printRoot'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
+  ['tSheet','gantt','h24','pdRow','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tCdn','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','mapStat','recBar','roFlag','storeBox','btBanner','printRoot'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
   const pb=clone.querySelector('#pasteBox');if(pb)pb.textContent='';
   const sc=[...clone.querySelectorAll('script')].find(x=>x.textContent.indexOf('const SEED=')>=0);
   let src=sc.textContent;
@@ -2172,8 +2562,9 @@ function composePages(inc,paper){
   const page=(title,nodes)=>{nodes=nodes.filter(Boolean);if(nodes.length)pages.push({title,nodes})};
   const card=id=>$(id)?$(id).closest('.card'):null;
   if(inc.dash){
-    page('Summary and alignment map',[$('btBanner').classList.contains('on')?take($('btBanner')):null,take($('kpis')),take(document.querySelector('#p-dash .mapcard'))]);
+    page('Summary and alignment map',[$('btBanner').classList.contains('on')?take($('btBanner')):null,take($('kpis')),take($('h24')),take(document.querySelector('#p-dash .mapcard'))]);
     page('Contracts and diameters',[take($('contractRow')),take($('ring').closest('.cols3'))]);
+    page('Per-day progress by diameter',[take($('pdCard'))]);
     page('Progress charts',[take($('prChart').closest('.cols')),take(card('drChart')),take(card('curve'))]);
     page('Drives boring now and what is left',[take(card('tRun')),take(card('tCdn'))]);
     page('Summaries and delays',[take($('tDn').closest('.cols')),take(card('tDelay'))]);
@@ -2274,7 +2665,7 @@ function pptMap(P,s,x0,y0,w,h){
   const box=(x,y,bw,bh,fill,stroke,sw,round)=>s.addShape(round?P.ShapeType.roundRect:P.ShapeType.rect,
     Object.assign({x:X(x),y:Y(y),w:L(bw),h:L(bh),fill:fill?{color:hx(fill)}:{type:'none'},line:stroke?{color:hx(stroke),width:PT(sw||1)}:{type:'none'}},round?{rectRadius:.12}:{}));
   const tx=(t,x,y,bw,bh,o)=>s.addText(t,Object.assign({x:X(x),y:Y(y),w:L(bw),h:L(bh),fontFace:F,margin:0,valign:'middle',color:hx(C.ink)},o));
-  const dot=(x,y,r,fill,stroke,sw)=>s.addShape(P.ShapeType.ellipse,{x:X(x-r),y:Y(y-r),w:L(2*r),h:L(2*r),fill:{color:hx(fill)},line:stroke?{color:hx(stroke),width:PT(sw||1.5)}:{type:'none'}});
+  const dot=(x,y,r,fill,stroke,sw)=>s.addShape(P.ShapeType.ellipse,{x:X(x-r),y:Y(y-r),w:L(2*r),h:L(2*r),fill:fill?{color:hx(fill)}:{type:'none'},line:stroke?{color:hx(stroke),width:PT(sw||1.5)}:{type:'none'}});
   /* sheet, frame and title */
   box(0,0,G.W,G.H,C.bg,C.frame,1.2);
   if(G.title){box(G.title.x,G.title.y,G.title.w,G.title.h,C.panel,C.box,1.2);
@@ -2283,7 +2674,7 @@ function pptMap(P,s,x0,y0,w,h){
     tx('SIBS-1',b.x-89,b.ly-11,80,14,{fontSize:FS(10.5),bold:true,color:hx(C.mag),align:'right'});
     tx('SIBS-2',b.x+9,b.ly-11,80,14,{fontSize:FS(10.5),bold:true,color:hx(C.mag)})}
   /* drives: one line per state, arrowhead at the receiving shaft */
-  const st=(kind,w)=>kind==='run'?{color:hx(C.run),width:PT(w*1.35)}:kind==='stop'?{color:hx(C.stop),width:PT(w*1.35)}:
+  const st=(kind,w)=>kind==='run'?{color:hx(C.run),width:PT(w*1.35)}:kind==='stop'?{color:hx(C.stop),width:PT(w*1.35)}:kind==='mob'?{color:hx(C.mob),width:PT(w*1.2),dashType:'lgDash'}:
     kind==='idle'?{color:hx(C.plan),width:PT(w*.8),dashType:'sysDot'}:kind==='bored'?{color:hx(C.done),width:PT(w),dashType:'dash'}:{color:hx(C.done),width:PT(w)};
   const arrow=o=>Object.assign(o,{endArrowType:'triangle'});
   G.segs.forEach(o=>{
@@ -2294,11 +2685,20 @@ function pptMap(P,s,x0,y0,w,h){
     }else ln(o.ax,o.ay,o.bx,o.by,st(c.status,o.w));
     /* arrowhead: its own small triangle at the receiving shaft */
     const AL=Math.hypot(o.Bx-o.bx,o.By-o.by);
-    if(AL>2){const hw=o.w*.72+1.8,lit=c.status==='done'||c.status==='bored',cx=(o.Bx+o.bx)/2,cy=(o.By+o.by)/2;
+    if(AL>2){const hw=o.w*.72+1.8,lit=c.status==='done'||c.status==='bored'||c.status==='mob',cx=(o.Bx+o.bx)/2,cy=(o.By+o.by)/2;
       s.addShape(P.ShapeType.triangle,{x:X(cx-hw),y:Y(cy-AL/2),w:L(2*hw),h:L(AL),rotate:Math.atan2(o.uy,o.ux)*180/Math.PI+90,
-        fill:{color:hx(lit?C.done:C.plan),transparency:lit?0:45},line:{type:'none'}})}
+        fill:{color:hx(c.status==='mob'?C.mob:lit?C.done:C.plan),transparency:lit?0:45},line:{type:'none'}})}
   });
-  G.shafts.forEach(q=>dot(q.x,q.y,6.6,q.live?C.done:C.bg,q.live?C.liveRing:C.offRing,1.5));
+  G.shafts.forEach(q=>dot(q.x,q.y,6.6,q.live?C.done:q.mob?C.mob:C.bg,q.live?C.liveRing:q.mob?C.hotM:C.offRing,1.5));
+  /* mobilisation cranes: tracks, cab, boom, hoist rope and the machine on the hook */
+  (G.cranes||[]).forEach(q=>{
+    dot(q.x,q.y,10.5,null,C.mob,1.2);
+    box(q.bx-12,q.gy-1,24,6,C.coreM,C.mob,1,true);
+    box(q.bx-6-q.sd*2,q.gy-9,12,8,C.mob,null);
+    ln(q.bx-q.sd*3,q.gy-8,q.x,q.tipY,{color:hx(C.mob),width:PT(2.2)});
+    ln(q.x,q.tipY,q.x,q.y-22,{color:hx(C.mob),width:PT(.8)});
+    box(q.x-4.5,q.y-22,9,13,C.coreM,C.mob,1.1);
+  });
   /* machines at the face */
   G.segs.filter(o=>o.c.status==='run').forEach(o=>{
     const MC=o.c.stop?C.stop:C.run;
@@ -2329,6 +2729,24 @@ function pptMap(P,s,x0,y0,w,h){
     tx(n(c.rem,1)+' m left'+(c.rate?' · '+n(c.rate,1)+' m/day':''),X0+q.BW*.5,Y0+52,q.BW*.5-10,16,{fontSize:FS(9.2),align:'right',color:hx(C.noteTxt)});
     if(c.stop)tx('Machine '+stopTxt(d),X0+12,Y0+72,q.BW-24,20,{fontSize:FS(9.4),bold:true,color:hx(MC)});
   });
+  /* close-ups of mobilisations */
+  (G.mcalls||[]).forEach(q=>{
+    const d=q.d,c=q.c,MC=C.mob,X0=q.X,Y0=q.Y;
+    ln(q.fx,q.fy,q.lx,q.ly,{color:hx(MC),width:PT(1),dashType:'dash'});
+    box(X0,Y0,q.BW,q.BH,C.classic?'#E8F8FB':C.panel,MC,1.3,true);
+    box(X0,Y0,4,q.BH,MC,null);
+    tx(d.sn+'. '+d.f+' → '+d.t,X0+12,Y0+6,q.BW*.55,16,{fontSize:FS(10.5),bold:true});
+    tx('⚙ MOBILISING · DN'+d.dn,X0+q.BW*.5,Y0+6,q.BW*.5-10,16,{fontSize:FS(9.5),bold:true,color:hx(MC),align:'right'});
+    const gy=Y0+52,sx=X0+q.BW*.6,cb=X0+q.BW*.27;
+    ln(X0+12,gy,X0+q.BW-12,gy,{color:hx(C.dim),width:PT(1.2)});
+    box(sx-12,gy,24,25,C.house,C.dim,1.2);
+    box(cb-19,gy-7,38,7,C.coreM,MC,1,true);box(cb-11,gy-18,17,11,MC,null);
+    ln(cb+4,gy-14,sx,Y0+27,{color:hx(MC),width:PT(2.6)});
+    ln(sx,Y0+27,sx,Y0+43,{color:hx(MC),width:PT(.9)});
+    box(sx-6,Y0+43,12,17,C.coreM,MC,1.1);
+    tx('Since '+fmt(d.mob)+' · day '+c.mobDay+' / '+MOBDAYS,X0+12,Y0+84,q.BW*.6,14,{fontSize:FS(9.4),bold:true});
+    tx(n(c.len,1)+' m drive',X0+q.BW*.6,Y0+84,q.BW*.4-10,14,{fontSize:FS(9.2),align:'right',color:hx(C.noteTxt)});
+  });
   /* breakthroughs: star, rays and a badge */
   const FW=['FFD23F','3BF08C','FF5CA8','5CC8FF','FF8A3D','B69CFF'];
   G.bts.forEach(q=>{
@@ -2345,7 +2763,7 @@ function pptMap(P,s,x0,y0,w,h){
     tx('CONSTRUCTION WORKS',g.x+11,g.y+8,g.w-20,14,{fontSize:FS(10.5),bold:true});
     ln(g.x,g.y+25,g.x+g.w,g.y+25,{color:hx(C.frame),width:PT(.7)});
     g.items.forEach((it,i)=>{const y=g.y+42+i*17;
-      if(['idle','run','stop','done','bored'].indexOf(it.kind)>=0)ln(g.x+14,y,g.x+46,y,st(it.kind,5));
+      if(['idle','run','stop','done','bored','mob'].indexOf(it.kind)>=0)ln(g.x+14,y,g.x+46,y,st(it.kind,5));
       else if(it.kind==='node')dot(g.x+30,y,6.2,/not yet/.test(it.t)?C.bg:C.done,/not yet/.test(it.t)?C.offRing:C.liveRing,1.5);
       else if(it.kind==='arrow')ln(g.x+12,y,g.x+48,y,{color:hx(C.dim),width:PT(3),endArrowType:'triangle'});
       else if(it.kind==='fw')s.addShape(P.ShapeType.star5,{x:X(g.x+23),y:Y(y-7),w:L(14),h:L(14),fill:{color:'FFD23F'},line:{color:'E0A800',width:.5}});
@@ -2422,6 +2840,10 @@ async function makePpt(){
             {text:n(gg.p,0)+' / '+n(gg.len,0),options:{align:'right'}},{text:n(gg.pct*100,0)+'%',options:{align:'right',bold:true}}])});
         tbl(s,rows,{x:x+.15,y:y0+.72,w:cw-.2,colW:[.9,.75,.7,.75,.8,1.6,cw-.2-5.5],fontSize:10});
       });
+      {const day=AS||today(),rws=D.filter(d=>calc(d).status==='run'||hasLog(d,day)),t24=D.reduce((t,d)=>t+dayM(d,day),0),any=D.some(d=>hasLog(d,day));
+        s.addText([{text:'Last 24 hours (to '+fmt(day)+'): ',options:{bold:true,color:K.ink}},{text:any?sgn(t24)+' m by running machines':'no daily figure logged',options:{bold:true,color:K.y}},
+          {text:rws.length?'   ·   '+rws.map(d=>d.sn+'. '+d.f+' → '+d.t+' '+(hasLog(d,day)?sgn(dayM(d,day))+' m':'—')).join('   ·   '):'',options:{color:K.ink2}}],
+          {x:.4,y:SH-.78,w:SW-.8,h:.32,fontFace:F,fontSize:10,margin:0})}
       /* 2: map */
       s=slide('Alignment map');
       pptMap(P,s,.4,.8,SW-.8,SH-1.55);
@@ -2501,6 +2923,24 @@ async function makePpt(){
         cr.push([{text:nm,options:{bold:true,fill:{color:K.raise}}},{text:'all DN',options:{bold:true,fill:{color:K.raise}}}].concat(cell(L).map(c=>(c.options.fill={color:K.raise},c)),[{text:'',options:{fill:{color:K.raise}}}]))});
       tbl(s,cr,{x:.4,y:.9,w:SW-.8,colW:[.8,.85,.6,.55,.6,.65,.75,.75,.75,.55,SW-.8-6.85],fontSize:9.5});
       s.addText('Allow 15 days per drive for mobilisation, grouting and demobilisation, on top of the boring time.',{x:.4,y:SH-.75,w:SW-.8,h:.28,fontFace:F,fontSize:9.5,italic:true,color:K.ink2,margin:0});
+      /* per-day progress, DN by DN, each contract */
+      s=slide('Per-day progress by diameter — each contract');
+      {const day=AS||today();let yy=.9;
+        names.forEach((nm,k)=>{const L=D.filter(d=>d.pr===nm);
+          sub(s,nm+' — metres per boring day',.4,yy,8);
+          const rows=[[hdr('DN'),hdr('Drives started','right'),hdr('Bored m','right'),hdr('Boring days','right'),hdr('Average m/day','right'),hdr('Best drive m/day','right'),hdr('Boring now m/day','right'),hdr('Last 24 h m','right')]];
+          const rowOf=(lab,l,bold)=>{const g=group(l);let best=null;l.forEach(d=>{const c=calc(d);if(c.rate&&(!best||c.rate>best.r))best={r:c.rate,d:d}});
+            const rl=l.filter(d=>calc(d).status==='run'),o=t=>({text:t,options:{align:'right',bold:!!bold}});
+            return[{text:lab,options:{bold:true}},o(l.filter(d=>calc(d).p>0).length+' of '+g.cnt),o(n(g.p,1)),o(String(g.days||'—')),
+              {text:g.days?n(g.rate,1):'—',options:{align:'right',bold:true,color:k?K.c2:K.c1}},o(best?n(best.r,1)+'  (#'+best.d.sn+')':'—'),
+              o(rl.length?n(rl.reduce((t,d)=>t+calc(d).rate,0)/rl.length,1)+'  ('+rl.length+')':'—'),
+              o(l.some(d=>hasLog(d,day))?sgn(l.reduce((t,d)=>t+dayM(d,day),0)):'—')]};
+          [...new Set(L.map(d=>+d.dn))].sort((a,b)=>a-b).forEach(x2=>rows.push(rowOf('DN-'+x2,L.filter(d=>+d.dn===x2))));
+          rows.push(rowOf('All DN',L,true).map(c=>(c.options.fill={color:K.raise},c)));
+          tbl(s,rows,{x:.4,y:yy+.32,w:SW-.8,fontSize:10});
+          yy+=.32+.3*(rows.length)+.45;
+        });
+        s.addText('Average = bored metres over boring days. Last 24 h = daily figures entered for '+fmt(day)+'.',{x:.4,y:SH-.72,w:SW-.8,h:.28,fontFace:F,fontSize:9,italic:true,color:K.ink2,margin:0});}
       /* 7: summaries */
       s=slide('Summaries by diameter and by contract');
       const sm=(rows,label)=>{const out=[[hdr(label),hdr('Total m','right'),hdr('Bored m','right'),hdr('Left m','right'),hdr('%','right'),hdr('Drives','right'),hdr('Done','right'),hdr('Days','right'),hdr('m/day','right')]];
@@ -2641,7 +3081,7 @@ async function ghSite(){
   if(!ghOn()){$('ghNote').textContent='Fill in the user and repository first.';return}
   ghCfgSave();
   const clone=document.documentElement.cloneNode(true);
-  ['tSheet','gantt','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tCdn','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','mapStat','recBar','roFlag','storeBox','ghNote','btBanner','printRoot'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
+  ['tSheet','gantt','h24','pdRow','kpis','contractRow','curve','dnChart','prChart','moChart','drChart','tRun','tCdn','tDn','tProj','tDelay','ring','ringNote','dnLeg','prLeg','drLeg','mapSvg','mapLeg','mapNote','mapStat','recBar','roFlag','storeBox','ghNote','btBanner','printRoot'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.innerHTML=''});
   const pb=clone.querySelector('#pasteBox');if(pb)pb.textContent='';
   ['ghOwner','ghRepo','ghBranch','ghName','ghToken'].forEach(id=>{const e=clone.querySelector('#'+id);if(e)e.setAttribute('value','')});
   const sc=[...clone.querySelectorAll('script')].find(x=>x.textContent.indexOf('const SEED=')>=0);
@@ -2664,7 +3104,7 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
   if(b.dataset.p==='dash')celebrate();
   window.scrollTo({top:0,behavior:'smooth'});});
 $('asAt').onchange=()=>{AS=$('asAt').value||today();save();render()};
-['mapMh','mapDn','mapSn','mapLR','mapCo','mapZoom'].forEach(id=>{const e=$(id);if(e)e.onchange=alignMap});
+['mapMh','mapDn','mapSn','mapLR','mapCo','mapMob','mapZoom'].forEach(id=>{const e=$(id);if(e)e.onchange=alignMap});
 function apply(o){D=Array.isArray(o.d)?o.d:[];AS=o.as||today();bkDate=o.bk||'';localPub=o.pub||'';
   migDone=Array.isArray(o.mig)?o.mig.slice():[];migrate()}
 (async()=>{
