@@ -11,8 +11,9 @@ const SAT_BIN='sibs3d-sat.bin?v=1';              // satellite picture, encrypted
 const SAT_KEY={spx:1,c:'iW/OZcaBBoUlk9br+FG9mScv3LAAyWKxnOjnLkSRRWwY4Go0ZMnImSDWSWoL1bobLmjzxgsYjFEGbzQXrH18aZntOlFtIUe/4RbbBZpFEZ0='}; // its key, locked with the page data key
 async function satSrc(){
   if(SAT_URL)return SAT_URL;
-  if(!window.SPX||!SPX.dec)throw new Error('locked');
-  const {k}=await SPX.dec(SAT_KEY);
+  const spx=(typeof SPX!=='undefined'&&SPX)||window.SPX;
+  if(!spx||!spx.dec)throw new Error('locked');
+  const {k}=await spx.dec(SAT_KEY);
   const kb=Uint8Array.from(atob(k),c=>c.charCodeAt(0));
   const key=await crypto.subtle.importKey('raw',kb,'AES-GCM',false,['decrypt']);
   const r=await fetch(SAT_BIN);if(!r.ok)throw new Error('net');
