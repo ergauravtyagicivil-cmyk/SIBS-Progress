@@ -695,5 +695,39 @@ function hookPpt(){
   G.prototype.__pdm=true;
 }
 setInterval(hookPpt,1000);
+
+/* Print / PDF: give the MTBM section its own page right after "Per-day progress by diameter" */
+function fitPage(pg){const I=pg.querySelector('.pin'),B=pg.querySelector('.pbody'),PW=parseFloat(pg.style.width),PH=parseFloat(pg.style.height);
+  const bh=B.clientHeight||PH-30;let best=null;
+  [1,1.12,1.25,1.4,1.55,1.75,2].forEach(f=>{const w=Math.round(PW*f);I.style.zoom=1;I.style.width=w+'px';
+    const h=I.scrollHeight||1,sw=Math.max(w,I.scrollWidth),sc=Math.min(1,PW/sw,bh/h);if(!best||sc>best[1]+1e-4)best=[sw,sc]});
+  I.style.width=best[0]+'px';I.style.zoom=(best[1]*0.995).toFixed(4)}
+function hookPrint(){
+  if(!has('composePages')||window.composePages.__pdm)return;
+  const orig=window.composePages;
+  const w=function(){
+    const undo=orig.apply(this,arguments);
+    let mine=null;
+    try{
+      const host=document.getElementById('pdmHost'),root=document.getElementById('printRoot');
+      const pg=host&&root&&host.closest('.ppage');
+      if(pg&&root.contains(pg)){
+        const card=host.parentNode,mark=document.createComment('pdm');card.insertBefore(mark,host);
+        const P=pg.cloneNode(false);P.style.width=pg.style.width;P.style.height=pg.style.height;
+        const head=pg.querySelector('.phead').cloneNode(true);const b=head.querySelector('b');
+        const sp=head.querySelector('span');if(sp&&b){sp.innerHTML='';sp.appendChild(b);sp.appendChild(document.createTextNode(' · MTBM per-day progress by DN — SIBS-1, SIBS-2 and combined'))}
+        const B=document.createElement('div');B.className='pbody';const I=document.createElement('div');I.className='pin';
+        const wrap=document.createElement('div');wrap.className='card';wrap.appendChild(host);I.appendChild(wrap);B.appendChild(I);P.appendChild(head);P.appendChild(B);
+        pg.after(P);fitPage(pg);fitPage(P);
+        const all=[...root.querySelectorAll('.ppage')];
+        all.forEach((p,i)=>{const s=p.querySelectorAll('.phead span')[1];if(s)s.innerHTML=s.innerHTML.replace(/page \d+ of \d+/,'page '+(i+1)+' of '+all.length)});
+        mine=()=>{try{mark.parentNode.insertBefore(host,mark);mark.remove()}catch(e){}};
+      }
+    }catch(e){console.warn('MTBM print page',e)}
+    return function(){if(mine)mine();return undo&&undo.apply(this,arguments)};
+  };
+  w.__pdm=true;window.composePages=w;
+}
+setInterval(hookPrint,1000);hookPrint();
 window.SIBSPD_stats=pdStats;window.SIBSPD_draw=drawWeb;window.SIBSPD_ppt=pptSlide;
 })();
