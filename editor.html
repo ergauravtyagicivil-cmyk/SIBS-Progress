@@ -61,7 +61,7 @@ button:disabled{opacity:.6;cursor:wait}
     var c=unb64($('spxData').textContent.trim());
     var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:c.subarray(0,12)},k,c.subarray(12));
     var html=new TextDecoder().decode(pt);
-    html=html.replace(/<\/body>(?![\s\S]*<\/body>)/i,'<script src="sibs3d.js?v=7" charset="utf-8"><\/script></body>');
+    html=html.replace(/<\/body>(?![\s\S]*<\/body>)/i,'<script src="sibs3d.js?v=8" charset="utf-8"><\/script></body>');
     if(document.readyState!=='complete')await new Promise(function(r){window.addEventListener('load',r,{once:true})});
     ['spxStyle','spxWrap','spxData'].forEach(function(i){var e=$(i);if(e)e.remove()});
     document.documentElement.className='';

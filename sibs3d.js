@@ -520,6 +520,7 @@ const css=`
 .pdm-b em{font-style:normal;text-align:right;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums;font-weight:600}
 .pdm-leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2,#9DB2C1);margin-top:6px}
 .pdm-leg i{display:inline-block;width:12px;height:6px;border-radius:3px;margin-right:5px;vertical-align:1px}
+#printRoot .pdm-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}#printRoot .pdm-sec{margin-top:8px}#printRoot .pdm-t{padding:8px 10px}#printRoot .pdm-t svg.m{margin:10px 0 2px;max-height:62px}#printRoot .pdm-big b{font-size:24px}#printRoot .pdm-bar{margin:5px 0 6px}#printRoot .pdm-kv{gap:1px 8px;font-size:12px}#printRoot .pdm-sh{padding:5px 10px}#printRoot .pdm-top p{display:none}
 @media print{.pdm-seg{display:none}.pdm-t.pdm-live .st i{animation:none}}
 `;
 if(!document.getElementById('pdmCss')){const s=document.createElement('style');s.id='pdmCss';s.textContent=css;document.head.appendChild(s)}
