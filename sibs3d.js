@@ -504,7 +504,7 @@ const css=`
 .pdm-big{display:flex;align-items:baseline;gap:6px}
 .pdm-big b{font-size:30px;line-height:1;font-weight:700;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums}
 .pdm-big span{font-size:12.5px;color:var(--ink2,#9DB2C1)}
-.pdm-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin:8px 0 10px;overflow:hidden}
+.pdm-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin:8px 0 2px;overflow:hidden}
 .pdm-bar i{display:block;height:100%;border-radius:3px;background:var(--k)}
 .pdm-kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:12.5px}
 .pdm-kv span:nth-child(odd){color:var(--ink2,#9DB2C1);white-space:nowrap}
@@ -569,14 +569,7 @@ function tile(dn,r,key,maxRate,maxDn){
    ${machine(dn,live,maxDn)}
    <div class="pdm-big"><b>${r.days?f1(r.rate):'—'}</b><span>m / boring day · DN${dn}</span></div>
    <div class="pdm-bar"><i style="width:${maxRate&&r.days?Math.min(100,r.rate/maxRate*100).toFixed(1):0}%"></i></div>
-   <div class="pdm-kv">
-    <span>Bored</span><span>${f1(r.p)} / ${f1(r.len)} m (${pct.toFixed(0)}%)</span>
-    <span>Drives started</span><span>${r.started} of ${r.cnt}</span>
-    <span>Boring days</span><span>${r.days||'—'}</span>
-    <span>Best drive</span><span>${r.best?f1(r.best.r)+' m/day · #'+r.best.sn:'—'}</span>
-    <span>Boring now</span><span${live?' class="y"':''}>${live?r.run.map(x=>f1(x.rate)).join(' · ')+' m/day':'—'}</span>
-    <span>Last 24 h</span><span${r.hh&&r.h?' class="y"':''}>${r.hh?sg(r.h)+' m':'—'}</span>
-   </div></div>`;
+   </div>`;
 }
 
 function render(host,S){
