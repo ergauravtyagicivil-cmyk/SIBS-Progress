@@ -491,11 +491,11 @@ const css=`
 .pdm-sum b{color:var(--ink,#E4EDF3);font-size:18px;font-variant-numeric:tabular-nums;margin-right:4px}
 .pdm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:12px}
 .pdm-t{border:1px solid var(--line,#24394C);border-radius:10px;padding:12px 14px 12px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));position:relative;overflow:hidden}
-.pdm-t.live{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.18) inset}
+.pdm-t.pdm-live{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.18) inset}
 .pdm-t .st{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;letter-spacing:.4px;display:flex;align-items:center;gap:5px;color:var(--ink3,#6D8597)}
 .pdm-t .st i{width:7px;height:7px;border-radius:50%;background:currentColor}
-.pdm-t.live .st{color:var(--led-y,#FFC83D)}.pdm-t.live .st i{animation:pdmP 1.3s infinite}
-.pdm-t.done .st{color:var(--led-g,#3BF08C)}
+.pdm-t.pdm-live .st{color:var(--led-y,#FFC83D)}.pdm-t.pdm-live .st i{animation:pdmP 1.3s infinite}
+.pdm-t.pdm-done .st{color:var(--led-g,#3BF08C)}
 @keyframes pdmP{0%{box-shadow:0 0 0 0 rgba(255,200,61,.7)}70%{box-shadow:0 0 0 6px rgba(255,200,61,0)}100%{box-shadow:0 0 0 0 rgba(255,200,61,0)}}
 .pdm-t svg.m{display:block;width:100%;height:auto;margin:18px 0 8px;overflow:visible}
 .pdm-big{display:flex;align-items:baseline;gap:6px}
@@ -517,7 +517,7 @@ const css=`
 .pdm-b em{font-style:normal;text-align:right;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums;font-weight:600}
 .pdm-leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2,#9DB2C1);margin-top:6px}
 .pdm-leg i{display:inline-block;width:12px;height:6px;border-radius:3px;margin-right:5px;vertical-align:1px}
-@media print{.pdm-seg{display:none}.pdm-t.live .st i{animation:none}}
+@media print{.pdm-seg{display:none}.pdm-t.pdm-live .st i{animation:none}}
 `;
 if(!document.getElementById('pdmCss')){const s=document.createElement('style');s.id='pdmCss';s.textContent=css;document.head.appendChild(s)}
 
@@ -560,7 +560,7 @@ function tile(dn,r,key,maxRate,maxDn){
   const live=r.run&&r.run.length>0,done=!live&&r.cnt>0&&r.p>=r.len-0.05;
   const st=live?'BORING NOW'+(r.run.length>1?' ×'+r.run.length:''):done?'ALL HOLED THROUGH':r.started?'IDLE':'NOT STARTED';
   const pct=r.len?r.p/r.len*100:0;
-  return `<div class="pdm-t${live?' live':done?' done':''}" style="--k:${K[key]}">
+  return `<div class="pdm-t${live?' pdm-live':done?' pdm-done':''}" style="--k:${K[key]}">
    <div class="st"><i></i>${st}</div>
    ${machine(dn,live,maxDn)}
    <div class="pdm-big"><b>${r.days?f1(r.rate):'—'}</b><span>m / boring day · DN${dn}</span></div>
