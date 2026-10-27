@@ -489,7 +489,10 @@ const css=`
 .pdm-seg button.on{background:var(--k);color:#06121b}
 .pdm-sum{display:flex;flex-wrap:wrap;gap:10px 22px;margin:14px 0 4px;font-size:13px;color:var(--ink2,#9DB2C1)}
 .pdm-sum b{color:var(--ink,#E4EDF3);font-size:18px;font-variant-numeric:tabular-nums;margin-right:4px}
-.pdm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:12px}
+.pdm-sec{margin-top:16px}.pdm-sh{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;padding:8px 12px;border-left:4px solid var(--k);background:rgba(255,255,255,.035);border-radius:6px;font-size:13px;color:var(--ink2,#9DB2C1)}
+.pdm-sh b{font-size:15px;color:var(--ink,#E4EDF3);margin-right:6px}.pdm-sh em{font-style:normal;font-weight:700;font-size:16px;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums}
+.pdm-sec .pdm-grid{margin-top:10px}
+.pdm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:12px}
 .pdm-t{border:1px solid var(--line,#24394C);border-radius:10px;padding:12px 14px 12px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));position:relative;overflow:hidden}
 .pdm-t.pdm-live{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.18) inset}
 .pdm-t .st{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;letter-spacing:.4px;display:flex;align-items:center;gap:5px;color:var(--ink3,#6D8597)}
@@ -505,7 +508,7 @@ const css=`
 .pdm-bar i{display:block;height:100%;border-radius:3px;background:var(--k)}
 .pdm-kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:12.5px}
 .pdm-kv span:nth-child(odd){color:var(--ink2,#9DB2C1);white-space:nowrap}
-.pdm-kv span:nth-child(even){text-align:right;font-variant-numeric:tabular-nums;color:var(--ink,#E4EDF3)}
+.pdm-kv span:nth-child(even){white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink,#E4EDF3)}
 .pdm-kv .y{color:var(--led-y,#FFC83D)!important;font-weight:700}
 .pdm-cmp{margin-top:16px;border:1px solid var(--line,#24394C);border-radius:10px;padding:12px 14px}
 .pdm-cmp h5{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink,#E4EDF3)}
@@ -575,33 +578,19 @@ function tile(dn,r,key,maxRate,maxDn){
    </div></div>`;
 }
 
-function render(host,S,state){
+function render(host,S){
   if(!host||!S)return;
-  const view=(state&&state.view)||host.dataset.view||'ALL';host.dataset.view=view;
-  const sec=S[view]||S.ALL,dns=Object.keys(sec.dn).map(Number).sort((a,b)=>a-b);
-  const allDn=[...new Set([].concat(...['SIBS1','SIBS2','ALL'].map(k=>S[k]?Object.keys(S[k].dn).map(Number):[])))].sort((a,b)=>a-b);
-  const maxRate=Math.max(1,...dns.map(x=>sec.dn[x].days?sec.dn[x].rate:0)),maxDn=Math.max(...allDn);
-  const A=sec.all,live=A.run?A.run.length:0;
-  const cmpMax=Math.max(1,...allDn.map(x=>Math.max(...['SIBS1','SIBS2','ALL'].map(k=>S[k]&&S[k].dn[x]&&S[k].dn[x].days?S[k].dn[x].rate:0))));
-  host.innerHTML=`
-   <div class="pdm-top" style="--k:${K[view]}">
-    <div><h4>MTBM per-day progress by DN</h4><p>Average metres bored per boring day for each pipe size — ${NAME[view]}${S.AS?' · data date '+S.AS:''}</p></div>
-    <div class="pdm-seg">${['SIBS1','SIBS2','ALL'].map(k=>`<button type="button" data-v="${k}" class="${k===view?'on':''}" style="--k:${K[k]}">${k==='ALL'?'Combined':NAME[k]}</button>`).join('')}</div>
-   </div>
-   <div class="pdm-sum">
-    <span><b>${f1(A.rate)}</b>m/day overall</span>
-    <span><b>${f1(A.p)}</b>of ${f1(A.len)} m bored</span>
-    <span><b>${A.days}</b>boring days</span>
-    <span><b style="color:var(--led-y,#FFC83D)">${live}</b>MTBM${live===1?'':'s'} boring now</span>
-    <span><b style="color:${A.hh&&A.h?'var(--led-y,#FFC83D)':'inherit'}">${A.hh?sg(A.h):'—'}</b>m last 24 h</span>
-   </div>
-   <div class="pdm-grid">${dns.map(x=>tile(x,sec.dn[x],view,maxRate,maxDn)).join('')}</div>
-   <div class="pdm-cmp"><h5>Average m/day by DN — SIBS-1, SIBS-2 and combined</h5>
-    ${allDn.map(x=>`<div class="pdm-row"><b>DN${x}</b><div class="pdm-bars">${['SIBS1','SIBS2','ALL'].map(k=>{const r=S[k]&&S[k].dn[x];const v=r&&r.days?r.rate:0;
-      return `<div class="pdm-b"><span>${k==='ALL'?'Combined':NAME[k]}</span><div><i style="width:${(v/cmpMax*100).toFixed(1)}%;background:${K[k]}"></i></div><em>${r&&r.days?f1(v):'—'}</em></div>`}).join('')}</div></div>`).join('')}
-    <div class="pdm-leg"><span><i style="background:${K.SIBS1}"></i>SIBS-1</span><span><i style="background:${K.SIBS2}"></i>SIBS-2</span><span><i style="background:${K.ALL}"></i>Combined</span><span>m per boring day</span></div>
-   </div>`;
-  host.querySelectorAll('.pdm-seg button').forEach(b=>b.onclick=()=>render(host,S,{view:b.dataset.v}));
+  const allDn=[...new Set([].concat(...['SIBS1','SIBS2','ALL'].map(k=>S[k]?Object.keys(S[k].dn).map(Number):[])))].sort((a,b)=>a-b),maxDn=Math.max(...allDn);
+  const sect=key=>{const sec=S[key];if(!sec)return '';const dns=Object.keys(sec.dn).map(Number).sort((a,b)=>a-b);
+    const maxRate=Math.max(1,...dns.map(x=>sec.dn[x].days?sec.dn[x].rate:0)),A=sec.all,live=A.run?A.run.length:0;
+    return `<div class="pdm-sec" style="--k:${K[key]}">
+     <div class="pdm-sh"><b>${NAME[key]}</b>
+      <span><em>${f1(A.rate)}</em> m/day overall</span><span><em>${f1(A.p)}</em> of ${f1(A.len)} m bored</span><span><em>${A.days}</em> boring days</span>
+      <span><em style="color:var(--led-y,#FFC83D)">${live}</em> MTBM${live===1?'':'s'} boring now</span>
+      <span><em style="color:${A.hh&&A.h?'var(--led-y,#FFC83D)':'inherit'}">${A.hh?sg(A.h):'—'}</em> m last 24 h</span></div>
+     <div class="pdm-grid">${dns.map(x=>tile(x,sec.dn[x],key,maxRate,maxDn)).join('')}</div></div>`};
+  host.innerHTML=`<div class="pdm-top"><div><h4>MTBM per-day progress by DN</h4><p>Average metres bored per boring day for each pipe size — SIBS-1, SIBS-2 and combined${S.AS?' · data date '+S.AS:''}</p></div></div>
+   ${['SIBS1','SIBS2','ALL'].map(sect).join('')}`;
 }
 window.SIBSPD={render};
 })();
