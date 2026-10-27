@@ -695,5 +695,5 @@ function hookPpt(){
   G.prototype.__pdm=true;
 }
 setInterval(hookPpt,1000);
-window.SIBSPD_stats=pdStats;window.SIBSPD_draw=drawWeb;
+window.SIBSPD_stats=pdStats;window.SIBSPD_draw=drawWeb;window.SIBSPD_ppt=pptSlide;
 })();
