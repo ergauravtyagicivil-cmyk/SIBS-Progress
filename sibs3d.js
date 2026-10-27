@@ -474,3 +474,226 @@ function build(G,W,H,mapCanvas,q,close){
 }
 window.SIBS3D={open:open3d};
 })();
+
+/* MTBM per-day progress by DN — SIBS-1, SIBS-2 and combined.  © 2026 Gaurav Tyagi */
+(function(){
+'use strict';
+const css=`
+.pdm{margin-top:18px;border-top:1px solid var(--line,#24394C);padding-top:16px}
+.pdm-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.pdm-top h4{margin:0;font-size:15px;font-weight:600;color:var(--ink,#E4EDF3)}
+.pdm-top p{margin:2px 0 0;font-size:12.5px;color:var(--ink2,#9DB2C1)}
+.pdm-seg{display:inline-flex;border:1px solid var(--line,#24394C);border-radius:8px;overflow:hidden}
+.pdm-seg button{font:inherit;font-size:13px;font-weight:600;padding:6px 14px;border:0;background:transparent;color:var(--ink2,#9DB2C1);cursor:pointer}
+.pdm-seg button+button{border-left:1px solid var(--line,#24394C)}
+.pdm-seg button.on{background:var(--k);color:#06121b}
+.pdm-sum{display:flex;flex-wrap:wrap;gap:10px 22px;margin:14px 0 4px;font-size:13px;color:var(--ink2,#9DB2C1)}
+.pdm-sum b{color:var(--ink,#E4EDF3);font-size:18px;font-variant-numeric:tabular-nums;margin-right:4px}
+.pdm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:12px}
+.pdm-t{border:1px solid var(--line,#24394C);border-radius:10px;padding:12px 14px 12px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));position:relative;overflow:hidden}
+.pdm-t.live{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.18) inset}
+.pdm-t .st{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;letter-spacing:.4px;display:flex;align-items:center;gap:5px;color:var(--ink3,#6D8597)}
+.pdm-t .st i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.pdm-t.live .st{color:var(--led-y,#FFC83D)}.pdm-t.live .st i{animation:pdmP 1.3s infinite}
+.pdm-t.done .st{color:var(--led-g,#3BF08C)}
+@keyframes pdmP{0%{box-shadow:0 0 0 0 rgba(255,200,61,.7)}70%{box-shadow:0 0 0 6px rgba(255,200,61,0)}100%{box-shadow:0 0 0 0 rgba(255,200,61,0)}}
+.pdm-t svg.m{display:block;width:100%;height:auto;margin:18px 0 8px;overflow:visible}
+.pdm-big{display:flex;align-items:baseline;gap:6px}
+.pdm-big b{font-size:30px;line-height:1;font-weight:700;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums}
+.pdm-big span{font-size:12.5px;color:var(--ink2,#9DB2C1)}
+.pdm-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin:8px 0 10px;overflow:hidden}
+.pdm-bar i{display:block;height:100%;border-radius:3px;background:var(--k)}
+.pdm-kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:12.5px}
+.pdm-kv span:nth-child(odd){color:var(--ink2,#9DB2C1);white-space:nowrap}
+.pdm-kv span:nth-child(even){text-align:right;font-variant-numeric:tabular-nums;color:var(--ink,#E4EDF3)}
+.pdm-kv .y{color:var(--led-y,#FFC83D)!important;font-weight:700}
+.pdm-cmp{margin-top:16px;border:1px solid var(--line,#24394C);border-radius:10px;padding:12px 14px}
+.pdm-cmp h5{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink,#E4EDF3)}
+.pdm-row{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;margin:8px 0}
+.pdm-row>b{font-size:13px;color:var(--ink,#E4EDF3)}
+.pdm-bars{display:grid;gap:3px}
+.pdm-b{display:grid;grid-template-columns:70px 1fr 44px;gap:8px;align-items:center;font-size:11.5px;color:var(--ink2,#9DB2C1)}
+.pdm-b div{height:9px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden}.pdm-b div i{display:block;height:100%;border-radius:5px}
+.pdm-b em{font-style:normal;text-align:right;color:var(--ink,#E4EDF3);font-variant-numeric:tabular-nums;font-weight:600}
+.pdm-leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2,#9DB2C1);margin-top:6px}
+.pdm-leg i{display:inline-block;width:12px;height:6px;border-radius:3px;margin-right:5px;vertical-align:1px}
+@media print{.pdm-seg{display:none}.pdm-t.live .st i{animation:none}}
+`;
+if(!document.getElementById('pdmCss')){const s=document.createElement('style');s.id='pdmCss';s.textContent=css;document.head.appendChild(s)}
+
+const K={SIBS1:'var(--c1,#5CB8FF)',SIBS2:'var(--c2,#B69CFF)',ALL:'var(--led-g,#3BF08C)'};
+const NAME={SIBS1:'SIBS-1',SIBS2:'SIBS-2',ALL:'SIBS-1 + SIBS-2 combined'};
+const f1=v=>(v==null||isNaN(v))?'—':(+v).toLocaleString('en-GB',{minimumFractionDigits:1,maximumFractionDigits:1});
+const sg=v=>v>0?'+'+f1(v):f1(v);
+let uid=0;
+
+/* side view of a micro-tunnelling machine; size follows the DN, DN written on the shield */
+function machine(dn,live,maxDn){
+  const id='pm'+(++uid),s=.62+.38*Math.min(1,(dn-1000)/Math.max(200,(maxDn||1800)-1000));
+  const H=Math.round(74*s),W=300,cy=44,top=cy-H/2,bot=cy+H/2;
+  const sx=100,sw=172,cx=sx+sw;                 // shield start/width, cutter x
+  const pipes=[0,1,2].map(i=>{const x=-14+i*38;return `<rect x="${x}" y="${top+3}" width="36" height="${H-6}" rx="3" fill="url(#${id}c)" stroke="rgba(0,0,0,.35)"/>`}).join('');
+  const teeth=Array.from({length:7},(_,i)=>{const y=top+4+(H-8)*i/6;return `<path d="M${cx+9} ${y-3} l7 3 l-7 3z" fill="#9aa4ad"/>`}).join('');
+  return `<svg class="m" viewBox="0 0 ${W} 88" role="img" aria-label="MTBM DN${dn}">
+  <defs>
+   <linearGradient id="${id}y" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE08A"/><stop offset=".45" stop-color="#FFC83D"/><stop offset="1" stop-color="#B97F00"/></linearGradient>
+   <linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9d4ca"/><stop offset=".5" stop-color="#b6afa2"/><stop offset="1" stop-color="#7d776c"/></linearGradient>
+   <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b7580"/><stop offset=".5" stop-color="#3c444c"/><stop offset="1" stop-color="#1f252b"/></linearGradient>
+   <radialGradient id="${id}g"><stop offset="0" stop-color="#FFC83D" stop-opacity=".55"/><stop offset="1" stop-color="#FFC83D" stop-opacity="0"/></radialGradient>
+  </defs>
+  <line x1="0" y1="${bot+10}" x2="${W}" y2="${bot+10}" stroke="rgba(255,255,255,.08)" stroke-dasharray="3 5"/>
+  <g>${pipes}${live?`<animateTransform attributeName="transform" type="translate" values="-38 0;0 0" dur="2.4s" repeatCount="indefinite"/>`:''}</g>
+  <rect x="${sx-4}" y="${top+6}" width="10" height="${H-12}" fill="#3c444c"/>
+  <rect x="${sx}" y="${top}" width="${sw}" height="${H}" rx="6" fill="url(#${id}y)" stroke="rgba(0,0,0,.35)"/>
+  <rect x="${sx+sw*.86}" y="${top}" width="6" height="${H}" fill="#2a3036" opacity=".75"/>
+  <rect x="${sx+6}" y="${top+3}" width="${sw-12}" height="${Math.max(3,H*.12)}" rx="2" fill="#fff" opacity=".28"/>
+  <text x="${sx+sw*.43}" y="${cy+Math.round(Math.min(30,H*.46)*.36)}" text-anchor="middle" font-family="Barlow,system-ui,sans-serif" font-weight="800" font-size="${Math.round(Math.min(30,H*.46))}" fill="#1b1200" letter-spacing=".5">DN${dn}</text>
+  
+  <rect x="${cx}" y="${top-3}" width="10" height="${H+6}" rx="3" fill="url(#${id}s)"/>
+  <g>${teeth}${live?`<animateTransform attributeName="transform" type="translate" values="0 0;0 ${(H-8)/6}" dur=".45s" repeatCount="indefinite"/>`:''}</g>
+  <rect x="${cx+8}" y="${top-6}" width="12" height="${H+12}" fill="none"/>
+  ${live?`<circle cx="${cx+22}" cy="${cy}" r="${H*.7}" fill="url(#${id}g)"><animate attributeName="opacity" values=".5;1;.5" dur="1.6s" repeatCount="indefinite"/></circle>`:''}
+  </svg>`;
+}
+
+function tile(dn,r,key,maxRate,maxDn){
+  const live=r.run&&r.run.length>0,done=!live&&r.cnt>0&&r.p>=r.len-0.05;
+  const st=live?'BORING NOW'+(r.run.length>1?' ×'+r.run.length:''):done?'ALL HOLED THROUGH':r.started?'IDLE':'NOT STARTED';
+  const pct=r.len?r.p/r.len*100:0;
+  return `<div class="pdm-t${live?' live':done?' done':''}" style="--k:${K[key]}">
+   <div class="st"><i></i>${st}</div>
+   ${machine(dn,live,maxDn)}
+   <div class="pdm-big"><b>${r.days?f1(r.rate):'—'}</b><span>m / boring day · DN${dn}</span></div>
+   <div class="pdm-bar"><i style="width:${maxRate&&r.days?Math.min(100,r.rate/maxRate*100).toFixed(1):0}%"></i></div>
+   <div class="pdm-kv">
+    <span>Bored</span><span>${f1(r.p)} / ${f1(r.len)} m (${pct.toFixed(0)}%)</span>
+    <span>Drives started</span><span>${r.started} of ${r.cnt}</span>
+    <span>Boring days</span><span>${r.days||'—'}</span>
+    <span>Best drive</span><span>${r.best?f1(r.best.r)+' m/day · #'+r.best.sn:'—'}</span>
+    <span>Boring now</span><span${live?' class="y"':''}>${live?r.run.map(x=>f1(x.rate)).join(' · ')+' m/day':'—'}</span>
+    <span>Last 24 h</span><span${r.hh&&r.h?' class="y"':''}>${r.hh?sg(r.h)+' m':'—'}</span>
+   </div></div>`;
+}
+
+function render(host,S,state){
+  if(!host||!S)return;
+  const view=(state&&state.view)||host.dataset.view||'ALL';host.dataset.view=view;
+  const sec=S[view]||S.ALL,dns=Object.keys(sec.dn).map(Number).sort((a,b)=>a-b);
+  const allDn=[...new Set([].concat(...['SIBS1','SIBS2','ALL'].map(k=>S[k]?Object.keys(S[k].dn).map(Number):[])))].sort((a,b)=>a-b);
+  const maxRate=Math.max(1,...dns.map(x=>sec.dn[x].days?sec.dn[x].rate:0)),maxDn=Math.max(...allDn);
+  const A=sec.all,live=A.run?A.run.length:0;
+  const cmpMax=Math.max(1,...allDn.map(x=>Math.max(...['SIBS1','SIBS2','ALL'].map(k=>S[k]&&S[k].dn[x]&&S[k].dn[x].days?S[k].dn[x].rate:0))));
+  host.innerHTML=`
+   <div class="pdm-top" style="--k:${K[view]}">
+    <div><h4>MTBM per-day progress by DN</h4><p>Average metres bored per boring day for each pipe size — ${NAME[view]}${S.AS?' · data date '+S.AS:''}</p></div>
+    <div class="pdm-seg">${['SIBS1','SIBS2','ALL'].map(k=>`<button type="button" data-v="${k}" class="${k===view?'on':''}" style="--k:${K[k]}">${k==='ALL'?'Combined':NAME[k]}</button>`).join('')}</div>
+   </div>
+   <div class="pdm-sum">
+    <span><b>${f1(A.rate)}</b>m/day overall</span>
+    <span><b>${f1(A.p)}</b>of ${f1(A.len)} m bored</span>
+    <span><b>${A.days}</b>boring days</span>
+    <span><b style="color:var(--led-y,#FFC83D)">${live}</b>MTBM${live===1?'':'s'} boring now</span>
+    <span><b style="color:${A.hh&&A.h?'var(--led-y,#FFC83D)':'inherit'}">${A.hh?sg(A.h):'—'}</b>m last 24 h</span>
+   </div>
+   <div class="pdm-grid">${dns.map(x=>tile(x,sec.dn[x],view,maxRate,maxDn)).join('')}</div>
+   <div class="pdm-cmp"><h5>Average m/day by DN — SIBS-1, SIBS-2 and combined</h5>
+    ${allDn.map(x=>`<div class="pdm-row"><b>DN${x}</b><div class="pdm-bars">${['SIBS1','SIBS2','ALL'].map(k=>{const r=S[k]&&S[k].dn[x];const v=r&&r.days?r.rate:0;
+      return `<div class="pdm-b"><span>${k==='ALL'?'Combined':NAME[k]}</span><div><i style="width:${(v/cmpMax*100).toFixed(1)}%;background:${K[k]}"></i></div><em>${r&&r.days?f1(v):'—'}</em></div>`}).join('')}</div></div>`).join('')}
+    <div class="pdm-leg"><span><i style="background:${K.SIBS1}"></i>SIBS-1</span><span><i style="background:${K.SIBS2}"></i>SIBS-2</span><span><i style="background:${K.ALL}"></i>Combined</span><span>m per boring day</span></div>
+   </div>`;
+  host.querySelectorAll('.pdm-seg button').forEach(b=>b.onclick=()=>render(host,S,{view:b.dataset.v}));
+}
+window.SIBSPD={render};
+})();
+
+/* ---- hook into the page: web card, print (moves with #pdCard) and PowerPoint ---- */
+(function(){
+'use strict';
+const has=n=>{try{return typeof eval(n)==='function'}catch(e){return false}};
+function pdStats(){
+  if(typeof D==='undefined'||!has('group')||!has('calc'))return null;
+  const day=(typeof AS!=='undefined'&&AS)||new Date().toISOString().slice(0,10);
+  const dM=(d)=>has('dayM')?dayM(d,day):0,hL=(d)=>has('hasLog')?hasLog(d,day):false;
+  const st=l=>{const g=group(l);let best=null;l.forEach(d=>{const q=calc(d);if(q.rate&&(!best||q.rate>best.r))best={r:q.rate,sn:d.sn,ft:d.f+'→'+d.t}});
+    const rl=l.filter(d=>calc(d).status==='run');
+    return{cnt:g.cnt,len:g.len||l.reduce((s,d)=>s+(+d.len||0),0),p:g.p,days:g.days,rate:g.rate||0,best,
+      run:rl.map(d=>({ft:d.f+'→'+d.t,rate:calc(d).rate,pct:calc(d).pct})),h:l.reduce((s,d)=>s+dM(d),0),hh:l.some(hL),started:l.filter(d=>calc(d).p>0).length}};
+  const out={};[['SIBS1',D.filter(d=>d.pr==='SIBS1')],['SIBS2',D.filter(d=>d.pr==='SIBS2')],['ALL',D]].forEach(([k,l])=>{
+    out[k]={all:st(l),dn:{}};[...new Set(l.map(d=>+d.dn))].filter(x=>x).sort((a,b)=>a-b).forEach(x=>out[k].dn[x]=st(l.filter(d=>+d.dn===x)))});
+  out.AS=day?new Date(day+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+  return out;
+}
+function drawWeb(){
+  const card=document.getElementById('pdCard');if(!card||!window.SIBSPD)return;
+  let host=document.getElementById('pdmHost');
+  if(!host){host=document.createElement('div');host.id='pdmHost';host.className='pdm';const row=document.getElementById('pdRow');(row&&row.parentNode===card?row:card.lastChild).after(host)}
+  const S=pdStats();if(S)SIBSPD.render(host,S);
+}
+/* re-draw whenever the page recalculates its per-day tables */
+function hookPerDay(){
+  if(!has('perDay')||window.perDay.__pdm)return false;
+  const orig=window.perDay;const w=function(){const r=orig.apply(this,arguments);try{drawWeb()}catch(e){}return r};w.__pdm=true;window.perDay=w;return true;
+}
+function boot(){hookPerDay();drawWeb()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+setInterval(()=>{if(!document.getElementById('pdmHost')&&document.getElementById('pdCard'))drawWeb();hookPerDay()},2000);
+
+/* PowerPoint: add a native slide (machine per DN + editable chart) to the page's own export */
+function pptSlide(P){
+  const S=pdStats();if(!S)return;
+  const cv=v=>{const c=getComputedStyle(document.documentElement).getPropertyValue(v).trim()||'#888888';if(c[0]==='#')return c.slice(1,7).toUpperCase();
+    const m=c.match(/\d+(\.\d+)?/g);return m?m.slice(0,3).map(q=>(+q|0).toString(16).padStart(2,'0')).join('').toUpperCase():'888888'};
+  const K={bg:cv('--surface'),ink:cv('--ink'),ink2:cv('--ink2'),line:cv('--line'),raise:cv('--raise'),g:cv('--led-g'),y:cv('--led-y'),c1:cv('--c1'),c2:cv('--c2')};
+  const SW=13.333,SH=7.5,F='Calibri',f1=v=>(v==null||isNaN(v))?'—':(+v).toLocaleString('en-GB',{minimumFractionDigits:1,maximumFractionDigits:1});
+  const no=(P._slides||P.slides||[]).length+1;
+  const s=P.addSlide();s.background={color:K.bg};
+  s.addText([{text:'Micro-tunnel boring progress — SIBS 1 & 2',options:{bold:true,fontSize:18,color:K.ink}},{text:'   MTBM per-day progress by DN — SIBS-1, SIBS-2 and combined',options:{fontSize:13,color:K.ink2}}],{x:.4,y:.18,w:10,h:.45,fontFace:F,margin:0});
+  s.addText('Data date '+S.AS,{x:9.9,y:.18,w:3.03,h:.45,fontFace:F,fontSize:12,color:K.ink2,align:'right',margin:0});
+  s.addShape(P.ShapeType.line,{x:.4,y:.68,w:SW-.8,h:0,line:{color:K.ink,width:1.25}});
+  s.addText('Sheikh Isa Bin Salman Highway Trunk Sewer · SPP-24/026 & SPP-24/027 · supervision consultant progress record',{x:.4,y:SH-.38,w:10,h:.25,fontFace:F,fontSize:8.5,color:K.ink2,margin:0});
+  s.addText(String(no),{x:SW-1.4,y:SH-.38,w:1,h:.25,fontFace:F,fontSize:8.5,color:K.ink2,align:'right',margin:0});
+  const A=S.ALL.all,live=A.run.length;
+  s.addText([{text:f1(A.rate),options:{bold:true,fontSize:16,color:K.ink}},{text:' m/day overall     ',options:{color:K.ink2}},
+    {text:f1(A.p),options:{bold:true,fontSize:16,color:K.ink}},{text:' of '+f1(A.len)+' m bored     ',options:{color:K.ink2}},
+    {text:String(live),options:{bold:true,fontSize:16,color:K.y}},{text:' MTBM'+(live===1?'':'s')+' boring now     ',options:{color:K.ink2}},
+    {text:A.hh?(A.h>0?'+':'')+f1(A.h):'—',options:{bold:true,fontSize:16,color:A.hh&&A.h?K.y:K.ink}},{text:' m last 24 h',options:{color:K.ink2}}],
+    {x:.4,y:.78,w:SW-.8,h:.42,fontFace:F,fontSize:11,margin:0,valign:'middle'});
+  const dns=Object.keys(S.ALL.dn).map(Number).sort((a,b)=>a-b),maxDn=Math.max(...dns),rowH=Math.min(1.32,5.3/Math.max(1,dns.length));
+  dns.forEach((dn,i)=>{
+    const y=1.35+i*rowH,r=S.ALL.dn[dn],lv=r.run.length>0,sc=.7+.3*Math.min(1,(dn-1000)/Math.max(200,maxDn-1000)),h=.62*sc,cy=y+.38;
+    s.addShape(P.ShapeType.roundRect,{x:.4,y:y-.04,w:6.55,h:rowH-.12,fill:{color:K.raise},line:{color:lv?K.y:K.line,width:lv?1.25:.75},rectRadius:.06});
+    for(let p=0;p<3;p++)s.addShape(P.ShapeType.roundRect,{x:.5+p*.27,y:cy-h/2+.04,w:.25,h:h-.08,fill:{color:'B6AFA2'},line:{color:'7D776C',width:.5},rectRadius:.02});
+    s.addShape(P.ShapeType.roundRect,{x:1.33,y:cy-h/2,w:1.55,h:h,fill:{color:'FFC83D'},line:{color:'B97F00',width:.75},rectRadius:.06});
+    s.addShape(P.ShapeType.rect,{x:2.66,y:cy-h/2,w:.05,h:h,fill:{color:'2A3036'},line:{color:'2A3036',width:0}});
+    s.addShape(P.ShapeType.roundRect,{x:2.88,y:cy-h/2-.03,w:.1,h:h+.06,fill:{color:'3C444C'},line:{color:'1F252B',width:.5},rectRadius:.02});
+    s.addText('DN'+dn,{x:1.33,y:cy-h/2,w:1.33,h:h,fontFace:F,fontSize:Math.round(15+6*sc),bold:true,color:'1B1200',align:'center',valign:'middle',margin:0});
+    s.addText(lv?'● BORING NOW'+(r.run.length>1?' ×'+r.run.length:''):r.p>=r.len-.05?'● ALL HOLED THROUGH':r.started?'● IDLE':'● NOT STARTED',
+      {x:.5,y:cy+h/2+.02,w:2.5,h:.22,fontFace:F,fontSize:8.5,bold:true,color:lv?K.y:r.p>=r.len-.05?K.g:K.ink2,margin:0});
+    const v=k=>{const q=S[k].dn[dn];return q&&q.days?f1(q.rate):'—'};
+    s.addText([{text:'SIBS-1 ',options:{color:K.ink2}},{text:v('SIBS1'),options:{bold:true,color:K.c1}},{text:'    SIBS-2 ',options:{color:K.ink2}},{text:v('SIBS2'),options:{bold:true,color:K.c2}},
+      {text:'    Combined ',options:{color:K.ink2}},{text:v('ALL'),options:{bold:true,color:K.g}},{text:'  m/day',options:{color:K.ink2}}],{x:3.15,y:y+.02,w:3.75,h:.32,fontFace:F,fontSize:11.5,margin:0});
+    s.addText('Bored '+f1(r.p)+' / '+f1(r.len)+' m ('+(r.len?Math.round(r.p/r.len*100):0)+'%) · '+r.started+' of '+r.cnt+' drives · '+(r.days||'—')+' boring days',{x:3.15,y:y+.34,w:3.75,h:.25,fontFace:F,fontSize:9,color:K.ink2,margin:0});
+    s.addText([{text:'Best '+(r.best?f1(r.best.r)+' m/day (#'+r.best.sn+')':'—')+'   ',options:{color:K.ink2}},
+      {text:lv?'Boring now '+r.run.map(x=>f1(x.rate)).join(' · ')+' m/day':'',options:{color:K.y,bold:true}},
+      {text:r.hh?'   Last 24 h '+(r.h>0?'+':'')+f1(r.h)+' m':'',options:{color:r.h?K.y:K.ink2,bold:!!r.h}}],{x:3.15,y:y+.58,w:3.75,h:.25,fontFace:F,fontSize:9,margin:0});
+  });
+  const lab=dns.map(x=>'DN'+x),ser=k=>({name:k==='ALL'?'Combined':k==='SIBS1'?'SIBS-1':'SIBS-2',labels:lab,values:dns.map(x=>{const q=S[k].dn[x];return q&&q.days?+q.rate.toFixed(1):0})});
+  s.addText('Average m per boring day by DN',{x:7.2,y:1.3,w:5.7,h:.3,fontFace:F,fontSize:12.5,bold:true,color:K.ink,margin:0});
+  s.addChart(P.ChartType.bar,[ser('SIBS1'),ser('SIBS2'),ser('ALL')],{x:7.15,y:1.6,w:5.8,h:5.1,barDir:'col',barGrouping:'clustered',chartColors:[K.c1,K.c2,K.g],
+    fontFace:F,catAxisLabelFontFace:F,valAxisLabelFontFace:F,legendFontFace:F,dataLabelFontFace:F,catAxisLabelColor:K.ink2,valAxisLabelColor:K.ink2,legendColor:K.ink,dataLabelColor:K.ink,
+    catAxisLabelFontSize:10,valAxisLabelFontSize:9,legendFontSize:10,dataLabelFontSize:8,valGridLine:{color:K.line,size:.5},catGridLine:{style:'none'},
+    showLegend:true,legendPos:'b',showValue:true,dataLabelFormatCode:'0.0',valAxisTitle:'m / boring day',showValAxisTitle:true,valAxisTitleColor:K.ink2,valAxisTitleFontSize:9});
+  s.addText('Average = bored metres over boring days. "Boring now" = current rate of each machine on that DN.',{x:.4,y:SH-.72,w:SW-.8,h:.28,fontFace:F,fontSize:9,italic:true,color:K.ink2,margin:0});
+}
+function hookPpt(){
+  const G=window.PptxGenJS;if(!G||!G.prototype||G.prototype.__pdm)return;
+  const wf=G.prototype.writeFile;
+  G.prototype.writeFile=async function(){
+    try{let inc=true;try{if(has('prOpts'))inc=prOpts().inc.dash}catch(e){}
+      if(inc&&!this.__pdmDone&&/Micro-tunnel progress/i.test(this.title||'')){this.__pdmDone=true;pptSlide(this)}}catch(e){console.warn('MTBM slide',e)}
+    return wf.apply(this,arguments)};
+  G.prototype.__pdm=true;
+}
+setInterval(hookPpt,1000);
+window.SIBSPD_stats=pdStats;window.SIBSPD_draw=drawWeb;
+})();
