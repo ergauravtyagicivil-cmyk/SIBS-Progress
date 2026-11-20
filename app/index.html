@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12161C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MT Progress">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Microtunnel Progress</title>
+<style>
+  :root{
+    --bg:#F3F4F1; --card:#FFFFFF; --ink:#12161C; --muted:#5B6470; --line:#DDE1E4; --field:#C9CED3;
+    --accent:#C2410C; --accent-d:#9A3412; --accent-soft:#FFEDD5; --dark:#12161C; --dark-2:#2A313B; --dark-muted:#A9B1BB; --glow:#FB923C;
+    --ok:#166534; --ok-bg:#DCFCE7; --warn:#92400E; --warn-bg:#FEF3C7; --bad:#991B1B; --bad-bg:#FEE2E2;
+    --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+  body{min-height:100vh;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  main{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 18px 24px;display:flex;flex-direction:column;gap:14px}
+  h1{margin:0;font-size:26px;font-weight:700;line-height:1.15}
+  h2{margin:4px 0 0;font-size:17px;font-weight:600}
+  a{color:var(--accent);text-decoration:none}
+  .eyebrow{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  .mono{font-family:var(--mono)}
+  .row{display:flex;align-items:center;gap:10px}
+  .between{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+  .dark{background:var(--dark);color:#fff;border-radius:20px;padding:18px}
+  .dark .muted{color:var(--dark-muted)}
+  .bar{height:8px;background:#E5E7EB;border-radius:99px;overflow:hidden}
+  .bar>i{display:block;height:100%;background:var(--accent);border-radius:99px}
+  .dark .bar{background:var(--dark-2);height:10px}
+  .dark .bar>i{background:var(--glow)}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .stat b{display:block;font-family:var(--mono);font-size:20px;font-weight:600}
+  .stat span{font-size:12px}
+  .chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap}
+  .chip.ok{background:var(--ok-bg);color:var(--ok)} .chip.warn{background:var(--warn-bg);color:var(--warn)}
+  .chip.bad{background:var(--bad-bg);color:var(--bad)} .chip.idle{background:#E5E7EB;color:#374151}
+  .drive-card{display:flex;flex-direction:column;gap:8px;color:var(--ink)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 16px;border-radius:14px;border:1px solid var(--field);background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.danger{color:var(--bad);border-color:#F1B5B5}
+  .btn.icon{width:44px;min-height:44px;padding:0;border-radius:12px}
+  .btn.sm{min-height:40px;font-size:14px;padding:0 12px}
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+  input,select,textarea{width:100%;min-height:46px;border:1px solid var(--field);border-radius:12px;background:#fff;color:var(--ink);padding:0 12px;font:inherit;font-size:16px}
+  textarea{padding:10px 12px;min-height:70px;resize:vertical}
+  input.warn{border-color:#B45309;background:#FFFBEB}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#E5E7EB;border-radius:12px;padding:4px}
+  .seg button{min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .stepper{display:flex;align-items:center;gap:10px}
+  .stepper output{font-family:var(--mono);font-size:26px;font-weight:600;min-width:34px;text-align:center}
+  .chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;height:130px}
+  .chart div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:130px}
+  .chart i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:var(--ink)}
+  .chart i.today{background:var(--accent)} .chart i.zero{height:3px;background:#B91C1C}
+  .chart span{font-size:11px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:right;padding:10px 8px;color:var(--muted);font-weight:600;background:#F7F8F6}
+  td{text-align:right;padding:10px 8px;border-top:1px solid #E5E7EB;font-family:var(--mono)}
+  th:first-child,td:first-child{text-align:left;padding-left:12px;font-family:inherit}
+  td:first-child{font-weight:600}
+  .issue{display:flex;gap:10px}
+  .dot{width:10px;height:10px;border-radius:99px;margin-top:5px;flex-shrink:0}
+  .empty{text-align:center;padding:28px 16px;display:flex;flex-direction:column;gap:12px}
+  .banner{background:var(--accent-soft);color:#7C2D12;border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+  .banner button{background:none;border:0;color:#7C2D12;font-size:20px;line-height:1;cursor:pointer;padding:0 4px;min-width:32px;min-height:32px}
+  .log-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid #E5E7EB}
+  .log-item:first-child{border-top:0}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+  nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:66px;font-size:12px;font-weight:500;color:var(--muted)}
+  nav.tabs a.on{color:var(--accent);font-weight:700}
+  #toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;max-width:90vw}
+  #toast.show{opacity:1}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<main id="view" aria-live="polite"></main>
+
+<nav class="tabs" aria-label="Main">
+  <a href="#home" data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+  <a href="#drives" data-tab="drives"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Drives</a>
+  <a href="#log" data-tab="log"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Log shift</a>
+  <a href="#report" data-tab="report"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Report</a>
+</nav>
+<div id="toast" role="status"></div>
+<input type="file" id="restoreFile" accept="application/json,.json" class="sr" aria-label="Restore backup file">
+
+<script>
+'use strict';
+/* ---------- storage ---------- */
+const KEY = 'mtp.v1';
+function blank() { return { project: 'My Project', drives: [], logs: [] }; }
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(KEY)); if (d && Array.isArray(d.drives)) return d; } catch (e) {}
+  return blank();
+}
+let db = load();
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(db)); }
+  catch (e) { toast('Could not save on this phone (storage full?)'); }
+}
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ---------- helpers ---------- */
+const $ = (s) => document.querySelector(s);
+const view = $('#view');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function num(v) { const n = parseFloat(v); return isFinite(n) ? n : null; }
+function fmt(n, d = 1) { return Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function pad(n) { return String(n).padStart(2, '0'); }
+function dstr(dt) { return dt.getFullYear() + '-' + pad(dt.getMonth() + 1) + '-' + pad(dt.getDate()); }
+function today() { return dstr(new Date()); }
+function addDays(s, k) { const [y, m, d] = s.split('-').map(Number); return dstr(new Date(y, m - 1, d + k)); }
+function niceDate(s, opts) {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', opts || { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+let toastTimer;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200); }
+const driveById = (id) => db.drives.find((d) => d.id === id);
+function driveLabel(d) { return d.name + (d.from || d.to ? ' · ' + (d.from || '?') + ' → ' + (d.to || '?') : ''); }
+function sortLogs(a, b) { return a.date === b.date ? (a.ts || 0) - (b.ts || 0) : (a.date < b.date ? -1 : 1); }
+
+/* ---------- calculations ---------- */
+function stats(d, upTo) {
+  const end = upTo || today();
+  const logs = db.logs.filter((l) => l.driveId === d.id && l.date <= end).sort(sortLogs);
+  const sum = logs.reduce((s, l) => s + (l.metres || 0), 0);
+  const jacked = Math.min(sum, d.length || sum);
+  const pct = d.length ? Math.min(100, (jacked / d.length) * 100) : 0;
+  const pipes = logs.reduce((s, l) => s + (l.pipes || 0), 0);
+  const dayM = (day) => logs.filter((l) => l.date === day).reduce((s, l) => s + (l.metres || 0), 0);
+  const last7 = [];
+  for (let i = 6; i >= 0; i--) { const day = addDays(end, -i); last7.push({ day, m: dayM(day) }); }
+  const worked = last7.filter((x) => x.m > 0);
+  const avg = worked.length ? worked.reduce((s, x) => s + x.m, 0) / 7 : 0;
+  const remaining = Math.max(0, (d.length || 0) - jacked);
+  const done = d.length > 0 && jacked >= d.length;
+  let eta = null;
+  if (!done && avg > 0) eta = addDays(end, Math.ceil(remaining / avg));
+  const readings = [...logs].reverse().find((l) => l.jf != null || l.fp != null || l.line != null || l.level != null) || null;
+  const lastLog = logs[logs.length - 1] || null;
+  const todayLogs = logs.filter((l) => l.date === end);
+  const todayM = dayM(end);
+  const todayDown = todayLogs.reduce((s, l) => s + (l.downtime || 0), 0);
+  let status = { t: 'Not started', c: 'idle' };
+  if (done) status = { t: 'Complete', c: 'ok' };
+  else if (todayLogs.length && todayM === 0 && todayDown > 0) status = { t: 'Stopped', c: 'bad' };
+  else if (logs.length && remaining <= 5 * (d.pipeLen || 3)) status = { t: 'Breakout soon', c: 'warn' };
+  else if (lastLog && lastLog.date >= addDays(end, -2)) status = { t: 'Jacking', c: 'ok' };
+  else if (logs.length) status = { t: 'Idle', c: 'idle' };
+  return { logs, jacked, pct, pipes, last7, avg, remaining, done, eta, readings, lastLog, todayM, todayDown, status };
+}
+function devLevel(v, tol) {
+  if (v == null) return '';
+  const a = Math.abs(v), t = tol || 50;
+  return a > t ? 'bad' : a > 0.75 * t ? 'warn' : 'ok';
+}
+
+/* ---------- views ---------- */
+function installBanner() {
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (standalone || localStorage.getItem('mtp.hideInstall')) return '';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const how = ios ? 'In Safari tap <b>Share</b> → <b>Add to Home Screen</b>.' : 'Tap the browser menu <b>⋮</b> → <b>Install app</b> (or Add to Home screen).';
+  return `<div class="banner"><div><b>Install this app:</b> ${how}${deferredPrompt ? ' <br><a href="#" id="doInstall">Install now</a>' : ''}</div><button type="button" id="hideInstall" aria-label="Hide install tip">×</button></div>`;
+}
+
+function homeView() {
+  const all = db.drives.map((d) => ({ d, s: stats(d) }));
+  const total = db.drives.reduce((s, d) => s + (d.length || 0), 0);
+  const jacked = all.reduce((s, x) => s + x.s.jacked, 0);
+  const pct = total ? (jacked / total) * 100 : 0;
+  const done = all.filter((x) => x.s.done).length;
+  const active = all.filter((x) => ['Jacking', 'Breakout soon', 'Stopped'].includes(x.s.status.t));
+  const todayM = all.reduce((s, x) => s + x.s.todayM, 0);
+  const others = all.filter((x) => !x.s.done && !active.includes(x));
+  const list = [...active, ...others];
+  let h = installBanner();
+  h += `<div class="between" style="align-items:flex-start"><div><div class="eyebrow">${esc(db.project)}</div><h1>Tunnel progress</h1><div class="muted small">${niceDate(today())}</div></div></div>`;
+  if (!db.drives.length) {
+    h += `<div class="card empty"><h2>No drives yet</h2><p class="muted small" style="margin:0">Add your first drive (shaft to shaft, DN, length), then log each shift.</p>
+      <a class="btn primary" href="#edit/new">Add a drive</a><button class="btn" type="button" id="sample">Try with sample data</button></div>`;
+    return h;
+  }
+  h += `<div class="dark" style="display:flex;flex-direction:column;gap:12px">
+    <div class="between"><span class="muted small">Total jacked</span><span class="muted small">of ${fmt(total, 0)} m</span></div>
+    <div class="row" style="align-items:baseline"><span class="mono" style="font-size:38px;font-weight:600;line-height:1">${fmt(jacked)} m</span><span style="font-size:18px;font-weight:700;color:var(--glow)">${fmt(pct, 0)}%</span></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="grid3">
+      <div class="stat"><b>${done}/${db.drives.length}</b><span class="muted">Drives done</span></div>
+      <div class="stat"><b>${active.length}</b><span class="muted">Active</span></div>
+      <div class="stat"><b style="color:var(--glow)">+${fmt(todayM)} m</b><span class="muted">Today</span></div>
+    </div></div>`;
+  h += `<div class="between"><h2>${list.length ? 'Drives in progress' : 'All drives complete'}</h2><a class="small" href="#drives">All ${db.drives.length}</a></div>`;
+  h += list.map(({ d, s }) => driveCard(d, s)).join('');
+  return h;
+}
+function driveCard(d, s) {
+  return `<a class="card drive-card" href="#drive/${d.id}">
+    <div class="between" style="align-items:center"><span style="font-size:16px;font-weight:600">${esc(d.name)}</span><span class="chip ${s.status.c}">${s.status.t}</span></div>
+    <span class="muted small">${esc((d.from || '?') + ' → ' + (d.to || '?'))}${d.dn ? ' · DN' + esc(d.dn) : ''} · ${fmt(d.length, 0)} m</span>
+    <div class="bar"><i style="width:${s.pct}%"></i></div>
+    <div class="between small"><span class="mono">${fmt(s.jacked)} / ${fmt(d.length, 0)} m</span><span class="muted">${s.todayM ? '+' + fmt(s.todayM) + ' m today' : s.todayDown ? 'Down ' + fmt(s.todayDown) + ' h today' : fmt(s.pct, 0) + '%'}</span></div>
+  </a>`;
+}
+
+function driveView(id) {
+  const d = driveById(id);
+  if (!d) return `<div class="card empty"><h2>Drive not found</h2><a class="btn" href="#drives">Back to drives</a></div>`;
+  const s = stats(d);
+  const r = s.readings;
+  const tol = d.tol || 50;
+  const max = Math.max(1, ...s.last7.map((x) => x.m));
+  const rd = (label, val, unit, note, cls) => `<div class="card" style="padding:12px 14px"><div class="muted" style="font-size:12px">${label}</div><div class="mono" style="font-size:20px;font-weight:600">${val == null ? '—' : esc(val) + (unit ? ' ' + unit : '')}</div><div style="font-size:12px;font-weight:600;color:var(--${cls || 'muted'})">${note}</div></div>`;
+  const jfCls = r && r.jf != null && d.jfLimit ? (r.jf > d.jfLimit ? 'bad' : r.jf > 0.85 * d.jfLimit ? 'warn' : 'ok') : '';
+  const lineCls = r ? devLevel(r.line, tol) : '';
+  const levCls = r ? devLevel(r.level, tol) : '';
+  let h = `<div class="row"><a class="btn icon" href="#home" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <div style="flex:1;min-width:0"><h1 style="font-size:22px">${esc(d.name)}</h1><div class="muted small">${esc((d.from || '?') + ' → ' + (d.to || '?'))}${d.dn ? ' · DN' + esc(d.dn) : ''} · ${fmt(d.length, 0)} m</div></div>
+    <a class="btn icon" href="#edit/${d.id}" aria-label="Edit drive"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></a></div>`;
+  h += `<div class="card" style="display:flex;flex-direction:column;gap:10px">
+    <div class="between"><span class="mono" style="font-size:30px;font-weight:600">${fmt(s.jacked)} m</span><span style="font-size:18px;font-weight:700;color:var(--accent)">${fmt(s.pct, 0)}%</span></div>
+    <div class="bar" style="height:10px"><i style="width:${s.pct}%"></i></div>
+    <div class="between small muted"><span>${s.pipes} pipes${d.length && d.pipeLen ? ' of ' + Math.ceil(d.length / d.pipeLen) : ''}</span><span>${s.done ? 'Complete' : fmt(s.remaining) + ' m to go' + (s.eta ? ' · ETA ' + niceDate(s.eta, { day: 'numeric', month: 'short' }) : '')}</span></div></div>`;
+  h += `<h2>Last readings${r ? ' <span class="muted small" style="font-weight:400">' + niceDate(r.date, { day: 'numeric', month: 'short' }) + ' · ' + esc(r.shift || '') + '</span>' : ''}</h2>
+    <div class="grid2">
+      ${rd('Max jacking force', r && r.jf, 't', d.jfLimit ? 'Limit ' + d.jfLimit + ' t' : '', jfCls)}
+      ${rd('Face pressure', r && r.fp, 'bar', '', '')}
+      ${rd('Line deviation', r && r.line != null ? (r.line > 0 ? '+' : '') + r.line : null, 'mm', 'Tolerance ±' + tol + ' mm', lineCls)}
+      ${rd('Level deviation', r && r.level != null ? (r.level > 0 ? '+' : '') + r.level : null, 'mm', 'Tolerance ±' + tol + ' mm', levCls)}
+    </div>`;
+  h += `<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="between"><h2 style="margin:0">Metres per day</h2><span class="muted" style="font-size:12px">Last 7 days · avg ${fmt(s.avg)} m</span></div>
+    <div class="chart" role="img" aria-label="Metres per day: ${s.last7.map((x) => fmt(x.m)).join(', ')}">
+    ${s.last7.map((x, i) => `<div><span class="mono">${x.m ? fmt(x.m, x.m % 1 ? 1 : 0) : '0'}</span><i class="${x.m === 0 ? 'zero' : i === 6 ? 'today' : ''}" style="${x.m ? 'height:' + Math.round((x.m / max) * 90) + 'px' : ''}"></i><span class="muted">${niceDate(x.day, { weekday: 'short' })}</span></div>`).join('')}
+    </div></div>`;
+  h += `<a class="btn primary" href="#log/${d.id}">＋ Log a shift</a>`;
+  const recent = [...s.logs].reverse().slice(0, 30);
+  h += `<h2>Shift history</h2><div class="card">${recent.length ? recent.map((l) => `<div class="log-item"><div><div style="font-weight:600">${niceDate(l.date, { day: 'numeric', month: 'short', year: '2-digit' })} · ${esc(l.shift || '')}</div>
+      <div class="muted small">${l.pipes ? l.pipes + ' pipes · ' : ''}${fmt(l.metres)} m${l.downtime ? ' · down ' + fmt(l.downtime) + ' h (' + esc(l.reason || '') + ')' : ''}${l.remarks ? '<br>' + esc(l.remarks) : ''}</div></div>
+      <button class="btn icon sm danger" type="button" data-del="${l.id}" aria-label="Delete this shift entry"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>`).join('') : '<p class="muted small" style="margin:0">No shifts logged yet.</p>'}</div>`;
+  return h;
+}
+
+let form = { shift: 'Day', pipes: 0 };
+function logView(preId) {
+  if (!db.drives.length) return `<h1>Log a shift</h1><div class="card empty"><p class="muted" style="margin:0">Add a drive first.</p><a class="btn primary" href="#edit/new">Add a drive</a></div>`;
+  const sel = driveById(preId) || db.drives.find((d) => !stats(d).done) || db.drives[0];
+  const s = stats(sel);
+  const reasons = ['Pipe change / lubrication', 'Slurry system', 'Cutter head / MTBM', 'Survey / steering', 'Power / plant', 'Jacking frame / thrust wall', 'Weather / access', 'Other'];
+  return `<div class="between"><h1>Log a shift</h1></div>
+  <form id="logForm" style="display:flex;flex-direction:column;gap:12px" novalidate>
+    <div><label for="f-drive">Drive</label><select id="f-drive" name="drive">${db.drives.map((d) => `<option value="${d.id}" ${d.id === sel.id ? 'selected' : ''}>${esc(driveLabel(d))}</option>`).join('')}</select></div>
+    <div class="grid2"><div><label for="f-date">Date</label><input id="f-date" name="date" type="date" value="${today()}"></div>
+    <div><label>Shift</label><div class="seg" role="group" aria-label="Shift"><button type="button" data-shift="Day" aria-pressed="${form.shift === 'Day'}">Day</button><button type="button" data-shift="Night" aria-pressed="${form.shift === 'Night'}">Night</button></div></div></div>
+    <div class="card between" style="align-items:center"><div><div class="muted" style="font-size:12px;font-weight:600">Pipes jacked</div><div class="mono small">Ch. <span id="chFrom">${fmt(s.jacked)}</span> → <b style="color:var(--accent)" id="chTo"></b> m</div></div>
+      <div class="stepper"><button class="btn icon" type="button" id="minus" aria-label="One pipe less">−</button><output id="pipes">${form.pipes}</output><button class="btn icon" type="button" id="plus" aria-label="One pipe more" style="background:var(--ink);color:#fff;border-color:var(--ink)">+</button></div></div>
+    <div class="grid2"><div><label for="f-metres">Metres jacked</label><input id="f-metres" name="metres" type="number" step="any" inputmode="decimal"></div>
+    <div><label for="f-jf">Max jacking force (t)</label><input id="f-jf" name="jf" type="number" step="any" inputmode="decimal"></div>
+    <div><label for="f-fp">Face pressure (bar)</label><input id="f-fp" name="fp" type="number" step="any" inputmode="decimal"></div>
+    <div><label for="f-slurry">Slurry flow / notes</label><input id="f-slurry" name="slurry" type="text" placeholder="optional"></div>
+    <div><label for="f-line">Line deviation (mm)</label><input id="f-line" name="line" type="number" step="any" placeholder="+ right / − left"></div>
+    <div><label for="f-level">Level deviation (mm)</label><input id="f-level" name="level" type="number" step="any" placeholder="+ high / − low"></div></div>
+    <div style="display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px"><div><label for="f-down">Downtime (h)</label><input id="f-down" name="downtime" type="number" step="any" inputmode="decimal"></div>
+    <div><label for="f-reason">Reason</label><select id="f-reason" name="reason">${reasons.map((r) => `<option>${r}</option>`).join('')}</select></div></div>
+    <div><label for="f-rem">Remarks</label><textarea id="f-rem" name="remarks" rows="2" placeholder="Steering, lubrication, issues…"></textarea></div>
+    <button class="btn primary" type="submit" id="saveBtn">Save shift</button>
+  </form>`;
+}
+function bindLog() {
+  const f = $('#logForm'); if (!f) return;
+  const upd = () => {
+    const d = driveById(f.elements.namedItem('drive').value); const s = stats(d, f.elements.namedItem('date').value || today());
+    $('#chFrom').textContent = fmt(s.jacked);
+    $('#pipes').textContent = form.pipes;
+    if (!f.elements.namedItem('metres').dataset.touched) f.elements.namedItem('metres').value = form.pipes ? +(form.pipes * (d.pipeLen || 3)).toFixed(2) : '';
+    const m = num(f.elements.namedItem('metres').value) || 0;
+    $('#chTo').textContent = fmt(s.jacked + m);
+    $('#saveBtn').textContent = 'Save shift' + (m ? ' · +' + fmt(m) + ' m' : '');
+    const tol = d.tol || 50;
+    ['line', 'level'].forEach((k) => { const v = num(f.elements.namedItem(k).value); f.elements.namedItem(k).classList.toggle('warn', v != null && Math.abs(v) > 0.75 * tol); });
+  };
+  f.addEventListener('input', (e) => { if (e.target.name === 'metres') f.elements.namedItem('metres').dataset.touched = f.elements.namedItem('metres').value ? '1' : ''; upd(); });
+  f.addEventListener('change', upd);
+  $('#plus').onclick = () => { form.pipes = Math.min(form.pipes + 1, 40); upd(); };
+  $('#minus').onclick = () => { form.pipes = Math.max(form.pipes - 1, 0); upd(); };
+  f.querySelectorAll('[data-shift]').forEach((b) => b.onclick = () => { form.shift = b.dataset.shift; f.querySelectorAll('[data-shift]').forEach((x) => x.setAttribute('aria-pressed', x === b)); });
+  f.onsubmit = (e) => {
+    e.preventDefault();
+    const metres = num(f.elements.namedItem('metres').value) || 0, down = num(f.elements.namedItem('downtime').value) || 0;
+    if (!metres && !down && !f.elements.namedItem('remarks').value.trim()) { toast('Enter metres, downtime or a remark'); return; }
+    const log = { id: uid(), ts: Date.now(), driveId: f.elements.namedItem('drive').value, date: f.elements.namedItem('date').value || today(), shift: form.shift, pipes: form.pipes, metres,
+      jf: num(f.elements.namedItem('jf').value), fp: num(f.elements.namedItem('fp').value), slurry: f.elements.namedItem('slurry').value.trim(), line: num(f.elements.namedItem('line').value), level: num(f.elements.namedItem('level').value),
+      downtime: down, reason: down ? f.elements.namedItem('reason').value : '', remarks: f.elements.namedItem('remarks').value.trim() };
+    db.logs.push(log); save(); form = { shift: form.shift, pipes: 0 };
+    toast('Shift saved'); location.hash = '#drive/' + log.driveId;
+  };
+  upd();
+}
+
+let reportDate = null;
+function reportView() {
+  const day = reportDate || today();
+  const rows = db.drives.map((d) => { const s = stats(d, day); return { d, s, dayLogs: s.logs.filter((l) => l.date === day) }; });
+  const dayM = rows.reduce((t, r) => t + r.s.todayM, 0);
+  const dayP = rows.reduce((t, r) => t + r.dayLogs.reduce((a, l) => a + (l.pipes || 0), 0), 0);
+  const dayDown = rows.reduce((t, r) => t + r.s.todayDown, 0);
+  const issues = [];
+  rows.forEach(({ d, dayLogs }) => dayLogs.forEach((l) => {
+    const tol = d.tol || 50;
+    if (l.downtime) issues.push({ c: l.metres ? '#B45309' : '#B91C1C', t: `${d.name}: down ${fmt(l.downtime)} h (${l.shift})`, s: l.reason + (l.remarks ? ' — ' + l.remarks : '') });
+    ['line', 'level'].forEach((k) => { const lv = devLevel(l[k], tol); if (lv === 'warn' || lv === 'bad') issues.push({ c: lv === 'bad' ? '#B91C1C' : '#B45309', t: `${d.name}: ${k} ${l[k] > 0 ? '+' : ''}${l[k]} mm`, s: `Tolerance ±${tol} mm (${l.shift} shift)` }); });
+    if (d.jfLimit && l.jf > 0.85 * d.jfLimit) issues.push({ c: l.jf > d.jfLimit ? '#B91C1C' : '#B45309', t: `${d.name}: jacking force ${l.jf} t`, s: `Limit ${d.jfLimit} t` });
+  }));
+  rows.forEach(({ d, s }) => { if (s.status.t === 'Breakout soon') issues.push({ c: '#15803D', t: `${d.name}: breakout soon`, s: `${fmt(s.remaining)} m to go` }); });
+  let h = `<div><div class="eyebrow">Daily progress report</div><h1>${niceDate(day)}</h1></div>
+    <div><label for="r-date">Report date</label><input id="r-date" type="date" value="${day}"></div>`;
+  h += `<div class="grid3"><div class="dark stat" style="padding:12px;border-radius:14px"><b style="color:var(--glow)">${fmt(dayM)} m</b><span class="muted">Jacked</span></div>
+    <div class="card stat" style="padding:12px"><b>${dayP}</b><span class="muted">Pipes</span></div>
+    <div class="card stat" style="padding:12px"><b>${fmt(dayDown)} h</b><span class="muted">Downtime</span></div></div>`;
+  if (db.drives.length) h += `<div class="card" style="padding:0;overflow:hidden"><table><thead><tr><th scope="col">Drive</th><th scope="col">Day</th><th scope="col">Total</th><th scope="col">%</th></tr></thead><tbody>
+    ${rows.map(({ d, s }) => `<tr><td>${esc(d.name)}</td><td>${s.todayM ? '+' + fmt(s.todayM) : '0.0'}</td><td>${fmt(s.jacked)}</td><td>${fmt(s.pct, 0)}%</td></tr>`).join('')}</tbody></table></div>`;
+  h += `<h2>Issues &amp; downtime</h2>${issues.length ? issues.map((i) => `<div class="card issue"><span class="dot" style="background:${i.c}"></span><div><div style="font-weight:600;font-size:14px">${esc(i.t)}</div><div class="muted small">${esc(i.s)}</div></div></div>`).join('') : '<p class="muted small" style="margin:0">Nothing flagged for this date.</p>'}`;
+  h += `<div class="grid2"><button class="btn primary" type="button" id="share">Share report</button><button class="btn" type="button" id="csv">Export Excel (CSV)</button></div>
+    <h2>Backup</h2><p class="muted small" style="margin:0">Your data is stored only on this phone. Back it up regularly.</p>
+    <div class="grid2"><button class="btn sm" type="button" id="backup">Save backup file</button><button class="btn sm" type="button" id="restore">Restore backup</button></div>`;
+  return h;
+}
+function reportText() {
+  const day = reportDate || today();
+  let t = `*${db.project} — Microtunnel progress*\n${niceDate(day)}\n\n`;
+  let tot = 0;
+  db.drives.forEach((d) => { const s = stats(d, day); tot += s.todayM; t += `• ${d.name}: ${s.todayM ? '+' + fmt(s.todayM) : '0.0'} m | ${fmt(s.jacked)}/${fmt(d.length, 0)} m (${fmt(s.pct, 0)}%)${s.todayDown ? ' | down ' + fmt(s.todayDown) + ' h' : ''}\n`; });
+  t += `\nTotal today: ${fmt(tot)} m`;
+  return t;
+}
+function download(name, text, type) {
+  const blob = new Blob([text], { type });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function bindReport() {
+  const rd = $('#r-date'); if (!rd) return;
+  rd.onchange = () => { reportDate = rd.value || null; render(); };
+  $('#share').onclick = async () => {
+    const text = reportText();
+    if (navigator.share) { try { await navigator.share({ title: 'Microtunnel progress', text }); } catch (e) {} }
+    else { window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank'); }
+  };
+  $('#csv').onclick = () => {
+    const cols = ['date', 'shift', 'drive', 'from', 'to', 'dn', 'pipes', 'metres', 'jf_t', 'face_bar', 'slurry', 'line_mm', 'level_mm', 'downtime_h', 'reason', 'remarks'];
+    const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const lines = [cols.join(',')].concat([...db.logs].sort(sortLogs).map((l) => { const d = driveById(l.driveId) || {}; return [l.date, l.shift, d.name, d.from, d.to, d.dn, l.pipes, l.metres, l.jf, l.fp, l.slurry, l.line, l.level, l.downtime, l.reason, l.remarks].map(q).join(','); }));
+    download('microtunnel-shifts-' + today() + '.csv', '﻿' + lines.join('\n'), 'text/csv');
+  };
+  $('#backup').onclick = () => download('mt-progress-backup-' + today() + '.json', JSON.stringify(db, null, 1), 'application/json');
+  $('#restore').onclick = () => $('#restoreFile').click();
+}
+$('#restoreFile').onchange = (e) => {
+  const file = e.target.files[0]; if (!file) return;
+  const rdr = new FileReader();
+  rdr.onload = () => {
+    try { const d = JSON.parse(rdr.result); if (!Array.isArray(d.drives) || !Array.isArray(d.logs)) throw 0;
+      if (confirm('Replace all data on this phone with this backup?')) { db = d; save(); toast('Backup restored'); render(); }
+    } catch (err) { toast('That file is not a valid backup'); }
+    e.target.value = '';
+  };
+  rdr.readAsText(file);
+};
+
+function drivesView() {
+  let h = `<div class="between" style="align-items:center"><h1>Drives</h1><a class="btn sm primary" href="#edit/new">＋ Add drive</a></div>
+    <div><label for="p-name">Project name</label><input id="p-name" value="${esc(db.project)}"></div>`;
+  if (!db.drives.length) h += `<div class="card empty"><p class="muted" style="margin:0">No drives yet.</p><button class="btn" type="button" id="sample">Try with sample data</button></div>`;
+  h += db.drives.map((d) => driveCard(d, stats(d))).join('');
+  return h;
+}
+function editView(id) {
+  const d = id === 'new' ? { name: '', from: '', to: '', dn: '', length: '', pipeLen: 3, tol: 50, jfLimit: '' } : driveById(id);
+  if (!d) return `<div class="card empty"><h2>Drive not found</h2></div>`;
+  const f = (k, label, type, extra) => `<div><label for="e-${k}">${label}</label><input id="e-${k}" name="${k}" type="${type}" value="${esc(d[k] == null ? '' : d[k])}" ${extra || ''}></div>`;
+  return `<div class="row"><a class="btn icon" href="${id === 'new' ? '#drives' : '#drive/' + id}" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a><h1>${id === 'new' ? 'Add drive' : 'Edit drive'}</h1></div>
+  <form id="editForm" style="display:flex;flex-direction:column;gap:12px" novalidate>
+    ${f('name', 'Drive name (e.g. SIBS1 · D07)', 'text', 'required')}
+    <div class="grid2">${f('from', 'Launch shaft / MH', 'text')}${f('to', 'Reception shaft / MH', 'text')}
+    ${f('dn', 'Pipe DN (mm)', 'number', 'inputmode="numeric"')}${f('length', 'Drive length (m)', 'number', 'step="any" inputmode="decimal" required')}
+    ${f('pipeLen', 'Pipe length (m)', 'number', 'step="any" inputmode="decimal"')}${f('tol', 'Line/level tolerance ± (mm)', 'number', 'inputmode="numeric"')}
+    ${f('jfLimit', 'Jacking force limit (t)', 'number', 'step="any" inputmode="decimal"')}</div>
+    <button class="btn primary" type="submit">Save drive</button>
+    ${id !== 'new' ? '<button class="btn danger" type="button" id="delDrive">Delete drive and its shifts</button>' : ''}
+  </form>`;
+}
+function bindEdit(id) {
+  const f = $('#editForm'); if (!f) return;
+  f.onsubmit = (e) => {
+    e.preventDefault();
+    const name = f.elements.namedItem('name').value.trim(), length = num(f.elements.namedItem('length').value);
+    if (!name || !length) { toast('Drive name and length are required'); return; }
+    const data = { name, from: f.elements.namedItem('from').value.trim(), to: f.elements.namedItem('to').value.trim(), dn: f.elements.namedItem('dn').value.trim(), length, pipeLen: num(f.elements.namedItem('pipeLen').value) || 3, tol: num(f.elements.namedItem('tol').value) || 50, jfLimit: num(f.elements.namedItem('jfLimit').value) };
+    let did = id;
+    if (id === 'new') { did = uid(); db.drives.push(Object.assign({ id: did }, data)); }
+    else Object.assign(driveById(id), data);
+    save(); toast('Drive saved'); location.hash = '#drive/' + did;
+  };
+  const del = $('#delDrive');
+  if (del) del.onclick = () => {
+    if (!confirm('Delete this drive and all its shift entries?')) return;
+    db.drives = db.drives.filter((d) => d.id !== id); db.logs = db.logs.filter((l) => l.driveId !== id);
+    save(); toast('Drive deleted'); location.hash = '#drives';
+  };
+}
+
+function loadSample() {
+  const t = today();
+  const D = (name, from, to, length) => ({ id: uid(), name, from, to, dn: '1400', length, pipeLen: 3, tol: 50, jfLimit: 600 });
+  const a = D('SIBS1 · D07', 'MH-07', 'MH-08', 312), b = D('SIBS2 · D03', 'MH-21', 'MH-22', 286), c = D('SIBS1 · D11', 'MH-11', 'MH-12', 240);
+  const L = (dr, k, m, extra) => Object.assign({ id: uid(), ts: Date.now() + Math.random(), driveId: dr.id, date: addDays(t, k), shift: 'Day', pipes: Math.round(m / 3), metres: m, jf: null, fp: null, line: null, level: null, downtime: 0, reason: '', remarks: '' }, extra || {});
+  const logs = [L(a, -10, 121.5, { pipes: 0, remarks: 'Opening balance' })];
+  [12, 15, 9, 0, 18, 21, 18].forEach((m, i) => logs.push(L(a, i - 6, m, m ? { jf: 380 + i * 6, fp: 1.6, line: 8 + i, level: -20 - i * 3 } : { downtime: 10, reason: 'Slurry system', remarks: 'Separation plant repair' })));
+  logs.push(L(b, -10, 252, { pipes: 0, remarks: 'Opening balance' }), L(b, 0, 9, { jf: 455, fp: 1.7, line: 5, level: 10 }));
+  logs.push(L(c, -10, 54, { pipes: 0, remarks: 'Opening balance' }), L(c, 0, 0, { pipes: 0, downtime: 4.5, reason: 'Slurry system', remarks: 'Slurry pump maintenance' }));
+  db = { project: 'SIBS Trunk Sewer (sample)', drives: [a, b, c], logs };
+  save(); toast('Sample data loaded — edit or delete it any time'); render();
+}
+
+/* ---------- router ---------- */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; if ((location.hash || '#home') === '#home') render(); });
+
+function render() {
+  const [route, arg] = (location.hash || '#home').slice(1).split('/');
+  const tab = { home: 'home', drive: 'drives', drives: 'drives', edit: 'drives', log: 'log', report: 'report' }[route] || 'home';
+  document.querySelectorAll('nav.tabs a').forEach((a) => { const on = a.dataset.tab === tab; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  if (route === 'drive') view.innerHTML = driveView(arg);
+  else if (route === 'drives') view.innerHTML = drivesView();
+  else if (route === 'edit') view.innerHTML = editView(arg);
+  else if (route === 'log') view.innerHTML = logView(arg);
+  else if (route === 'report') view.innerHTML = reportView();
+  else view.innerHTML = homeView();
+  window.scrollTo(0, 0);
+  bindCommon(); bindLog(); bindReport(); if (route === 'edit') bindEdit(arg);
+}
+function bindCommon() {
+  const s = $('#sample'); if (s) s.onclick = loadSample;
+  const hi = $('#hideInstall'); if (hi) hi.onclick = () => { localStorage.setItem('mtp.hideInstall', '1'); render(); };
+  const di = $('#doInstall'); if (di) di.onclick = async (e) => { e.preventDefault(); if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; render(); } };
+  const pn = $('#p-name'); if (pn) pn.onchange = () => { db.project = pn.value.trim() || 'My Project'; save(); toast('Project name saved'); };
+  view.querySelectorAll('[data-del]').forEach((b) => b.onclick = () => {
+    if (!confirm('Delete this shift entry?')) return;
+    db.logs = db.logs.filter((l) => l.id !== b.dataset.del); save(); toast('Entry deleted'); render();
+  });
+}
+window.addEventListener('hashchange', render);
+render();
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
