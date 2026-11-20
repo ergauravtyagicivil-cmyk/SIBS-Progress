@@ -1,11 +1,12 @@
 {
-  "name": "Microtunnel Progress",
-  "short_name": "MT Progress",
-  "description": "Log and track microtunnelling drive progress on site.",
+  "id": "/SIBS-Progress/app/",
+  "name": "SIBS Progress Editor",
+  "short_name": "SIBS Editor",
+  "description": "Update SIBS microtunnel and manhole progress from your phone.",
   "start_url": "./index.html",
-  "scope": "./",
+  "scope": "../",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#F3F4F1",
   "theme_color": "#12161C",
   "icons": [
